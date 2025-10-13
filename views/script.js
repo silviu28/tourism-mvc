@@ -32,3 +32,9 @@ setInterval(function () {
 sendbutton.onclick = function () {
   window.alert("Form has been sent!");
 }
+
+const sendFeedback = function (event) {
+  event.preventDefault();
+  alert('thank you for your feedback');
+  // add POST here...
+}

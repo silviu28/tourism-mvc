@@ -5,7 +5,7 @@ const startTime = function () {
   const s = today.getSeconds();
   m = checkTime(m);
   s = checkTime(s);
-  document.getElementById('time').innerHTML = h + ":" + m + ":" + s;
+  document.getElementById('time').innerText = h + ":" + m + ":" + s;
   setTimeout(startTime, 1000);
 }
 
@@ -15,3 +15,5 @@ const checkTime = function (i) {
   }
   return i;
 }
+
+startTime();
