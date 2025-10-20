@@ -1,4 +1,4 @@
-import { useState, type FunctionComponent } from "react";
+import { useState, type FunctionComponent, type SyntheticEvent } from "react";
 
 interface FormData {
   name?: string,
@@ -23,7 +23,8 @@ const Signup: FunctionComponent<SignupProps> = ({ onSubmit }) => {
   const [confirm, setConfirm] = useState<string>('');
   const [notify, setNotify] = useState<boolean>(false);
 
-  const submit = () => {
+  const submit = (e: SyntheticEvent) => {
+    e.preventDefault();
     // ...
     onSubmit({
       name,

@@ -3,18 +3,21 @@ import ImageParallax from "../ImageParallax";
 import TypeText from "../TypeText";
 import ColumnSplit from "../ColumnSplit";
 import CommentSection from "../CommentSection";
+import Badge from "../Badge";
 
 const FrontPage: FunctionComponent = () => {
   return (
     <div>
-      <button className={["scroll-button", "button1"].join(" ")}
+      <button
+        style={{ position: 'fixed', left: '100%', top: '100%', transform: 'translate(-10vw, -10vh)' }}
         onClick={() =>
-          window.scrollTo({ top: 0, behavior: "smooth" })}>Go
+          window.scrollTo({ top: 0, behavior: "smooth" })}>
+        ↑
       </button>
 
-      <ImageParallax src="/images/bg.jpg" />
+      <ImageParallax src="bg.jpg" />
 
-      <TypeText text={"You should.. now!"} />
+      <TypeText text="You should.. now!" />
 
       <section className="info-section"
         style={{ padding: "2%" }}>
@@ -30,32 +33,32 @@ const FrontPage: FunctionComponent = () => {
       </section>
 
       <ColumnSplit splitCount={2}>
-        <ImageParallax src="/images/bg.jpg" />
-        <ImageParallax src="/images/bg.jpg" />
+        <ImageParallax src="/bg.jpg" />
+        <ImageParallax src="/bg.jpg" />
       </ColumnSplit>
 
       <h1 style={{ textAlign: "center" }}>Why choose us?</h1>
       <ColumnSplit splitCount={4}>
         <div>
-          <img src={"src/assets/icons/question_mark.png"} />
+          <Badge src='question_mark.png' />
           <h2>Understanding</h2>
           <p>Lorem ipsum</p>
         </div>
 
         <div>
-          <img src={"src/assets/icons/smile.png"} />
+          <Badge src='smile.png' />
           <h2>Servicing</h2>
           <p>Lorem ipsum</p>
         </div>
 
         <div>
-          <img src={"src/assets/icons/service.png"} />
+          <Badge src='service.png' />
           <h2>Servicing</h2>
           <p>Lorem ipsum</p>
         </div>
 
         <div>
-          <img src={"src/assets/icons/service.png"} />
+          <Badge src='service.png' />
           <h2>Servicing</h2>
           <p>Lorem ipsum</p>
         </div>
@@ -63,7 +66,7 @@ const FrontPage: FunctionComponent = () => {
 
       <CommentSection />
       <p>(C) Copyright. All rights reserved.</p>
-    </div>
+    </div >
   );
 };
 
