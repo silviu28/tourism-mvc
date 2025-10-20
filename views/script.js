@@ -22,19 +22,21 @@ window.onscroll = function () {
 const toTop = function () {
   document.body.scrollTop = 0;
   document.documentElement.scrollTop = 0;
-}
+};
 
 setInterval(function () {
   let random = Math.floor(Math.random() * 5);
   image.src = images[random];
 }, 5000);
 
-sendbutton.onclick = function () {
-  window.alert("Form has been sent!");
-}
+// sendButton?.onclick = function () {
+//   window.alert("Form has been sent!");
+// };
 
 const sendFeedback = function (event) {
   event.preventDefault();
   alert('thank you for your feedback');
   // add POST here...
-}
+};
+
+console.log(document.getElementById('comment-section'));

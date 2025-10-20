@@ -29,6 +29,13 @@ app.get('/users', async (req, res) => {
   res.json(users);
 });
 
+app.get('/comments', async (req, res) => {
+  const comments = await sequelize.query('SELECT * FROM comments', {
+    type: QueryTypes.SELECT,
+  });
+  res.json(comments);
+});
+
 app.listen(PORT, () => {
   console.log(`--> localhost:${PORT}`);
 });
