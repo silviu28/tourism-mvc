@@ -3,6 +3,7 @@ import './App.css';
 import { Route, BrowserRouter as Router, Routes } from 'react-router';
 import Navbar from './components/Navbar';
 import FrontPage from './components/FrontPage';
+import Signup from './components/Signup';
 
 const App: FunctionComponent = () => {
   return (
@@ -10,8 +11,8 @@ const App: FunctionComponent = () => {
       <Navbar />
       <Routes>
         <Route path="/" element={<FrontPage />} />
-        {/* <Route path="/" element={<Signup />} />
-        <Route path="/" element={<TripsPage />} />
+        <Route path="/signup" element={<Signup />} />
+        {/*<Route path="/" element={<TripsPage />} />
         <Route path="/" element={<PriceTable />} />
         <Route path="/" element={<Contact />} />
         <Route path="/" element={<Gallery />} /> */}
