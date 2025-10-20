@@ -1,0 +1,16 @@
+.column2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.column3 {
+  width: 33%;
+  float: right;
+}
+
+.column4 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 10px;
+}
