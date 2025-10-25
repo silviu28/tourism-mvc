@@ -1,4 +1,5 @@
 import { useState, type FunctionComponent, type SyntheticEvent } from "react";
+import { useNavigate } from "react-router";
 
 interface FormData {
   name?: string,
@@ -22,6 +23,8 @@ const Signup: FunctionComponent<SignupProps> = ({ onSubmit }) => {
   const [password, setPassword] = useState<string>('');
   const [confirm, setConfirm] = useState<string>('');
   const [notify, setNotify] = useState<boolean>(false);
+
+  const navigate = useNavigate();
 
   const submit = (e: SyntheticEvent) => {
     e.preventDefault();
@@ -72,7 +75,11 @@ const Signup: FunctionComponent<SignupProps> = ({ onSubmit }) => {
           </button>
           <br />
         </form>
-        <button className={"button1"}>Already logged?</button>
+        <button
+          className="button1"
+          onClick={() => navigate('/login')}>
+          Already logged?
+        </button>
       </div>
     </div>
   );
