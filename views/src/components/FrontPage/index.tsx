@@ -4,6 +4,12 @@ import TypeText from "../TypeText";
 import ColumnSplit from "../ColumnSplit";
 import CommentSection from "../CommentSection";
 import Badge from "../Badge";
+import axios from "axios";
+
+const addComment = async (data: { id: number, username: string, comment: string }) => {
+  const res = await axios.post('http://localhost:4004/comments', data);
+  console.log(res.data);
+};
 
 const FrontPage: FunctionComponent = () => {
   return (
@@ -64,7 +70,7 @@ const FrontPage: FunctionComponent = () => {
         </div>
       </ColumnSplit>
 
-      <CommentSection />
+      <CommentSection onSubmit={addComment} />
       <p>(C) Copyright. All rights reserved.</p>
     </div >
   );

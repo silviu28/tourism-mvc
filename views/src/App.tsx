@@ -19,16 +19,19 @@ const App: FunctionComponent = () => {
   };
   const login = async data => {
     const res = await axios.put('http://localhost:4004/users', data);
-    localStorage.setItem('user', JSON.stringify({
-      username: res.data.username,
-      token: res.data.token,
-    }));
+    if (res.data.id && res.data.username && res.data.token) {
+      localStorage.setItem('user', JSON.stringify({
+        id: res.data.id,
+        username: res.data.username,
+        token: res.data.token,
+      }));
+    }
   };
 
-  const [token, setToken] = useState<UserData>(() => JSON.parse(localStorage.getItem('user') || "{}"));
+  const [user, setUser] = useState<UserData>(() => JSON.parse(localStorage.getItem('user') || "{}"));
 
   return (
-    <UserContext.Provider value={token}>
+    <UserContext.Provider value={user}>
       <Router>
         <Navbar />
         <Routes>

@@ -66,6 +66,7 @@ router.put('/users', async (req, res) => {
       throw Error('invalid password');
     } else {
       res.status(200).json({
+        id: user.id,
         username: user.username,
         token: jwt.sign({ username }, process.env.JWT_SECRET, {
           expiresIn: 3600 * 24 * 31,

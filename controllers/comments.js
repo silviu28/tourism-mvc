@@ -4,7 +4,10 @@ const sequelize = require('./sequelizeConfig');
 const { QueryTypes } = require('sequelize');
 
 router.get('/comments', async (_req, res) => {
-  const comments = await sequelize.query('SELECT * FROM comments', {
+  const comments = await sequelize.query(`
+    SELECT c.id, c.comment, u.username FROM comments c
+    JOIN users u ON c.user_id = u.id
+    `, {
     type: QueryTypes.SELECT,
   });
   res.json(comments);
@@ -12,9 +15,11 @@ router.get('/comments', async (_req, res) => {
 
 router.post('/comments', async (req, res) => {
   try {
-    const { comment } = req.body;
-    const query = await sequelize.query('INSERT INTO comments(comment) VALUES(:comment)', {
-      replacements: { comment },
+    const { id, username, comment } = req.body;
+    const query = await sequelize.query(`
+      INSERT INTO comments(user_id, comment, date) VALUES(:id, :comment, :date)
+      `, {
+      replacements: { comment, id, date: new Date(), },
       type: QueryTypes.INSERT,
     });
 
