@@ -1,8 +1,11 @@
-import type { FunctionComponent } from "react";
+import { useContext, type FunctionComponent } from "react";
 import { Link } from "react-router";
 import './style.css';
+import UserContext from "../../UserContext";
+import { type UserData } from "../../types";
 
 const Navbar: FunctionComponent = () => {
+  const user = useContext<UserData>(UserContext);
   return (
     <div className="header">
       <ul>
@@ -16,6 +19,7 @@ const Navbar: FunctionComponent = () => {
           <img src={"public/images/thumbnail.png"}
             style={{ "width": "2vw", "height": "2vw" }} />
         </li>
+        {user.username ? <li>Welcome, {user.username}!</li> : ""}
       </ul>
     </div>
   );
