@@ -15,6 +15,7 @@ import UserContext from './UserContext';
 
 const App: FunctionComponent = () => {
   const createAccount = async data => {
+    console.log(data);
     const res = await axios.post('http://localhost:4004/users', data);
   };
   const login = async data => {

@@ -28,9 +28,9 @@ export class Price extends Model {
   })
   declare host: string;
 
-  @Column({ type: DataType.NUMBER })
+  @Column({ type: DataType.FLOAT })
   declare priceLower?: number;
 
-  @Column({ type: DataType.NUMBER })
+  @Column({ type: DataType.FLOAT })
   declare priceUpper?: number;
 }

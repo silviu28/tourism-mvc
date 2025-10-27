@@ -1,4 +1,4 @@
-const express = require('express');
+import express from "express";
 const path = require('path');
 require('dotenv').config({ quiet: true });
 const cors = require('cors');
@@ -25,5 +25,5 @@ app.use(
 );
 
 app.listen(PORT, () => {
-  console.log(`--> localhost:${PORT}`);
+  console.log(`Server running @ http://localhost:${PORT}`);
 });

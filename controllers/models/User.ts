@@ -1,4 +1,5 @@
-import { AutoIncrement, Column, DataType, Model, PrimaryKey, Table, Unique } from "sequelize-typescript";
+import { AutoIncrement, Column, DataType, HasMany, Model, PrimaryKey, Table, Unique } from "sequelize-typescript";
+import { Comment } from "./Comment";
 
 @Table({
   tableName: "users",
@@ -42,4 +43,7 @@ export class User extends Model {
     allowNull: false
   })
   declare notify: boolean;
+
+  @HasMany(() => Comment)
+  declare comments: Comment[];
 }

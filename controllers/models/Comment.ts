@@ -1,4 +1,4 @@
-import { AutoIncrement, Column, DataType, ForeignKey, Model, PrimaryKey, Table } from "sequelize-typescript";
+import { AutoIncrement, BelongsTo, Column, DataType, ForeignKey, Model, PrimaryKey, Table } from "sequelize-typescript";
 import { User } from "./User";
 
 @Table({
@@ -36,4 +36,7 @@ export class Comment extends Model {
     allowNull: false
   })
   declare date: Date;
+
+  @BelongsTo(() => User)
+  declare user: User;
 }
