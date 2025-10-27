@@ -42,10 +42,10 @@ const Signup: FunctionComponent<SignupProps> = ({ onSubmit }) => {
 
   return (
     <div>
-      <img src={"public/images/bg3.jpg"} style={{ position: "absolute", display: "flex" }} />
+      <img src={"public/images/bg3.jpg"} style={{ position: "absolute" }} />
       <div style={{
         borderRadius: "10px", background: "rgba(0, 0, 0, .5)",
-        display: "grid", padding: "10px", left: "25%", top: "25%"
+        display: "grid", padding: "7vw", margin: "10vw", left: "25%", top: "25%"
       }}>
         <form onSubmit={submit} style={{ display: 'flex', flexDirection: 'column' }}>
           <h1 style={{ textAlign: "center" }}>Sign up</h1>

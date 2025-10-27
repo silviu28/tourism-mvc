@@ -21,27 +21,16 @@ const FrontPage: FunctionComponent = () => {
         ↑
       </button>
 
-      <ImageParallax src="bg.jpg" />
+      <ImageParallax src="https://flyingmag1.b-cdn.net/wp-content/uploads/sites/2/2022/06/AdobeStock_249454423-scaled-1.jpeg" />
 
-      <TypeText text="You should.. now!" />
+      <TypeText text="Book the vacation of your life." />
 
       <section className="info-section"
         style={{ padding: "2%" }}>
-        <p>We are a group of people experts in the art of traveling. Whether it's the culture, the food or just the nice places, we know everything there is to know about places around the Globe.</p>
-        <p>Our job is to try to satisfy our customers' needs through the services we provide.</p>
-        <p>After all, the world is so big, why stay in one place? </p>
-        <p>Here's a list of some services we provide:</p>
-        <ul>
-          <li>Trip advising and trip planning</li>
-          <li>Affordable prices</li>
-          <li>Great platform with easy access to everything</li>
-        </ul>
+        <p>Whether you're looking for a relaxing getaway, a thrilling adventure, or an authentic cultural experience, we're here to make it happen. Our team takes pride in crafting unique travel experiences that match your interests, schedule, and budget.</p>
+        <p>From hidden gems off the beaten path to world-famous destinations, we'll guide you every step of the way. With our expertise and passion for exploration, all you have to do is pack your bags and let the journey begin.</p>
+        <p>Because with us, traveling isn't just about reaching a destination; it's about discovering the world in your own way.</p>
       </section>
-
-      <ColumnSplit splitCount={2}>
-        <ImageParallax src="/bg.jpg" />
-        <ImageParallax src="/bg.jpg" />
-      </ColumnSplit>
 
       <h1 style={{ textAlign: "center" }}>Why choose us?</h1>
       <ColumnSplit splitCount={4}>
@@ -72,7 +61,7 @@ const FrontPage: FunctionComponent = () => {
 
       <CommentSection onSubmit={addComment} />
       <p>(C) Copyright. All rights reserved.</p>
-    </div >
+    </div>
   );
 };
 

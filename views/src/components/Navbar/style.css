@@ -1,5 +1,20 @@
 .header {
+  display: flex;
+  justify-content: space-between;
+  padding: -2rem 2rem;
   top: -100%;
   left: 100%;
-  background-color: pink;
+  background-color: rgb(50, 50, 50);
+}
+
+.navigation-flex {
+  display: flex;
+  gap: .5rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+li {
+  list-style: none;
 }

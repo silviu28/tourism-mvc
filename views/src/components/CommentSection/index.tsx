@@ -3,6 +3,7 @@ import UserContext from "../../UserContext";
 import { type CommentData, type UserData } from "../../types";
 import axios from "axios";
 import Comment from "../Comment";
+import "./style.css";
 
 interface CommentSectionProps {
   onSubmit: ({ id, username, comment }: { id: number, username: string, comment: string }) => Promise<void>;
@@ -27,7 +28,7 @@ const CommentSection: FunctionComponent<CommentSectionProps> = ({ onSubmit }) =>
   }, []);
 
   return (
-    <div>
+    <div style={{ margin: "1vw" }}>
       <p>Comments</p>
       <input type="text" onChange={e => setComment(e.target.value)} />
       <button onClick={() => onSubmit({ id, username, comment })}>
