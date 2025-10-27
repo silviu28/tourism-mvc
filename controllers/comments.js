@@ -7,6 +7,7 @@ router.get('/comments', async (_req, res) => {
   const comments = await sequelize.query(`
     SELECT c.id, c.comment, u.username FROM comments c
     JOIN users u ON c.user_id = u.id
+    ORDER BY c.date DESC
     `, {
     type: QueryTypes.SELECT,
   });
