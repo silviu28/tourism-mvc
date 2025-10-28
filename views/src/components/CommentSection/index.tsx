@@ -32,7 +32,11 @@ const CommentSection: FunctionComponent<CommentSectionProps> = ({ onSubmit }) =>
   return (
     <div style={{ margin: "1vw" }}>
       <p>Comments</p>
-      <input type="text" onChange={e => setComment(e.target.value)} />
+      <input
+        type="text"
+        onChange={e => setComment(e.target.value)}
+        style={{ width: '87%' }}
+      />
       <button onClick={() => onSubmit({ id, username, comment })}>
         Send
       </button>
@@ -44,7 +48,6 @@ const CommentSection: FunctionComponent<CommentSectionProps> = ({ onSubmit }) =>
             comment={comment.comment}
           />)}
       </div>
-      <script src="comment.js"></script>
     </div>
   );
 };

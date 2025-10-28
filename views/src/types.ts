@@ -11,3 +11,13 @@ export interface CommentData {
   },
   comment: string,
 };
+
+export interface Price {
+  location: string;
+  country: string;
+  status: string;
+  insurance: string;
+  travelHost: string;
+  priceLower?: number;
+  priceUpper?: number;
+};

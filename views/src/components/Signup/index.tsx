@@ -28,7 +28,6 @@ const Signup: FunctionComponent<SignupProps> = ({ onSubmit }) => {
 
   const submit = (e: SyntheticEvent) => {
     e.preventDefault();
-    // ...
     onSubmit({
       name,
       dob,
@@ -42,12 +41,13 @@ const Signup: FunctionComponent<SignupProps> = ({ onSubmit }) => {
 
   return (
     <div>
-      <img src={"public/images/bg3.jpg"} style={{ position: "absolute" }} />
+      <img src={"https://hips.hearstapps.com/hmg-prod/images/alpe-di-siusi-sunrise-with-sassolungo-or-langkofel-royalty-free-image-1623254127.jpg"} style={{ height: "94vh", width: "100vw" }} />
       <div style={{
+        position: 'absolute',
         borderRadius: "10px", background: "rgba(0, 0, 0, .5)",
-        display: "grid", padding: "7vw", margin: "10vw", left: "25%", top: "25%"
+        display: "grid", padding: "7vw", margin: "10vw", left: "25%", top: "-12%", zIndex: 998
       }}>
-        <form onSubmit={submit} style={{ display: 'flex', flexDirection: 'column' }}>
+        <form onSubmit={submit} style={{ display: 'flex', flexDirection: 'column', zIndex: 999 }}>
           <h1 style={{ textAlign: "center" }}>Sign up</h1>
           <label>Full Name: </label>
           <input type="text" onChange={e => setName(e.target.value)} />

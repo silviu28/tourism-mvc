@@ -5,7 +5,7 @@ import { Price } from "./models/Price";
 import { Feedback } from "./models/Feedback";
 require('dotenv').config({ quiet: true });
 
-export default new Sequelize({
+const con: Sequelize = new Sequelize({
   dialect: "mysql",
   database: process.env.DB_NAME,
   username: process.env.DB_USER,
@@ -14,4 +14,6 @@ export default new Sequelize({
   models: [User, Comment, Price, Feedback],
 });
 
-// a.sync({ alter: true });
+con.sync({ alter: true });
+
+export default con;
