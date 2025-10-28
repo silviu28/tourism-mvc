@@ -8,8 +8,8 @@ router.get('/feedback', async (_req, res) => {
 });
 
 router.post('/feedback', async (req, res) => {
-  const { id, feedback } = req.body;
   try {
+    const { id, feedback } = req.body;
     const query = await Feedback.create({
       user_id: id,
       feedback
@@ -18,6 +18,20 @@ router.post('/feedback', async (req, res) => {
     res.status(200).json(query);
   } catch (error) {
     res.status(400).json(error);
+  }
+});
+
+router.delete("/feedback", async (req, res) => {
+  try {
+    const { id } = req.body;
+    const feedback = await Feedback.findByPk(id);
+    if (!feedback) {
+      res.status(404).json({ error: "Not found" });
+      return;
+    }
+    res.status(200).send();
+  } catch (error) {
+    res.status(400).json({ error });
   }
 });
 

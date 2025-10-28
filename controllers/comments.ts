@@ -32,4 +32,19 @@ router.post('/comments', async (req, res) => {
   }
 });
 
+router.delete("/comments", async (req, res) => {
+  try {
+    const { id } = req.body;
+    const comment = await Comment.findByPk(id);
+    if (!comment) {
+      res.status(404).json({ error: "Not found" });
+      return;
+    }
+    await comment.destroy();
+    res.status(200).send();
+  } catch (error) {
+    res.status(400).json({ error });
+  }
+});
+
 module.exports = router;
