@@ -1,4 +1,6 @@
 import { useState, type FunctionComponent, type SyntheticEvent } from "react";
+import "./style.css";
+import content from "../../content.json";
 
 interface LoginProps {
   onSubmit: ({ username, password }: { username: string, password: string }) => void;
@@ -10,7 +12,6 @@ const Login: FunctionComponent<LoginProps> = ({ onSubmit }) => {
 
   const submit = (e: SyntheticEvent) => {
     e.preventDefault();
-    // ...
     onSubmit({
       username,
       password,
@@ -19,13 +20,9 @@ const Login: FunctionComponent<LoginProps> = ({ onSubmit }) => {
 
   return (
     <div>
-      <img src={"https://hips.hearstapps.com/hmg-prod/images/alpe-di-siusi-sunrise-with-sassolungo-or-langkofel-royalty-free-image-1623254127.jpg"} style={{ height: "94vh", width: "100vw" }} />
-      <div style={{
-        position: 'absolute',
-        borderRadius: "10px", background: "rgba(0, 0, 0, .5)",
-        display: "grid", padding: "7vw", margin: "10vw", left: "25%", top: "-12%", zIndex: 998
-      }}>
-        <form onSubmit={submit} style={{ display: 'flex', flexDirection: 'column' }}>
+      <img src={content.thumbnail2} className="background" />
+      <div className="float-container">
+        <form onSubmit={submit} className="flex-col">
           <h1 style={{ textAlign: "center" }}>Sign up</h1>
 
           <label>Username:</label>

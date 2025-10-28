@@ -39,7 +39,7 @@ const App: FunctionComponent = () => {
           <Route path="/" element={<FrontPage />} />
           <Route path="/signup" element={<Signup onSubmit={createAccount} />} />
           <Route path="/trips" element={<TripsPage />} />
-          <Route path="/prices" element={<PriceTable />} />
+          <Route path="/prices" element={<PriceTable prices={[]} />} />
           <Route path="/contact" element={<Contact onSubmit={() => { }} />} />
           <Route path="/login" element={<Login onSubmit={login} />} />
         </Routes>

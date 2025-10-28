@@ -1,0 +1,26 @@
+.background {
+  height: 94vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.float-container {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.5);
+  display: grid;
+  padding: 7vw;
+  z-index: 998;
+}
+
+.flex-col {
+  display: flex;
+  flex-direction: column;
+  z-index: 999;
+}

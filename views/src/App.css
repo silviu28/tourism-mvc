@@ -41,10 +41,6 @@ h3 {
   font-size: 18px;
 }
 
-.middle {
-  text-align: right;
-}
-
 a {
   text-decoration: none;
 }
@@ -242,4 +238,16 @@ input {
   border-radius: 10px;
   border-color: white;
   min-height: 2vh;
+  border-color: black;
+}
+
+.container {
+  background-color: rgba(100, 100, 100, .5);
+  padding: 2%;
+  margin: 2%;
+  border-radius: 1vw;
+}
+
+.slight-margin {
+  margin: 2%;
 }

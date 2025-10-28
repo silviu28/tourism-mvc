@@ -6,10 +6,18 @@ import { type UserData } from "../../types";
 
 const Navbar: FunctionComponent = () => {
   const user = useContext<UserData>(UserContext);
+
+  const promptLogout = () => {
+    if (window.confirm("Logout?")) {
+      localStorage.removeItem('user');
+      location.reload();
+    }
+  };
+
   return (
     <div className="header">
       <li>
-        <img src={"/vite.svg"}
+        <img src="/vite.svg"
           style={{ "width": "2vw", "height": "2vw" }} />
       </li>
 
@@ -21,7 +29,11 @@ const Navbar: FunctionComponent = () => {
         <li><Link to="/contact">Contact Us</Link></li>
         <li><Link to="/gallery">Gallery</Link></li>
       </ul>
-      {user.username ? <li><a>Welcome, {user.username}!</a></li> : ""}
+      {user.username &&
+        <li>
+          <a onClick={promptLogout}>Welcome, {user.username}!</a>
+        </li>
+      }
     </div>
   );
 };

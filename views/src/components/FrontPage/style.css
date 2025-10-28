@@ -1,0 +1,6 @@
+.scroll-btn {
+  position: fixed;
+  left: 100%;
+  top: 100%;
+  transform: translate(-10vw, -10vh);
+}

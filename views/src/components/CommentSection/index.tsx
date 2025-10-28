@@ -10,10 +10,8 @@ interface CommentSectionProps {
 };
 
 const CommentSection: FunctionComponent<CommentSectionProps> = ({ onSubmit }) => {
-  const { id, username } = useContext<UserData>(UserContext);
-  if (!id || !username) {
-    return;
-  }
+  const user = useContext<UserData>(UserContext);
+  const { username, id } = user;
   const [comment, setComment] = useState<string>("");
   const [comments, setComments] = useState<CommentData[]>([]);
 
@@ -30,14 +28,18 @@ const CommentSection: FunctionComponent<CommentSectionProps> = ({ onSubmit }) =>
   if (comments) console.log(comments);
 
   return (
-    <div style={{ margin: "1vw" }}>
+    <div className="slight-margin">
       <p>Comments</p>
       <input
         type="text"
         onChange={e => setComment(e.target.value)}
         style={{ width: '87%' }}
+        placeholder={!user.id ? "Sign in to comment" : ""}
+        disabled={!user.id}
       />
-      <button onClick={() => onSubmit({ id, username, comment })}>
+      <button
+        onClick={() => onSubmit({ id: id!, username: username!, comment })}
+        disabled={!user.id}>
         Send
       </button>
       <div>
