@@ -1,17 +1,30 @@
 import express from "express";
 import { Comment } from "./models/Comment";
+import { User } from "./models/User";
 const router = express.Router();
 
 router.get('/comments', async (_req, res) => {
-  const comments = await Comment.findAll();
-  // ???????? join
+  const comments = await Comment.findAll({
+    attributes: ["id", "comment"],
+    include: [
+      {
+        model: User,
+        attributes: ["username"],
+      }
+    ],
+  });
   res.json(comments);
 });
 
 router.post('/comments', async (req, res) => {
   try {
     const { id, comment } = req.body;
-    const query = await Comment.create({ user_id: id, comment });
+    const query = await Comment.create({
+      userId: id,
+      comment,
+      date: new Date()
+    });
+    console.log(query);
 
     res.status(200).json(query);
   } catch (error) {

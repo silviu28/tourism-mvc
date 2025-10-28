@@ -2,6 +2,7 @@ import { Sequelize } from "sequelize-typescript";
 import { User } from "./models/User";
 import { Comment } from "./models/Comment";
 import { Price } from "./models/Price";
+import { Feedback } from "./models/Feedback";
 require('dotenv').config({ quiet: true });
 
 export default new Sequelize({
@@ -10,5 +11,7 @@ export default new Sequelize({
   username: process.env.DB_USER,
   password: process.env.PASSWORD || "",
   host: process.env.HOST,
-  models: [User, Comment, Price],
+  models: [User, Comment, Price, Feedback],
 });
+
+// a.sync({ alter: true });

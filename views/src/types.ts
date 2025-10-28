@@ -6,6 +6,8 @@ export interface UserData {
 
 export interface CommentData {
   id: number,
-  username: string,
+  user: {
+    username: string,
+  },
   comment: string,
 };

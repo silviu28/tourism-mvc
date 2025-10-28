@@ -27,6 +27,8 @@ const CommentSection: FunctionComponent<CommentSectionProps> = ({ onSubmit }) =>
     fetch();
   }, []);
 
+  if (comments) console.log(comments);
+
   return (
     <div style={{ margin: "1vw" }}>
       <p>Comments</p>
@@ -38,7 +40,7 @@ const CommentSection: FunctionComponent<CommentSectionProps> = ({ onSubmit }) =>
         {comments.map(comment =>
           <Comment
             key={comment.id}
-            username={comment.username}
+            username={comment.user.username}
             comment={comment.comment}
           />)}
       </div>
