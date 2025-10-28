@@ -5,12 +5,12 @@ import UserContext from "../../UserContext";
 import { type UserData } from "../../types";
 
 const Navbar: FunctionComponent = () => {
-  const user = useContext<UserData>(UserContext);
+  const [user, setUser]: any = useContext<UserData>(UserContext);
 
   const promptLogout = () => {
     if (window.confirm("Logout?")) {
       localStorage.removeItem('user');
-      location.reload();
+      setUser({});
     }
   };
 

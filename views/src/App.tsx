@@ -11,29 +11,60 @@ import axios from 'axios';
 import Login from './components/LoginPage';
 import type { UserData } from './types';
 import UserContext from './UserContext';
+import Alert from './components/Alert';
+
 
 
 const App: FunctionComponent = () => {
-  const createAccount = async data => {
-    console.log(data);
-    const res = await axios.post('http://localhost:4004/users', data);
+  const [user, setUser] = useState<UserData>(() => JSON.parse(localStorage.getItem('user') || "{}"));
+  const [alertTitle, setAlertTitle] = useState<string>("");
+  const [alertContent, setAlertContent] = useState<string>("");
+  const [isError, setIsError] = useState<boolean>(false);
+
+  const showAlert = (content: string, title: string, error: boolean) => {
+    setAlertContent(content);
+    if (title) setAlertTitle(title);
+    if (error) setIsError(error);
+
+    setTimeout(() => {
+      setAlertContent("");
+      setAlertTitle("");
+      setIsError(false);
+    }, 5000);
   };
-  const login = async data => {
-    const res = await axios.put('http://localhost:4004/users', data);
-    if (res.data.id && res.data.username && res.data.token) {
-      localStorage.setItem('user', JSON.stringify({
-        id: res.data.id,
-        username: res.data.username,
-        token: res.data.token,
-      }));
+
+  const createAccount = async data => {
+    try {
+      console.log(data);
+      const res: any = await axios.post('http://localhost:4004/users', data);
+      if (res.data.error) {
+        showAlert("nope", "account create failed", true);
+      }
+    } catch (error) {
+      showAlert("nope", "", true);
     }
   };
 
-  const [user, setUser] = useState<UserData>(() => JSON.parse(localStorage.getItem('user') || "{}"));
+  const login = async data => {
+    try {
+      const res: any = await axios.put('http://localhost:4004/users', data);
+      if (res.data.id && res.data.username && res.data.token) {
+        localStorage.setItem('user', JSON.stringify({ ...res.data }));
+        setUser({ ...res.data });
+      }
+    } catch (error) {
+      showAlert("nope", "", true);
+    }
+  };
 
   return (
-    <UserContext.Provider value={user}>
+    <UserContext.Provider value={[user, setUser]}>
       <Router>
+        <Alert
+          title={alertTitle}
+          content={alertContent}
+          error={isError}
+        />
         <Navbar />
         <Routes>
           <Route path="/" element={<FrontPage />} />
@@ -48,4 +79,4 @@ const App: FunctionComponent = () => {
   );
 };
 
-export default App
+export default App;
