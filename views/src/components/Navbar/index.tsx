@@ -28,6 +28,7 @@ const Navbar: FunctionComponent = () => {
         <li><Link to="/prices">Prices</Link></li>
         <li><Link to="/contact">Contact Us</Link></li>
         <li><Link to="/gallery">Gallery</Link></li>
+        <li><Link to="/admin">Admin</Link></li>
       </ul>
       {user.username &&
         <li>

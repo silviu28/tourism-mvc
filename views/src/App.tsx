@@ -12,6 +12,7 @@ import Login from './components/LoginPage';
 import type { UserData } from './types';
 import UserContext from './UserContext';
 import Alert from './components/Alert';
+import AdminPanel from './components/AdminPanel';
 
 
 
@@ -73,6 +74,7 @@ const App: FunctionComponent = () => {
           <Route path="/prices" element={<PriceTable prices={[]} />} />
           <Route path="/contact" element={<Contact onSubmit={() => { }} />} />
           <Route path="/login" element={<Login onSubmit={login} />} />
+          <Route path="/admin" element={<AdminPanel />} />
         </Routes>
       </Router>
     </UserContext.Provider>
