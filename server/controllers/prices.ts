@@ -1,14 +1,14 @@
 import express from 'express';
-import { Price } from './models/Price';
+import { Price } from '../models/Price';
 const router = express.Router();
-const sequelize = require('./sequelizeConfig');
-const { QueryTypes } = require('sequelize');
 
 router.get('/prices', async (_req, res) => {
-  const query = await sequelize.query('SELECT * FROM PRICES', {
-    type: QueryTypes.SELECT,
-  });
-  res.json(query);
+  try {
+    const query = await Price.findAll();
+    res.json(query);
+  } catch (error) {
+    res.status(400).json({ error });
+  }
 });
 
 router.delete("/prices", async (req, res) => {

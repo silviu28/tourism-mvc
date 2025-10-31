@@ -1,5 +1,5 @@
 import express from "express";
-import { Image } from "./models/Image";
+import { Image } from "../models/Image";
 
 const router = express.Router();
 

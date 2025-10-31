@@ -1,6 +1,6 @@
 import express from "express";
-import { Comment } from "./models/Comment";
-import { User } from "./models/User";
+import { Comment } from "../models/Comment";
+import { User } from "../models/User";
 const router = express.Router();
 
 router.get('/comments', async (_req, res) => {

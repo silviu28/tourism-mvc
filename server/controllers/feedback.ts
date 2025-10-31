@@ -1,5 +1,5 @@
 import express from 'express';
-import { Feedback } from './models/Feedback';
+import { Feedback } from '../models/Feedback';
 const router = express.Router();
 
 router.get('/feedback', async (_req, res) => {
