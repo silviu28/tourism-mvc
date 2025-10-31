@@ -12,9 +12,9 @@ router.get("/images", async (_req, res) => {
   }
 });
 
-router.delete("/images", async (req, res) => {
+router.delete("/images/:id", async (req, res) => {
   try {
-    const { id } = req.body;
+    const id = req.params.id
     const image = await Image.findByPk(id);
     if (!image) {
       res.status(404).json({ error: "Not found" });
@@ -26,4 +26,4 @@ router.delete("/images", async (req, res) => {
   }
 });
 
-export default router;
+module.exports = router;

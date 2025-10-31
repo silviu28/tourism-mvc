@@ -8,6 +8,8 @@ const commentRouter = require('./controllers/comments');
 const feedbackRouter = require('./controllers/feedback');
 const priceRouter = require('./controllers/prices');
 const userRouter = require('./controllers/users');
+const imageRouter = require("./controllers/images");
+const adminRouter = require("./controllers/admins");
 
 const PORT = 4004;
 
@@ -23,6 +25,8 @@ app.use(
   feedbackRouter,
   priceRouter,
   userRouter,
+  imageRouter,
+  adminRouter,
 );
 
 (async function () {

@@ -13,11 +13,25 @@ export interface CommentData {
 };
 
 export interface Price {
-  location: string;
+  id?: number;
   country: string;
+  host: string;
+  isAvailable: boolean;
   status: string;
   insurance: string;
   travelHost: string;
   priceLower?: number;
   priceUpper?: number;
 };
+
+export interface Feedback {
+  id?: number;
+  feedback: string;
+};
+
+export interface Image {
+  id?: number;
+  src: string;
+};
+
+export type AdminPanelItem = Price | Feedback | Image;

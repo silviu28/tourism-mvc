@@ -21,9 +21,9 @@ router.post('/feedback', async (req, res) => {
   }
 });
 
-router.delete("/feedback", async (req, res) => {
+router.delete("/feedback/:id", async (req, res) => {
   try {
-    const { id } = req.body;
+    const id = req.params.id;
     const feedback = await Feedback.findByPk(id);
     if (!feedback) {
       res.status(404).json({ error: "Not found" });

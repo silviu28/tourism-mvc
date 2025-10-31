@@ -11,9 +11,9 @@ router.get('/prices', async (_req, res) => {
   }
 });
 
-router.delete("/prices", async (req, res) => {
+router.delete("/prices/:id", async (req, res) => {
   try {
-    const { id } = req.body;
+    const id = req.params.id;
     const price = await Price.findByPk(id);
     if (!price) {
       res.status(404).json({ error: "Not found" });
@@ -26,7 +26,7 @@ router.delete("/prices", async (req, res) => {
   }
 });
 
-router.put("/prices", async (req, res) => {
+router.put("/prices/:id", async (req, res) => {
   try {
     const price = req.body;
     let oldPrice = await Price.findByPk(price.id);
