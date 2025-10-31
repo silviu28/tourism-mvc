@@ -15,7 +15,6 @@ export interface CommentData {
 export interface Price {
   id?: number;
   country: string;
-  host: string;
   isAvailable: boolean;
   status: string;
   insurance: string;

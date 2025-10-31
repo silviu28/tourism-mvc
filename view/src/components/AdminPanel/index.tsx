@@ -1,22 +1,25 @@
-import { useEffect, useState, type FC } from "react";
+import { useContext, useEffect, useState, type FC } from "react";
 import { type AdminPanelItem, type Feedback, type Image, type Price } from "../../types";
 import axios from "axios";
+import UserContext from "../../UserContext";
+import Modal from "../Modal";
+import AdminForm from "../AdminForm";
 
-const remove = async (selectedItem: AdminPanelItem, path: string) => {
-  if (window.confirm("Are you sure you want to delete this?")) {
-    try {
-      await axios.delete(`http://localhost:4004/${path}/${selectedItem.id}`);
-    } catch (error) {
-      console.error(error);
-    }
-  }
+const selectedStyle = {
+  background: 'blue'
 };
 
+
+
 const AdminPanel: FC = () => {
+  const [, , showAlert] = useContext(UserContext);
+
   const [prices, setPrices] = useState<Price[]>([]);
   const [gallery, setGallery] = useState<Image[]>([]);
   const [feedback, setFeedback] = useState<Feedback[]>([]);
-  const [selectedItem, setSelectedItem] = useState<AdminPanelItem>(null);
+  const [selectedItem, setSelectedItem] = useState<AdminPanelItem | null>(null);
+  const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+  const [formType, setFormType] = useState<"image" | "price">("image");
 
   useEffect(() => {
     (async () => {
@@ -38,36 +41,82 @@ const AdminPanel: FC = () => {
 
   console.log(`Selecting`, selectedItem);
 
+  const remove = async (selectedItem: AdminPanelItem, path: string) => {
+    if (window.confirm("Are you sure you want to delete this?")) {
+      try {
+        await axios.delete(`http://localhost:4004/${path}/${selectedItem.id}`);
+        showAlert("Item deleted", false);
+      } catch (error) {
+        showAlert("Unable to delete this item", true);
+        console.error(error);
+      }
+    }
+  };
+
+  const submitImage = async (src: string) => {
+    try {
+      await axios.post("http://localhost:4004/images", src);
+      showAlert("Image uploaded", false);
+    } catch (error) {
+      showAlert("Unable to upload image", true);
+    }
+  };
+
+  const submitPrice = async (price: Price) => {
+    try {
+      await axios.post("http://localhost:4004/prices", price);
+      showAlert("Price uploaded", false);
+    } catch (error) {
+      showAlert("Unable to add pricing", true);
+    }
+  }
+
   return (
     <div>
+      <Modal isVisible={isModalVisible}>
+        <AdminForm
+          which={formType}
+          onSubmitImage={submitImage}
+          onSubmitPrice={submitPrice}
+        />
+      </Modal>
       <h1>Edit price page</h1>
       <div className="container">
         <ul>
           {prices.map(price =>
-            <li onClick={() => setSelectedItem(price)}>
-              {price.country},{price.host},{price.status ? "available" : "unavailable"},{price.insurance ?? "-"},{price.travelHost},{price.priceLower || ""},{price.priceUpper || ""}
+            <li
+              key={price.id}
+              style={price === selectedItem ? selectedStyle : {}}
+              onClick={() => setSelectedItem(price)}>
+              {price.country},{price.travelHost},{price.status ? "available" : "unavailable"},{price.insurance ?? "-"},{price.travelHost},{price.priceLower || ""},{price.priceUpper || ""}
             </li>
           )}
         </ul>
         <button>+</button>
-        <button onClick={() => remove(selectedItem, "prices")}>Delete</button>
+        <button onClick={() => remove(selectedItem!, "prices")}>Delete</button>
       </div>
       <h1>Edit images shown in gallery</h1>
       <div className="container">
         <ul>
           {gallery.map(img =>
-            <li onClick={() => setSelectedItem(img)}>{img.src}</li>)}
+            <li
+              key={img.id}
+              style={img === selectedItem ? selectedStyle : {}}
+              onClick={() => setSelectedItem(img)}>{img.src}</li>)}
         </ul>
         <button>+</button>
-        <button onClick={() => remove(selectedItem, "images")}>Delete</button>
+        <button onClick={() => remove(selectedItem!, "images")}>Delete</button>
       </div>
       <h1>View feedbacks sent by users</h1>
       <div className="container">
         <ul>
           {feedback.map(fb =>
-            <li onClick={() => setSelectedItem(fb)}>{fb.feedback}</li>)}
+            <li
+              key={fb.id}
+              style={fb === selectedItem ? selectedStyle : {}}
+              onClick={() => setSelectedItem(fb)}>{fb.feedback}</li>)}
         </ul>
-        <button onClick={() => remove(selectedItem, "feedback")}>Delete</button>
+        <button onClick={() => remove(selectedItem!, "feedback")}>Delete</button>
       </div>
     </div>
   );
