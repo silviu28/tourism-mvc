@@ -1,6 +1,9 @@
-import { AutoIncrement, Column, DataType, ForeignKey, HasOne, Model, PrimaryKey } from "sequelize-typescript";
+import { AutoIncrement, BelongsTo, Column, DataType, ForeignKey, Model, PrimaryKey, Table } from "sequelize-typescript";
 import { User } from "./User";
 
+@Table({
+  tableName: "admins"
+})
 export class Admin extends Model {
   @PrimaryKey
   @AutoIncrement
@@ -22,6 +25,6 @@ export class Admin extends Model {
   })
   declare userId: number;
 
-  @HasOne(() => User)
+  @BelongsTo(() => User)
   declare user: User;
 }

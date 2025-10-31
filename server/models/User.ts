@@ -1,5 +1,6 @@
-import { AutoIncrement, Column, DataType, HasMany, Model, PrimaryKey, Table, Unique } from "sequelize-typescript";
+import { AutoIncrement, Column, DataType, HasMany, HasOne, Model, PrimaryKey, Table, Unique } from "sequelize-typescript";
 import { Comment } from "./Comment";
+import { Admin } from "./Admin";
 
 @Table({
   tableName: "users",
@@ -46,4 +47,7 @@ export class User extends Model {
 
   @HasMany(() => Comment)
   declare comments: Comment[];
+
+  @HasOne(() => Admin)
+  declare admin?: Admin;
 }

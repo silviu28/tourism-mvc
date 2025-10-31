@@ -25,11 +25,10 @@ app.use(
   userRouter,
 );
 
-const initDb = async function () {
+(async function () {
   await sequelize.authenticate();
   console.log("Database connected");
-};
-initDb();
+})();
 
 app.listen(PORT, () => {
   console.log(`Server running @ http://localhost:${PORT}`);
