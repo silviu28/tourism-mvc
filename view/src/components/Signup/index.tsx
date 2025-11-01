@@ -29,6 +29,14 @@ const Signup: FunctionComponent<SignupProps> = ({ onSubmit }) => {
   const navigate = useNavigate();
 
   const submit = (e: SyntheticEvent) => {
+    setName("");
+    setDob("");
+    setUsername("");
+    setEmail("");
+    setPassword("");
+    setConfirm("");
+    setNotify(false);
+
     e.preventDefault();
     onSubmit({
       name,

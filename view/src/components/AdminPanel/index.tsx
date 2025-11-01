@@ -1,40 +1,64 @@
-import { useContext, useEffect, useState, type FC } from "react";
+import { useContext, useState, type FC } from "react";
 import { type AdminPanelItem, type Feedback, type Image, type Price } from "../../types";
 import axios from "axios";
 import UserContext from "../../UserContext";
 import Modal from "../Modal";
 import AdminForm from "../AdminForm";
+import { useQuery } from "@tanstack/react-query";
 
 const selectedStyle = {
   background: 'blue'
 };
 
-
-
 const AdminPanel: FC = () => {
+
   const [, , showAlert] = useContext(UserContext);
 
-  const [prices, setPrices] = useState<Price[]>([]);
-  const [gallery, setGallery] = useState<Image[]>([]);
-  const [feedback, setFeedback] = useState<Feedback[]>([]);
   const [selectedItem, setSelectedItem] = useState<AdminPanelItem | null>(null);
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
   const [formType, setFormType] = useState<"image" | "price">("image");
 
-  useEffect(() => {
-    (async () => {
-      try {
-        const pricesRes = await axios.get("http://localhost:4004/prices");
-        setPrices(pricesRes.data);
-        const galleryRes = await axios.get("http://localhost:4004/images");
-        setGallery(galleryRes.data);
-        const feedbackRes = await axios.get("http://localhost:4004/feedback");
-        setFeedback(feedbackRes.data);
-      } catch (error) {
-        console.error(error);
+  const openForm = (type: "image" | "price") => {
+    setFormType(type);
+    setIsModalVisible(true);
+  };
+
+  const { data: prices = [], isLoading: pricesLoading }
+    = useQuery<Price[]>({
+      queryKey: ["prices"],
+      queryFn: async () => {
+        try {
+          const pricesRes = await axios.get("http://localhost:4004/prices");
+          return pricesRes.data;
+        } catch (error) {
+          showAlert("Unable to load prices", true);
+        }
       }
-    })();
-  }, []);
+    });
+  const { data: gallery = [], isLoading: galleryLoading }
+    = useQuery<Image[]>({
+      queryKey: ["images"],
+      queryFn: async () => {
+        try {
+          const imagesRes = await axios.get("http://localhost:4004/images");
+          return imagesRes.data;
+        } catch (error) {
+          showAlert("Unable to load images", true);
+        }
+      }
+    });
+  const { data: feedback = [], isLoading: feedbackLoading }
+    = useQuery<Feedback[]>({
+      queryKey: ["feedback"],
+      queryFn: async () => {
+        try {
+          const feedbackRes = await axios.get("http://localhost:4004/feedback");
+          return feedbackRes.data;
+        } catch (error) {
+          showAlert("Unable to load feedback", true);
+        }
+      }
+    });
 
   if (false)
     return <p>Access is forbidden</p>;
@@ -42,6 +66,7 @@ const AdminPanel: FC = () => {
   console.log(`Selecting`, selectedItem);
 
   const remove = async (selectedItem: AdminPanelItem, path: string) => {
+    if (!selectedItem) return;
     if (window.confirm("Are you sure you want to delete this?")) {
       try {
         await axios.delete(`http://localhost:4004/${path}/${selectedItem.id}`);
@@ -73,7 +98,9 @@ const AdminPanel: FC = () => {
 
   return (
     <div>
-      <Modal isVisible={isModalVisible}>
+      <Modal
+        isVisible={isModalVisible}
+        visibilitySetter={setIsModalVisible}>
         <AdminForm
           which={formType}
           onSubmitImage={submitImage}
@@ -82,7 +109,7 @@ const AdminPanel: FC = () => {
       </Modal>
       <h1>Edit price page</h1>
       <div className="container">
-        <ul>
+        {!pricesLoading && <ul>
           {prices.map(price =>
             <li
               key={price.id}
@@ -91,31 +118,31 @@ const AdminPanel: FC = () => {
               {price.country},{price.travelHost},{price.status ? "available" : "unavailable"},{price.insurance ?? "-"},{price.travelHost},{price.priceLower || ""},{price.priceUpper || ""}
             </li>
           )}
-        </ul>
-        <button>+</button>
+        </ul>}
+        <button onClick={() => openForm("price")}>+</button>
         <button onClick={() => remove(selectedItem!, "prices")}>Delete</button>
       </div>
       <h1>Edit images shown in gallery</h1>
       <div className="container">
-        <ul>
+        {!galleryLoading && <ul>
           {gallery.map(img =>
             <li
               key={img.id}
               style={img === selectedItem ? selectedStyle : {}}
               onClick={() => setSelectedItem(img)}>{img.src}</li>)}
-        </ul>
-        <button>+</button>
+        </ul>}
+        <button onClick={() => openForm("image")}>+</button>
         <button onClick={() => remove(selectedItem!, "images")}>Delete</button>
       </div>
       <h1>View feedbacks sent by users</h1>
       <div className="container">
-        <ul>
+        {!feedbackLoading && <ul>
           {feedback.map(fb =>
             <li
               key={fb.id}
               style={fb === selectedItem ? selectedStyle : {}}
               onClick={() => setSelectedItem(fb)}>{fb.feedback}</li>)}
-        </ul>
+        </ul>}
         <button onClick={() => remove(selectedItem!, "feedback")}>Delete</button>
       </div>
     </div>

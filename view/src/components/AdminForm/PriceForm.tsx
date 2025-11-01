@@ -20,7 +20,7 @@ const PriceForm: FC<PriceFormProps> = ({ onSubmit }) => {
   }
 
   return (
-    <form onSubmit={submit}>
+    <form onSubmit={submit} className="flex-col">
       <label>Country</label>
       <input
         type="text"
@@ -77,6 +77,7 @@ const PriceForm: FC<PriceFormProps> = ({ onSubmit }) => {
           priceUpper: parseFloat(e.target.value)
         })}
       />
+      <button type="submit">Add Pricing</button>
     </form>
   );
 };

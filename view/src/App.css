@@ -247,3 +247,9 @@ input {
 .slight-margin {
   margin: 2%;
 }
+
+.flex-col {
+  display: flex;
+  flex-direction: column;
+  z-index: 999;
+}

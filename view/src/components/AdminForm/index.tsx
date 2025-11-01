@@ -12,7 +12,7 @@ interface AdminFormProps {
 const AdminForm: FC<AdminFormProps> = ({ which, onSubmitImage, onSubmitPrice }) => {
   if (which === "image") {
     return <ImageForm onSubmit={onSubmitImage} />
-  } else {
+  } else if (which === "price") {
     return <PriceForm onSubmit={onSubmitPrice} />
   }
 };

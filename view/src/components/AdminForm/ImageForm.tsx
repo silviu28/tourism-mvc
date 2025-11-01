@@ -12,12 +12,13 @@ const ImageForm: FC<ImageFormProps> = ({ onSubmit }) => {
 
   const [src, setSrc] = useState<string>("");
   return (
-    <form onSubmit={submit}>
+    <form onSubmit={submit} className="flex-col">
       <label>Image source:</label>
       <input
         type="text"
         onChange={e => setSrc(e.target.value)}
       />
+      <button type="submit">Add Image</button>
     </form>
   );
 };

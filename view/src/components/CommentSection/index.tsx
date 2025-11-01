@@ -1,31 +1,53 @@
-import { useContext, useEffect, useState, type FunctionComponent } from "react";
+import { useContext, useState, type FunctionComponent } from "react";
 import UserContext from "../../UserContext";
-import { type CommentData, type UserData } from "../../types";
+import { type CommentData } from "../../types";
 import axios from "axios";
 import Comment from "../Comment";
 import "./style.css";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 interface CommentSectionProps {
   onSubmit: ({ id, username, comment }: { id: number, username: string, comment: string }) => Promise<void>;
 };
 
 const CommentSection: FunctionComponent<CommentSectionProps> = ({ onSubmit }) => {
-  const user = useContext<UserData>(UserContext);
+  const queryClient = useQueryClient();
+  const [user, , showAlert] = useContext(UserContext);
   const { username, id } = user;
   const [comment, setComment] = useState<string>("");
-  const [comments, setComments] = useState<CommentData[]>([]);
 
-  useEffect(() => {
-    async function fetch() {
-      const res = await axios.get<CommentData[]>("http://localhost:4004/comments");
-      if (res.data) {
-        setComments(res.data);
+  const { data: comments = [], isLoading } = useQuery<CommentData[]>({
+    queryKey: ["comments"],
+    queryFn: async () => {
+      try {
+        const commentsRes = await axios.get("http://localhost:4004/comments");
+        return commentsRes.data;
+      } catch (error) {
+        showAlert("Cannot display comments", true);
       }
     }
-    fetch();
-  }, []);
+  });
+  const { mutate } = useMutation({
+    mutationFn: async (newComment: {
+      id: number,
+      username: string,
+      comment: string
+    }) => {
+      try {
+        setComment("");
+        await axios.post("http://localhost:4004/comments", newComment);
+        queryClient.invalidateQueries({
+          queryKey: ["comments"],
+        });
+      } catch (error) {
+        showAlert("Unable to add your comment", true);
+      }
+    }
+  });
 
-  if (comments) console.log(comments);
+  if (isLoading) {
+    return <p>Loading...</p>;
+  }
 
   return (
     <div className="slight-margin">
@@ -38,7 +60,7 @@ const CommentSection: FunctionComponent<CommentSectionProps> = ({ onSubmit }) =>
         disabled={!user.id}
       />
       <button
-        onClick={() => onSubmit({ id: id!, username: username!, comment })}
+        onClick={() => mutate({ id: id!, username: username!, comment })}
         disabled={!user.id}>
         Send
       </button>
