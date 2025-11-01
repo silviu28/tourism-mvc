@@ -13,8 +13,10 @@ import type { UserData } from './types';
 import UserContext from './UserContext';
 import Alert from './components/Alert';
 import AdminPanel from './components/AdminPanel';
+import Gallery from './components/Gallery';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
-
+const queryClient = new QueryClient();
 
 const App: FunctionComponent = () => {
   const [user, setUser] = useState<UserData>(() => JSON.parse(localStorage.getItem('user') || "{}"));
@@ -59,25 +61,28 @@ const App: FunctionComponent = () => {
   };
 
   return (
-    <UserContext.Provider value={[user, setUser, showAlert]}>
-      <Router>
-        <Alert
-          title={alertTitle}
-          content={alertContent}
-          error={isError}
-        />
-        <Navbar />
-        <Routes>
-          <Route path="/" element={<FrontPage />} />
-          <Route path="/signup" element={<Signup onSubmit={createAccount} />} />
-          <Route path="/trips" element={<TripsPage />} />
-          <Route path="/prices" element={<PriceTable prices={[]} />} />
-          <Route path="/contact" element={<Contact onSubmit={() => { }} />} />
-          <Route path="/login" element={<Login onSubmit={login} />} />
-          <Route path="/admin" element={<AdminPanel />} />
-        </Routes>
-      </Router>
-    </UserContext.Provider>
+    <QueryClientProvider client={queryClient}>
+      <UserContext.Provider value={[user, setUser, showAlert]}>
+        <Router>
+          <Alert
+            title={alertTitle}
+            content={alertContent}
+            error={isError}
+          />
+          <Navbar />
+          <Routes>
+            <Route path="/" element={<FrontPage />} />
+            <Route path="/signup" element={<Signup onSubmit={createAccount} />} />
+            <Route path="/trips" element={<TripsPage />} />
+            <Route path="/prices" element={<PriceTable prices={[]} />} />
+            <Route path="/contact" element={<Contact onSubmit={() => { }} />} />
+            <Route path="/login" element={<Login onSubmit={login} />} />
+            <Route path="/admin" element={<AdminPanel />} />
+            <Route path="/gallery" element={<Gallery />} />
+          </Routes>
+        </Router>
+      </UserContext.Provider>
+    </QueryClientProvider>
   );
 };
 
