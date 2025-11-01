@@ -26,7 +26,7 @@ export class Price extends Model {
     type: DataType.STRING,
     allowNull: false
   })
-  declare host: string;
+  declare travelHost: string;
 
   @Column({ type: DataType.FLOAT })
   declare priceLower?: number;

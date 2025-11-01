@@ -1,5 +1,6 @@
 import express from 'express';
 import { Price } from '../models/Price';
+import adminTokenAuthenticator from '../middleware/adminTokenAuthenticator';
 const router = express.Router();
 
 router.get('/prices', async (_req, res) => {
@@ -21,6 +22,16 @@ router.delete("/prices/:id", async (req, res) => {
     }
     await price.destroy();
     res.status(200).send();
+  } catch (error) {
+    res.status(400).json({ error });
+  }
+});
+
+router.post("/prices", adminTokenAuthenticator, async (req, res) => {
+  try {
+    const price = req.body;
+    await Price.create({ ...price });
+    res.status(200).send("Price added");
   } catch (error) {
     res.status(400).json({ error });
   }

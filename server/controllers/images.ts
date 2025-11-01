@@ -1,6 +1,7 @@
 import express from "express";
 import { Image } from "../models/Image";
 import tokenAuthenticator from "../middleware/userTokenAuthenticator";
+import adminTokenAuthenticator from "../middleware/adminTokenAuthenticator";
 
 const router = express.Router();
 
@@ -8,6 +9,16 @@ router.get("/images", async (_req, res) => {
   try {
     const images = await Image.findAll();
     res.status(200).json(images);
+  } catch (error) {
+    res.status(400).json({ error });
+  }
+});
+
+router.post("/images", adminTokenAuthenticator, async (req, res) => {
+  const image = req.body;
+  try {
+    await Image.create({ ...image });
+    res.status(200).send("Image added");
   } catch (error) {
     res.status(400).json({ error });
   }

@@ -48,16 +48,26 @@ const App: FunctionComponent = () => {
 
   const login = async data => {
     try {
-      const res: any = await axios.post('http://localhost:4004/login', data);
+      const res = await axios.post("http://localhost:4004/login", data);
       showAlert("Login succesful", "", false);
       setUser({
         id: res.data.id,
         username: res.data.username
       });
-      console.log(user);
       localStorage.setItem('user', JSON.stringify(user));
     } catch (error) {
       showAlert("Login failed", "", true);
+    }
+  };
+
+  const addFeedback = async (feedback: string) => {
+    try {
+      const res = await axios.post("http://localhost:4004/feedback", {
+        feedback
+      });
+      showAlert("Feedback added", "", false);
+    } catch (error) {
+      showAlert("Unable to add your feedback", "", true);
     }
   };
 
@@ -76,7 +86,7 @@ const App: FunctionComponent = () => {
             <Route path="/signup" element={<Signup onSubmit={createAccount} />} />
             <Route path="/trips" element={<TripsPage />} />
             <Route path="/prices" element={<PriceTable prices={[]} />} />
-            <Route path="/contact" element={<Contact onSubmit={() => { }} />} />
+            <Route path="/contact" element={<Contact onSubmit={addFeedback} />} />
             <Route path="/login" element={<Login onSubmit={login} />} />
             <Route path="/admin" element={<AdminPanel />} />
             <Route path="/gallery" element={<Gallery />} />

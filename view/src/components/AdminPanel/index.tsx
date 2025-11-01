@@ -80,7 +80,7 @@ const AdminPanel: FC = () => {
 
   const submitImage = async (src: string) => {
     try {
-      await axios.post("http://localhost:4004/images", src);
+      await axios.post("http://localhost:4004/images", { src });
       showAlert("Image uploaded", false);
     } catch (error) {
       showAlert("Unable to upload image", true);
