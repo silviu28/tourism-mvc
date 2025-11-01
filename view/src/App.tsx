@@ -1,4 +1,4 @@
-import { createContext, useState, type FunctionComponent } from 'react'
+import { useState, type FunctionComponent } from 'react'
 import './App.css';
 import { Route, BrowserRouter as Router, Routes } from 'react-router';
 import Navbar from './components/Navbar';
@@ -50,6 +50,10 @@ const App: FunctionComponent = () => {
     try {
       const res: any = await axios.post('http://localhost:4004/login', data);
       showAlert("Login succesful", "", false);
+      setUser({
+        id: res.data.id,
+        username: res.data.username
+      });
     } catch (error) {
       showAlert("Login failed", "", true);
     }

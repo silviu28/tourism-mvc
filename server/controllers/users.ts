@@ -71,13 +71,14 @@ router.post("/login", async (req, res) => {
         { expiresIn: 3600 * 24 * 31 }
       );
 
-      res.cookie("token", token, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "strict",
-        maxAge: 3600 * 24 * 31
-      });
-      res.status(200).json("Login succesful");
+      res
+        .cookie("token", token, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === "production",
+          sameSite: "strict",
+          maxAge: 3600 * 24 * 31
+        })
+        .json({ id: user.id, username });
     }
   } catch (error) {
     res.status(400).json({ error });
