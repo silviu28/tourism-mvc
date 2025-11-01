@@ -40,23 +40,18 @@ const App: FunctionComponent = () => {
     try {
       console.log(data);
       const res: any = await axios.post('http://localhost:4004/users', data);
-      if (res.data.error) {
-        showAlert("nope", "account create failed", true);
-      }
+      showAlert("Succesfully created account", "", false);
     } catch (error) {
-      showAlert("nope", "", true);
+      showAlert("", "", true);
     }
   };
 
   const login = async data => {
     try {
-      const res: any = await axios.put('http://localhost:4004/users', data);
-      if (res.data.id && res.data.username && res.data.token) {
-        localStorage.setItem('user', JSON.stringify({ ...res.data }));
-        setUser({ ...res.data });
-      }
+      const res: any = await axios.post('http://localhost:4004/login', data);
+      showAlert("Login succesful", "", false);
     } catch (error) {
-      showAlert("nope", "", true);
+      showAlert("Login failed", "", true);
     }
   };
 

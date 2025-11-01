@@ -3,6 +3,7 @@ const path = require('path');
 require('dotenv').config({ quiet: true });
 const cors = require('cors');
 import sequelize from "./sequelizeConfig";
+const cookieParser = require("cookie-parser");
 
 const commentRouter = require('./controllers/comments');
 const feedbackRouter = require('./controllers/feedback');
@@ -19,6 +20,7 @@ app.use(express.static(
 ));
 app.use(express.json());
 app.use(cors());
+app.use(cookieParser());
 
 app.use(
   commentRouter,

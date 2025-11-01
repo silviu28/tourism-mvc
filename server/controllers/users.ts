@@ -31,9 +31,8 @@ router.post('/users', async (req, res) => {
   }
 });
 
-router.put('/users', async (req, res) => {
+router.post("/login", async (req, res) => {
   const { username, password } = req.body;
-
   try {
     const user = await User.findOne({
       where: {
@@ -42,23 +41,38 @@ router.put('/users', async (req, res) => {
     });
 
     if (!user) {
-      res.status(404).send('invalid user');
+      res.status(404).send("User does not exist");
       return;
     }
+
     if (!await bcrypt.compare(password, user.passwordHash)) {
-      throw Error('invalid password');
+      throw Error("Invalid password");
     } else {
-      res.status(200).json({
-        id: user.id,
-        username: user.username,
-        token: jwt.sign({ username }, process.env.JWT_SECRET, {
-          expiresIn: 3600 * 24 * 31,
-        }),
+      const token = await jwt.sign(
+        { username },
+        process.env.JWT_SECRET,
+        { expiresIn: 3600 * 24 * 31 }
+      );
+      res.cookie("token", token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict",
+        maxAge: 3600 * 24 * 31
       });
+      res.status(200).json("Login succesful");
     }
   } catch (error) {
-    res.status(400).json(error);
+    res.status(400).json({ error });
   }
 });
+
+router.post("/logout", (_req, res) => {
+  res.clearCookie("token", {
+    httpOnly: true,
+    sameSite: "strict",
+    secure: process.env.NODE_ENV === "production"
+  });
+  res.send("Logged out");
+})
 
 module.exports = router;
