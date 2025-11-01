@@ -1,5 +1,7 @@
 import express from 'express';
 import { User } from '../models/User';
+import { Admin } from '../models/Admin';
+import { TokenParams } from '../types';
 const router = express.Router();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
@@ -45,14 +47,30 @@ router.post("/login", async (req, res) => {
       return;
     }
 
+    const admin = await Admin.findOne({
+      where: {
+        userId: user.id
+      }
+    });
+
     if (!await bcrypt.compare(password, user.passwordHash)) {
       throw Error("Invalid password");
     } else {
+      const tokenParams: TokenParams = {
+        id: user.id,
+        username,
+      };
+
+      if (admin) {
+        tokenParams.adminId = admin.id;
+      }
+
       const token = await jwt.sign(
-        { username },
+        tokenParams,
         process.env.JWT_SECRET,
         { expiresIn: 3600 * 24 * 31 }
       );
+
       res.cookie("token", token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",

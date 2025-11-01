@@ -1,6 +1,8 @@
 import express from "express";
 import { Comment } from "../models/Comment";
 import { User } from "../models/User";
+import userTokenAuthenticator from "../middleware/userTokenAuthenticator";
+import adminTokenAuthenticator from "../middleware/adminTokenAuthenticator";
 const router = express.Router();
 
 router.get('/comments', async (_req, res) => {
@@ -16,7 +18,7 @@ router.get('/comments', async (_req, res) => {
   res.json(comments);
 });
 
-router.post('/comments', async (req, res) => {
+router.post('/comments', userTokenAuthenticator, async (req, res) => {
   try {
     const { id, comment } = req.body;
     const query = await Comment.create({
@@ -32,7 +34,7 @@ router.post('/comments', async (req, res) => {
   }
 });
 
-router.delete("/comments", async (req, res) => {
+router.delete("/comments", adminTokenAuthenticator, async (req, res) => {
   try {
     const { id } = req.body;
     const comment = await Comment.findByPk(id);

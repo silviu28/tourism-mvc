@@ -1,13 +1,13 @@
 const jwt = require("jsonwebtoken");
 
 // use this to validate server operations that require authentication
-const tokenAuthenticator = (req, res, next) => {
+const userTokenAuthenticator = (req, res, next) => {
   const token = req.cookies.token;
   if (!token) {
     return res.status(401).json({ message: "Unauthorized operation" });
   }
   jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
-    if (err) {
+    if (err || !user.id || !user.username) {
       return res.status(403).json({ message: "Invalid token" });
     }
 
@@ -16,4 +16,4 @@ const tokenAuthenticator = (req, res, next) => {
   });
 };
 
-export default tokenAuthenticator;
+export default userTokenAuthenticator;

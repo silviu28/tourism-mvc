@@ -1,5 +1,6 @@
 import express from "express";
 import { Image } from "../models/Image";
+import tokenAuthenticator from "../middleware/userTokenAuthenticator";
 
 const router = express.Router();
 
@@ -12,7 +13,7 @@ router.get("/images", async (_req, res) => {
   }
 });
 
-router.delete("/images/:id", async (req, res) => {
+router.delete("/images/:id", tokenAuthenticator, async (req, res) => {
   try {
     const id = req.params.id
     const image = await Image.findByPk(id);

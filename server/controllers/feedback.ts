@@ -1,8 +1,9 @@
 import express from 'express';
 import { Feedback } from '../models/Feedback';
+import adminTokenAuthenticator from '../middleware/adminTokenAuthenticator';
 const router = express.Router();
 
-router.get('/feedback', async (_req, res) => {
+router.get('/feedback', adminTokenAuthenticator, async (_req, res) => {
   const feedback = await Feedback.findAll();
   res.json(feedback);
 });
@@ -21,7 +22,7 @@ router.post('/feedback', async (req, res) => {
   }
 });
 
-router.delete("/feedback/:id", async (req, res) => {
+router.delete("/feedback/:id", adminTokenAuthenticator, async (req, res) => {
   try {
     const id = req.params.id;
     const feedback = await Feedback.findByPk(id);
