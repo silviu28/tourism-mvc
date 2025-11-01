@@ -54,6 +54,8 @@ const App: FunctionComponent = () => {
         id: res.data.id,
         username: res.data.username
       });
+      console.log(user);
+      localStorage.setItem('user', JSON.stringify(user));
     } catch (error) {
       showAlert("Login failed", "", true);
     }

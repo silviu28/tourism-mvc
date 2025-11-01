@@ -11,14 +11,14 @@ const Login: FunctionComponent<LoginProps> = ({ onSubmit }) => {
   const [password, setPassword] = useState<string>('');
 
   const submit = (e: SyntheticEvent) => {
-    setUsername("");
-    setPassword("");
-
     e.preventDefault();
     onSubmit({
       username,
       password,
     });
+
+    setPassword("");
+    setUsername("");
   };
 
   return (

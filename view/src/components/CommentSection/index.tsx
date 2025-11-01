@@ -6,6 +6,9 @@ import Comment from "../Comment";
 import "./style.css";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
+axios.defaults.withCredentials = true;
+axios.defaults.baseURL = "http://localhost:4004";
+
 interface CommentSectionProps {
   onSubmit: ({ id, username, comment }: { id: number, username: string, comment: string }) => Promise<void>;
 };
@@ -35,7 +38,9 @@ const CommentSection: FunctionComponent<CommentSectionProps> = ({ onSubmit }) =>
     }) => {
       try {
         setComment("");
-        await axios.post("http://localhost:4004/comments", newComment);
+        await axios.post("http://localhost:4004/comments", newComment, {
+          withCredentials: true
+        });
         queryClient.invalidateQueries({
           queryKey: ["comments"],
         });
