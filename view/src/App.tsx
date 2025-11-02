@@ -55,7 +55,7 @@ const App: FunctionComponent = () => {
   const createAccount = async (data: any) => {
     try {
       console.log(data);
-      const res: any = await axios.post('http://localhost:4004/users', data);
+      await axios.post('http://localhost:4004/users', data);
       showAlert("Succesfully created account", "", false);
     } catch (error) {
       showAlert("", "", true);
@@ -78,7 +78,7 @@ const App: FunctionComponent = () => {
 
   const addFeedback = async (feedback: string) => {
     try {
-      const res = await axios.post("http://localhost:4004/feedback", {
+      await axios.post("http://localhost:4004/feedback", {
         feedback
       });
       showAlert("Feedback added", "", false);

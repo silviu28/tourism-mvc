@@ -3,6 +3,7 @@ import { Link } from "react-router";
 import './style.css';
 import UserContext from "../../UserContext";
 import { type UserData } from "../../types";
+import axios from "axios";
 
 interface NavbarProps {
   isAdmin: boolean;
@@ -11,10 +12,11 @@ interface NavbarProps {
 const Navbar: FC<NavbarProps> = ({ isAdmin }) => {
   const [user, setUser]: any = useContext<UserData>(UserContext);
 
-  const promptLogout = () => {
+  const promptLogout = async () => {
     if (window.confirm("Logout?")) {
       localStorage.removeItem('user');
       setUser({});
+      await axios.post("http://localhost:4004/logout");
     }
   };
 
@@ -28,6 +30,7 @@ const Navbar: FC<NavbarProps> = ({ isAdmin }) => {
       <ul className="navigation-flex">
         <li><Link to="/">Home</Link></li>
         <li><Link to="/signup">Sign Up</Link></li>
+        <li><Link to="/login">Login</Link></li>
         <li><Link to="/trips">Trips</Link></li>
         <li><Link to="/prices">Prices</Link></li>
         <li><Link to="/contact">Contact Us</Link></li>

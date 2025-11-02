@@ -30,8 +30,8 @@ router.delete("/prices/:id", async (req, res) => {
 router.post("/prices", adminTokenAuthenticator, async (req, res) => {
   try {
     const price = req.body;
-    await Price.create({ ...price });
-    res.status(200).send("Price added");
+    const query = await Price.create({ ...price });
+    res.status(200).json(query);
   } catch (error) {
     res.status(400).json({ error });
   }
@@ -40,13 +40,13 @@ router.post("/prices", adminTokenAuthenticator, async (req, res) => {
 router.put("/prices/:id", async (req, res) => {
   try {
     const price = req.body;
-    let oldPrice = await Price.findByPk(price.id);
-    if (!oldPrice) {
+    let updatedPrice = await Price.findByPk(price.id);
+    if (!updatedPrice) {
       res.status(404).json({ error: "Does not exist " });
       return;
     }
-    oldPrice = { ...price };
-    res.status(200).send();
+    updatedPrice = { ...price };
+    res.status(200).json(updatedPrice);
   } catch (error) {
     res.status(400).json({ error });
   }

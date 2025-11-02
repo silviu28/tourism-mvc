@@ -12,6 +12,7 @@ const Alert: FC<AlertProps> = ({ title, content, error }) => {
     width: "80%",
     textAlign: "center",
     left: "10%",
+    top: "5%",
     backgroundColor: error ? "red" : "green",
     zIndex: 1000,
   };

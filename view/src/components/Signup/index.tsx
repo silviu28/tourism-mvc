@@ -47,6 +47,7 @@ const Signup: FunctionComponent<SignupProps> = ({ onSubmit }) => {
       confirm,
       notify
     });
+    navigate("/login");
   };
 
   return (

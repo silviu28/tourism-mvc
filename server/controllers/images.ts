@@ -17,8 +17,8 @@ router.get("/images", async (_req, res) => {
 router.post("/images", adminTokenAuthenticator, async (req, res) => {
   const image = req.body;
   try {
-    await Image.create({ ...image });
-    res.status(200).send("Image added");
+    const query = await Image.create({ ...image });
+    res.status(200).json(query);
   } catch (error) {
     res.status(400).json({ error });
   }
@@ -33,6 +33,7 @@ router.delete("/images/:id", tokenAuthenticator, async (req, res) => {
       return;
     }
     await image.destroy();
+    res.status(200).send();
   } catch (error) {
     res.status(400).json({ error });
   }

@@ -2,7 +2,7 @@ import { AutoIncrement, BelongsTo, Column, DataType, ForeignKey, Model, PrimaryK
 import { User } from "./User";
 
 @Table({
-  tableName: "admins"
+  tableName: "admins",
 })
 export class Admin extends Model {
   @PrimaryKey

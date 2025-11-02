@@ -1,24 +1,29 @@
 import { useState, type FunctionComponent, type SyntheticEvent } from "react";
 import "./style.css";
 import content from "../../content.json";
+import { useNavigate } from "react-router";
 
 interface LoginProps {
   onSubmit: ({ username, password }: { username: string, password: string }) => void;
 };
 
 const Login: FunctionComponent<LoginProps> = ({ onSubmit }) => {
+  const navigate = useNavigate();
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
 
   const submit = (e: SyntheticEvent) => {
     e.preventDefault();
+
+    setPassword("");
+    setUsername("");
+
     onSubmit({
       username,
       password,
     });
 
-    setPassword("");
-    setUsername("");
+    navigate("/");
   };
 
   return (

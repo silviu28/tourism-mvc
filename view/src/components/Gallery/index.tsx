@@ -38,6 +38,14 @@ const Gallery: FC = () => {
     return (currentIndex + offset + images.length) % images.length
   }
 
+  if (!images.length) {
+    return (
+      <div>
+        <p>Seems there's no images uploaded..</p>
+      </div>
+    );
+  }
+
   return (
     <div className='carousel-container'>
       <button className='nav-button left' onClick={goToPrevious}>‹</button>

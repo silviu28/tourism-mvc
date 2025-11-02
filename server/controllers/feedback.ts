@@ -12,7 +12,7 @@ router.post('/feedback', async (req, res) => {
   try {
     const { id, feedback } = req.body;
     const query = await Feedback.create({
-      user_id: id,
+      userId: id,
       feedback
     });
 
