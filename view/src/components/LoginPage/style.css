@@ -7,15 +7,19 @@
 }
 
 .float-container {
-  position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
 
-  border-radius: 10px;
-  background: rgba(0, 0, 0, 0.5);
+  /* From https://css.glass */
+  background: rgba(50, 50, 50, 0.25);
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
   display: grid;
-  padding: 7vw;
+  padding: 4vw;
   z-index: 998;
 }
 
@@ -23,4 +27,20 @@
   display: flex;
   flex-direction: column;
   z-index: 999;
+}
+
+input {
+  width: 300px;
+  /* adjust width */
+  padding: 0.75rem 1rem;
+  /* comfortable padding */
+  border: 1px solid #ccc;
+  /* subtle border */
+  border-radius: 10px;
+  /* rounded corners */
+  font-size: 1rem;
+  outline: none;
+  transition: all 0.3s ease;
+  /* light background */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 }

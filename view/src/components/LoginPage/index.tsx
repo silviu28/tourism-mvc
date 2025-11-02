@@ -31,7 +31,7 @@ const Login: FunctionComponent<LoginProps> = ({ onSubmit }) => {
       <img src={content.thumbnail2} className="background" />
       <div className="float-container">
         <form onSubmit={submit} className="flex-col">
-          <h1 style={{ textAlign: "center" }}>Sign up</h1>
+          <h1 style={{ textAlign: "center" }}>Login</h1>
 
           <label>Username:</label>
           <input type="text" onChange={e => setUsername(e.target.value)} />

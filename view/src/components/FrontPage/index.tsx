@@ -4,14 +4,8 @@ import TypeText from "../TypeText";
 import ColumnSplit from "../ColumnSplit";
 import CommentSection from "../CommentSection";
 import Badge from "../Badge";
-import axios from "axios";
 import "./style.css";
 import content from "../../content.json";
-
-const addComment = async (data: { id: number, username: string, comment: string }) => {
-  const res = await axios.post('http://localhost:4004/comments', data);
-  console.log(res.data);
-};
 
 const toTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
 
@@ -63,7 +57,7 @@ const FrontPage: FunctionComponent = () => {
         </ColumnSplit>
       </div>
 
-      <CommentSection onSubmit={addComment} />
+      <CommentSection />
       <p>(C) Copyright. All rights reserved.</p>
     </div>
   );

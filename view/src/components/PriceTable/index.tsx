@@ -28,11 +28,11 @@ const PriceTable: FC<PriceTableProps> = () => {
   }
 
   return (
-    <>
+    <div className="slight-margin">
       <h1>Price Table</h1>
-      <table width="100%">
+      <table width="100%" className="pricetable">
         <tbody>
-          <tr className={"pricetable"}>
+          <tr className="table-head">
             <th>Country</th>
             <th>Available?</th>
             <th>Status</th>
@@ -52,10 +52,19 @@ const PriceTable: FC<PriceTableProps> = () => {
                   `${price.priceLower} - ${price.priceUpper}`}
               </td>
             </tr>)}
+          {!prices.length
+            && <tr>
+              <td>-</td>
+              <td>-</td>
+              <td>-</td>
+              <td>-</td>
+              <td>-</td>
+              <td>-</td>
+            </tr>}
         </tbody>
       </table>
       <br />
-    </>
+    </div>
   );
 };
 

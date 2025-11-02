@@ -1,4 +1,4 @@
-import { useContext, useState, type FunctionComponent } from "react";
+import { useContext, useState, type FC } from "react";
 import UserContext from "../../UserContext";
 import { type CommentData } from "../../types";
 import axios from "axios";
@@ -9,11 +9,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = "http://localhost:4004";
 
-interface CommentSectionProps {
-  onSubmit: ({ id, username, comment }: { id: number, username: string, comment: string }) => Promise<void>;
-};
-
-const CommentSection: FunctionComponent<CommentSectionProps> = ({ onSubmit }) => {
+const CommentSection: FC = () => {
   const queryClient = useQueryClient();
   const [user, , showAlert] = useContext(UserContext);
   const { username, id } = user;

@@ -19,9 +19,7 @@ app.use(cors({
   origin: "http://localhost:5173",
   credentials: true
 }));
-app.use(express.static(
-  path.join(__dirname, '..', 'views')
-));
+app.use(express.static(path.join(__dirname, "dist")));
 app.use(express.json());
 app.use(cookieParser());
 
@@ -38,6 +36,10 @@ app.use(
   await sequelize.authenticate();
   console.log("Database connected");
 })();
+
+app.get("/index", (_req, res) => {
+  res.sendFile(path.join(__dirname, "dist", "index.html"));
+});
 
 app.listen(PORT, () => {
   console.log(`Server running @ http://localhost:${PORT}`);

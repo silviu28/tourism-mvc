@@ -4,14 +4,13 @@ import axios from "axios";
 import UserContext from "../../UserContext";
 import Modal from "../Modal";
 import AdminForm from "../AdminForm";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 
 const selectedStyle = {
   background: 'blue'
 };
 
 const AdminPanel: FC = () => {
-  const queryClient = useQueryClient();
 
   const [, , showAlert] = useContext(UserContext);
 
@@ -94,7 +93,7 @@ const AdminPanel: FC = () => {
   }
 
   return (
-    <div>
+    <div className="slight-margin">
       <Modal
         isVisible={isModalVisible}
         visibilitySetter={setIsModalVisible}>

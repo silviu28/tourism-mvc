@@ -8,9 +8,7 @@ interface AlertProps {
 
 const Alert: FC<AlertProps> = ({ title, content, error }) => {
   const style = {
-    position: "absolute",
     width: "80%",
-    textAlign: "center",
     left: "10%",
     top: "5%",
     backgroundColor: error ? "red" : "green",

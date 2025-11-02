@@ -1,3 +1,272 @@
+@import url('https://fonts.cdnfonts.com/css/helvetica-neue-5');
+
+body {
+  background-color: #333;
+  margin: 0;
+}
+
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #333;
+}
+
+li a {
+  display: inline-block;
+  color: white;
+  text-align: left;
+  padding: 10px 10px;
+}
+
+li a:hover {
+  background-color: #111;
+}
+
+.body-text {
+  margin-right: 150px;
+  font-size: 18px;
+}
+
+h1,
+h2,
+p,
+li,
+h3 {
+  font-family: 'Helvetica Neue', sans-serif;
+  color: #fff;
+  font-size: 18px;
+}
+
+a {
+  text-decoration: none;
+}
+
+.typing {
+  position: absolute;
+  left: 8vw;
+  top: 30vh;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  display: inline-block;
+  color: black;
+}
+
+.type-text {
+  display: inline-block;
+  overflow: hidden;
+  letter-spacing: 2px;
+  animation:
+    typing 3s steps(30, end) forwards,
+    fadeBg .2s ease-in forwards 3s,
+    blink .5s step-end infinite;
+  white-space: nowrap;
+  font-size: 30px;
+  font-weight: 700;
+  border-right: 4px solid orange;
+  box-sizing: border-box;
+  color: black;
+  font-family: "Helvetica Neue", sans-serif;
+}
+
+@keyframes typing {
+  from {
+    width: 0%
+  }
+
+  to {
+    width: 100%
+  }
+}
+
+@keyframes fadeBg {
+  from {
+    background-color: transparent;
+  }
+
+  to {
+    background-color: white;
+  }
+}
+
+@keyframes blink {
+
+  from,
+  to {
+    border-color: transparent
+  }
+
+  50% {
+    border-color: black;
+  }
+}
+
+button {
+  background-color: transparent;
+  font-family: Tahoma, sans-serif;
+  color: white;
+  border-radius: 10px;
+  border-color: white;
+  min-height: 2vh;
+  border-color: white;
+}
+
+.button1:hover {
+  color: #ffffff;
+  background-color: rgb(2, 2, 2);
+}
+
+.column4 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 10px;
+}
+
+.bg3 {
+  background-image: url("public/images/bg3.jpg");
+}
+
+.container {
+  background-color: #333;
+}
+
+.column3 {
+  width: 33%;
+  float: right;
+}
+
+.column2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.icon {
+  max-width: 128px;
+  max-height: 128px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+}
+
+.gallery-pic {
+  max-width: 800px;
+  max-height: 600px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+  display: flex;
+  border-radius: 10px;
+}
+
+table,
+sub {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+table,
+th,
+td {
+  border: 1px groove white;
+}
+
+sub {
+  color: white;
+}
+
+a {
+  color: orange;
+}
+
+.info-collapse {
+  background-color: gray;
+  color: #333;
+  cursor: pointer;
+  padding: 20px;
+  width: 100%;
+  border: none;
+  text-align: left;
+  outline: none;
+  font-size: 18px;
+}
+
+
+.info-collapse-content {
+  padding: 0 20px;
+  display: none;
+  overflow: hidden;
+  background-color: rgb(43, 43, 43);
+}
+
+label {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  color: white;
+}
+
+.comment-section {
+  width: 100%;
+  height: 500px;
+  overflow: scroll;
+}
+
+.comment-container {
+  background-color: rgb(95, 95, 95);
+  width: 90%;
+  display: inline;
+  float: left;
+  height: auto;
+  border-radius: 10px;
+  border: solid #333;
+}
+
+iframe {
+  border: none;
+}
+
+.header {
+  top: -100%;
+  left: 100%;
+}
+
+.scroll-button {
+  display: flex;
+  position: fixed;
+  bottom: 5%;
+  right: 5%;
+}
+
+input {
+  background-color: transparent;
+  font-family: Tahoma, sans-serif;
+  color: white;
+  border-radius: 10px;
+  border-color: white;
+  min-height: 2vh;
+  border-color: black;
+}
+
+.container {
+  border: solid;
+  border-width: 2px;
+  border-color: #646cff;
+  background-color: rgba(100, 100, 100, .5);
+  padding: 2%;
+  margin: 2%;
+  border-radius: 1vw;
+}
+
+.slight-margin {
+  margin: 2%;
+}
+
+.flex-col {
+  display: flex;
+  flex-direction: column;
+  z-index: 999;
+}
+
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -35,7 +304,6 @@ button {
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  background-color: #1a1a1a;
   cursor: pointer;
   transition: border-color 0.25s;
 }
@@ -62,4 +330,16 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
+}
+
+.pricetable {
+  font-family: "Helvetica Neue", sans-serif;
+}
+
+table {
+  border: none;
+}
+
+.table-head {
+  background-color: rgb(72, 121, 72);
 }

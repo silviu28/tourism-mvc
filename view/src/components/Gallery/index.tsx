@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState, type FC } from "react";
+import { useContext, useState, type FC } from "react";
 import type { Image } from "../../types";
 import axios from "axios";
 import UserContext from "../../UserContext";
