@@ -1,4 +1,4 @@
-import { useState, type FunctionComponent } from 'react'
+import { useEffect, useState, type FunctionComponent } from 'react'
 import './App.css';
 import { Route, BrowserRouter as Router, Routes } from 'react-router';
 import Navbar from './components/Navbar';
@@ -16,6 +16,9 @@ import AdminPanel from './components/AdminPanel';
 import Gallery from './components/Gallery';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
+axios.defaults.withCredentials = true;
+axios.defaults.baseURL = "http://localhost:4004";
+
 const queryClient = new QueryClient();
 
 const App: FunctionComponent = () => {
@@ -23,6 +26,19 @@ const App: FunctionComponent = () => {
   const [alertTitle, setAlertTitle] = useState<string>("");
   const [alertContent, setAlertContent] = useState<string>("");
   const [isError, setIsError] = useState<boolean>(false);
+  const [isAdmin, setIsAdmin] = useState<boolean>(false);
+
+  // check for admin authorization for conditional rendering of admin panel
+  useEffect(() => {
+    (async () => {
+      try {
+        const adminRes = await axios.get("http://localhost:4004/admin/auth");
+        if (adminRes.data) {
+          setIsAdmin(true);
+        }
+      } catch (error) { }
+    })();
+  });
 
   const showAlert = (content: string, title: string, error: boolean) => {
     setAlertContent(content);
@@ -36,7 +52,7 @@ const App: FunctionComponent = () => {
     }, 5000);
   };
 
-  const createAccount = async data => {
+  const createAccount = async (data: any) => {
     try {
       console.log(data);
       const res: any = await axios.post('http://localhost:4004/users', data);
@@ -46,7 +62,7 @@ const App: FunctionComponent = () => {
     }
   };
 
-  const login = async data => {
+  const login = async (data: any) => {
     try {
       const res = await axios.post("http://localhost:4004/login", data);
       showAlert("Login succesful", "", false);
@@ -80,7 +96,7 @@ const App: FunctionComponent = () => {
             content={alertContent}
             error={isError}
           />
-          <Navbar />
+          <Navbar isAdmin={isAdmin} />
           <Routes>
             <Route path="/" element={<FrontPage />} />
             <Route path="/signup" element={<Signup onSubmit={createAccount} />} />
@@ -88,7 +104,8 @@ const App: FunctionComponent = () => {
             <Route path="/prices" element={<PriceTable prices={[]} />} />
             <Route path="/contact" element={<Contact onSubmit={addFeedback} />} />
             <Route path="/login" element={<Login onSubmit={login} />} />
-            <Route path="/admin" element={<AdminPanel />} />
+            {isAdmin &&
+              <Route path="/admin" element={<AdminPanel />} />}
             <Route path="/gallery" element={<Gallery />} />
           </Routes>
         </Router>

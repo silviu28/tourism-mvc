@@ -2,6 +2,7 @@ import express from 'express';
 import { User } from '../models/User';
 import { Admin } from '../models/Admin';
 import { TokenParams } from '../types';
+import userTokenAuthenticator from '../middleware/userTokenAuthenticator';
 const router = express.Router();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
@@ -94,5 +95,9 @@ router.post("/logout", (_req, res) => {
   });
   res.send("Logged out");
 })
+
+router.get("/user/auth", userTokenAuthenticator, (_req, res) => {
+  res.status(200).send("User token still valid");
+});
 
 module.exports = router;

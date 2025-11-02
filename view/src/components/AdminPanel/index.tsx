@@ -63,7 +63,6 @@ const AdminPanel: FC = () => {
   if (false)
     return <p>Access is forbidden</p>;
 
-  console.log(`Selecting`, selectedItem);
 
   const remove = async (selectedItem: AdminPanelItem, path: string) => {
     if (!selectedItem) return;

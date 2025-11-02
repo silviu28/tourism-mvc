@@ -1,10 +1,14 @@
-import { useContext, type FunctionComponent } from "react";
+import { useContext, type FC } from "react";
 import { Link } from "react-router";
 import './style.css';
 import UserContext from "../../UserContext";
 import { type UserData } from "../../types";
 
-const Navbar: FunctionComponent = () => {
+interface NavbarProps {
+  isAdmin: boolean;
+};
+
+const Navbar: FC<NavbarProps> = ({ isAdmin }) => {
   const [user, setUser]: any = useContext<UserData>(UserContext);
 
   const promptLogout = () => {
@@ -28,7 +32,8 @@ const Navbar: FunctionComponent = () => {
         <li><Link to="/prices">Prices</Link></li>
         <li><Link to="/contact">Contact Us</Link></li>
         <li><Link to="/gallery">Gallery</Link></li>
-        <li><Link to="/admin">Admin</Link></li>
+        {isAdmin &&
+          <li><Link to="/admin">Admin</Link></li>}
       </ul>
       {user.username &&
         <li>

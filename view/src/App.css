@@ -238,6 +238,9 @@ input {
 }
 
 .container {
+  border: solid;
+  border-width: 2px;
+  border-color: #646cff;
   background-color: rgba(100, 100, 100, .5);
   padding: 2%;
   margin: 2%;

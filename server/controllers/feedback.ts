@@ -30,6 +30,7 @@ router.delete("/feedback/:id", adminTokenAuthenticator, async (req, res) => {
       res.status(404).json({ error: "Not found" });
       return;
     }
+    await feedback.destroy();
     res.status(200).send();
   } catch (error) {
     res.status(400).json({ error });
