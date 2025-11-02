@@ -12,19 +12,19 @@ const Collapsible: FunctionComponent<CollapsibleProps> =
     const [open, setOpen] = useState<boolean>(false);
 
     return (
-      <div>
+      <div className="composite-collapse">
         {thumbnailSrc != null
           && <img src={thumbnailSrc} className="img-thumbnail" alt="" />}
-        <button
+        <div
           className="info-collapse"
           onClick={() => setOpen(!open)}>
           {title}
-        </button>
+        </div>
         {open
           &&
-          <>
+          <div className="info-collapse-content">
             {children}
-          </>
+          </div>
         }
       </div>
     );

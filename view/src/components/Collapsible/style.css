@@ -6,17 +6,28 @@
 }
 
 .info-collapse {
-  background-color: gray;
-  color: #333;
+  background-color: white;
+  color: black;
   cursor: pointer;
-  padding: 20px;
   width: 100%;
-  border: none;
-  text-align: left;
+  text-align: center;
   outline: none;
   font-size: 18px;
+  padding-top: 1%;
+  padding-bottom: 1%;
 }
 
 .info-collapse:hover {
-  background-color: rgb(80, 80, 79);
+  background-color: yellow;
+}
+
+.composite-collapse {
+  display: flex;
+  flex-direction: column;
+  margin: 10px;
+}
+
+.info-collapse-content {
+  background-color: white;
+  padding: 2%;
 }

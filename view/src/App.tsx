@@ -32,7 +32,7 @@ const App: FunctionComponent = () => {
   useEffect(() => {
     (async () => {
       try {
-        const adminRes = await axios.get("http://localhost:4004/admin/auth");
+        const adminRes = await axios.get("http://localhost:4004/api/admin/auth");
         if (adminRes.data) {
           setIsAdmin(true);
         }
@@ -55,10 +55,10 @@ const App: FunctionComponent = () => {
   const createAccount = async (data: any) => {
     try {
       console.log(data);
-      await axios.post('http://localhost:4004/users', data);
+      await axios.post('http://localhost:4004/api/users', data);
       showAlert("Succesfully created account", "", false);
     } catch (error) {
-      showAlert("", "", true);
+      showAlert("Unable to create account", "", true);
     }
   };
 

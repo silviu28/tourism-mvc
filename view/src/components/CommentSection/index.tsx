@@ -51,20 +51,22 @@ const CommentSection: FC = () => {
   }
 
   return (
-    <div className="slight-margin">
+    <div className="slight-margin, container">
       <p>Comments</p>
-      <input
-        type="text"
-        onChange={e => setComment(e.target.value)}
-        style={{ width: '87%' }}
-        placeholder={!user.id ? "Sign in to comment" : ""}
-        disabled={!user.id}
-      />
-      <button
-        onClick={() => mutate({ id: id!, username: username!, comment })}
-        disabled={!user.id}>
-        Send
-      </button>
+      <div style={{ display: "flex" }}>
+        <input
+          type="text"
+          onChange={e => setComment(e.target.value)}
+          style={{ width: '87%' }}
+          placeholder={!user.id ? "Sign in to comment" : ""}
+          disabled={!user.id}
+        />
+        <button
+          onClick={() => mutate({ id: id!, username: username!, comment })}
+          disabled={!user.id}>
+          Send
+        </button>
+      </div>
       <div>
         {comments.map(comment =>
           <Comment

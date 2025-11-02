@@ -8,7 +8,7 @@ router.get("/api/admins", async (_req, res) => {
   res.json(admins);
 });
 
-router.get("api/admin/auth", adminTokenAuthenticator, async (_req, res) => {
+router.get("/api/admin/auth", adminTokenAuthenticator, async (_req, res) => {
   res.status(200).send("Access to admin controls in permitted");
 });
 

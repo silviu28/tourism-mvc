@@ -22,10 +22,6 @@ const Navbar: FC<NavbarProps> = ({ isAdmin }) => {
 
   return (
     <div className="header">
-      <li>
-        <img src="/vite.svg"
-          style={{ "width": "2vw", "height": "2vw" }} />
-      </li>
 
       <ul className="navigation-flex">
         <li><Link to="/">Home</Link></li>

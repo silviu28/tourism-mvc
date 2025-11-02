@@ -7,9 +7,9 @@ interface CommentProps {
 
 const style = {
   padding: '1vw',
-  backgroundColor: 'black',
   margin: '.7vw',
-  borderRadius: '.5vw',
+  border: "1px solid #ccc",
+  boxShadow: "0 2px 5px rgba(0, 0, 0, 0.05)"
 };
 
 const Comment: FC<CommentProps> = ({ username, comment }) => {
