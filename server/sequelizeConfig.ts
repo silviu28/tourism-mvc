@@ -16,6 +16,6 @@ const con: Sequelize = new Sequelize({
   models: [User, Comment, Price, Feedback, Admin, Image],
 });
 
-// con.sync({ force: true });
+// con.sync({ alter: true });
 
 export default con;

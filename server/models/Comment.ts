@@ -2,7 +2,8 @@ import { AutoIncrement, BelongsTo, Column, DataType, ForeignKey, Model, PrimaryK
 import { User } from "./User";
 
 @Table({
-  tableName: "comments"
+  tableName: "comments",
+  timestamps: false,
 })
 export class Comment extends Model {
   @PrimaryKey

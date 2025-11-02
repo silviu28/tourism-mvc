@@ -3,6 +3,7 @@ import { User } from "./User";
 
 @Table({
   tableName: "admins",
+  timestamps: false
 })
 export class Admin extends Model {
   @PrimaryKey

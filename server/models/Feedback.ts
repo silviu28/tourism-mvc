@@ -1,6 +1,9 @@
 import { AutoIncrement, Column, DataType, Model, PrimaryKey, Table } from "sequelize-typescript";
 
-@Table({ tableName: "feedback" })
+@Table({
+  tableName: "feedback",
+  timestamps: false
+})
 export class Feedback extends Model {
   @PrimaryKey
   @AutoIncrement
