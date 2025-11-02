@@ -28,7 +28,7 @@ const AdminPanel: FC = () => {
       queryKey: ["prices"],
       queryFn: async () => {
         try {
-          const pricesRes = await axios.get("http://localhost:4004/prices");
+          const pricesRes = await axios.get("http://localhost:4004/api/prices");
           return pricesRes.data;
         } catch (error) {
           showAlert("Unable to load prices", true);
@@ -40,7 +40,7 @@ const AdminPanel: FC = () => {
       queryKey: ["images"],
       queryFn: async () => {
         try {
-          const imagesRes = await axios.get("http://localhost:4004/images");
+          const imagesRes = await axios.get("http://localhost:4004/api/images");
           return imagesRes.data;
         } catch (error) {
           showAlert("Unable to load images", true);
@@ -52,7 +52,7 @@ const AdminPanel: FC = () => {
       queryKey: ["feedback"],
       queryFn: async () => {
         try {
-          const feedbackRes = await axios.get("http://localhost:4004/feedback");
+          const feedbackRes = await axios.get("http://localhost:4004/api/feedback");
           return feedbackRes.data;
         } catch (error) {
           showAlert("Unable to load feedback", true);

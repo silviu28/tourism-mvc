@@ -64,7 +64,7 @@ const App: FunctionComponent = () => {
 
   const login = async (data: any) => {
     try {
-      const res = await axios.post("http://localhost:4004/login", data);
+      const res = await axios.post("http://localhost:4004/api/login", data);
       showAlert("Login succesful", "", false);
       setUser({
         id: res.data.id,
@@ -78,7 +78,7 @@ const App: FunctionComponent = () => {
 
   const addFeedback = async (feedback: string) => {
     try {
-      await axios.post("http://localhost:4004/feedback", {
+      await axios.post("http://localhost:4004/api/feedback", {
         feedback
       });
       showAlert("Feedback added", "", false);

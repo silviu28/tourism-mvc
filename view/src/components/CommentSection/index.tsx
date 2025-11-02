@@ -19,7 +19,7 @@ const CommentSection: FC = () => {
     queryKey: ["comments"],
     queryFn: async () => {
       try {
-        const commentsRes = await axios.get("http://localhost:4004/comments");
+        const commentsRes = await axios.get("http://localhost:4004/api/comments");
         return commentsRes.data;
       } catch (error) {
         showAlert("Cannot display comments", true);

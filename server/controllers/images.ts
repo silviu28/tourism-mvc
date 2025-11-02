@@ -5,7 +5,7 @@ import adminTokenAuthenticator from "../middleware/adminTokenAuthenticator";
 
 const router = express.Router();
 
-router.get("/images", async (_req, res) => {
+router.get("/api/images", async (_req, res) => {
   try {
     const images = await Image.findAll();
     res.status(200).json(images);
@@ -14,7 +14,7 @@ router.get("/images", async (_req, res) => {
   }
 });
 
-router.post("/images", adminTokenAuthenticator, async (req, res) => {
+router.post("/api/images", adminTokenAuthenticator, async (req, res) => {
   const image = req.body;
   try {
     const query = await Image.create({ ...image });
@@ -24,7 +24,7 @@ router.post("/images", adminTokenAuthenticator, async (req, res) => {
   }
 });
 
-router.delete("/images/:id", tokenAuthenticator, async (req, res) => {
+router.delete("/api/images/:id", tokenAuthenticator, async (req, res) => {
   try {
     const id = req.params.id
     const image = await Image.findByPk(id);

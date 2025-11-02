@@ -7,11 +7,11 @@ const router = express.Router();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
-router.get('/users', async (_req, res) => {
+router.get("/api/users", async (_req, res) => {
   res.json(await User.findAll());
 });
 
-router.post('/users', async (req, res) => {
+router.post("/api/users", async (req, res) => {
   const {
     name,
     dob,
@@ -34,7 +34,7 @@ router.post('/users', async (req, res) => {
   }
 });
 
-router.post("/login", async (req, res) => {
+router.post("/api/login", async (req, res) => {
   const { username, password } = req.body;
   try {
     const user = await User.findOne({
@@ -87,7 +87,7 @@ router.post("/login", async (req, res) => {
   }
 });
 
-router.post("/logout", (_req, res) => {
+router.post("/api/logout", (_req, res) => {
   res.clearCookie("token", {
     httpOnly: true,
     sameSite: "strict",

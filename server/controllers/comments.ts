@@ -5,7 +5,7 @@ import userTokenAuthenticator from "../middleware/userTokenAuthenticator";
 import adminTokenAuthenticator from "../middleware/adminTokenAuthenticator";
 const router = express.Router();
 
-router.get('/comments', async (_req, res) => {
+router.get("/api/comments", async (_req, res) => {
   const comments = await Comment.findAll({
     attributes: ["id", "comment"],
     include: [
@@ -18,7 +18,7 @@ router.get('/comments', async (_req, res) => {
   res.json(comments);
 });
 
-router.post('/comments', userTokenAuthenticator, async (req, res) => {
+router.post("/api/comments", userTokenAuthenticator, async (req, res) => {
   try {
     const { id, comment } = req.body;
     const query = await Comment.create({

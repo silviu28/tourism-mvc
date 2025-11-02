@@ -3,7 +3,7 @@ import { Price } from '../models/Price';
 import adminTokenAuthenticator from '../middleware/adminTokenAuthenticator';
 const router = express.Router();
 
-router.get('/prices', async (_req, res) => {
+router.get("/api/prices", async (_req, res) => {
   try {
     const query = await Price.findAll();
     res.json(query);
@@ -12,7 +12,7 @@ router.get('/prices', async (_req, res) => {
   }
 });
 
-router.delete("/prices/:id", async (req, res) => {
+router.delete("/api/prices/:id", async (req, res) => {
   try {
     const id = req.params.id;
     const price = await Price.findByPk(id);
@@ -27,7 +27,7 @@ router.delete("/prices/:id", async (req, res) => {
   }
 });
 
-router.post("/prices", adminTokenAuthenticator, async (req, res) => {
+router.post("/api/prices", adminTokenAuthenticator, async (req, res) => {
   try {
     const price = req.body;
     const query = await Price.create({ ...price });
@@ -37,7 +37,7 @@ router.post("/prices", adminTokenAuthenticator, async (req, res) => {
   }
 });
 
-router.put("/prices/:id", async (req, res) => {
+router.put("/api/prices/:id", async (req, res) => {
   try {
     const price = req.body;
     let updatedPrice = await Price.findByPk(price.id);

@@ -13,7 +13,7 @@ const Gallery: FC = () => {
     queryKey: ["images"],
     queryFn: async () => {
       try {
-        const imagesRes = await axios.get("http://localhost:4004/images");
+        const imagesRes = await axios.get("http://localhost:4004/api/images");
         return imagesRes.data;
       } catch (error) {
         showAlert("Unable to get gallery images.");
