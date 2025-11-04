@@ -18,23 +18,35 @@ export class User extends Model {
   @Unique
   @Column({
     type: DataType.STRING(18),
-    allowNull: false
+    allowNull: false,
+    validate: {
+      len: [3, 18],
+      isAlphanumeric: true
+    }
   })
   declare username: string;
 
   @Column({
     type: DataType.STRING,
-    allowNull: false
+    allowNull: false,
   })
   declare passwordHash: string;
 
   @Column({
     type: DataType.STRING,
-    allowNull: false
+    allowNull: false,
+    validate: {
+      isEmail: true
+    }
   })
   declare email: string;
 
-  @Column({ type: DataType.DATEONLY })
+  @Column({
+    type: DataType.DATEONLY,
+    validate: {
+      isDate: true
+    }
+  })
   declare birthdate: string;
 
   @Column({ type: DataType.STRING })

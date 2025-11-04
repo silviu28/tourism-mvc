@@ -1,7 +1,8 @@
-import { useState, type FunctionComponent, type SyntheticEvent } from "react";
+import { useContext, useState, type FunctionComponent, type SyntheticEvent } from "react";
 import { useNavigate } from "react-router";
 import content from "../../content.json";
 import "./style.css";
+import AlertContext from "../../AlertContext";
 
 interface FormData {
   name?: string,
@@ -18,6 +19,8 @@ interface SignupProps {
 }
 
 const Signup: FunctionComponent<SignupProps> = ({ onSubmit }) => {
+  const showAlert = useContext(AlertContext);
+
   const [name, setName] = useState<string>('');
   const [dob, setDob] = useState<string>('');
   const [username, setUsername] = useState<string>('');
@@ -29,6 +32,34 @@ const Signup: FunctionComponent<SignupProps> = ({ onSubmit }) => {
   const navigate = useNavigate();
 
   const submit = (e: SyntheticEvent) => {
+    e.preventDefault();
+
+    if (!username || !/^[a-zA-Z0-9_.-]+$/.test(username)) {
+      showAlert("Username is required", "", true);
+      return;
+    } else if (username.length < 3 || username.length > 18) {
+      showAlert("Username must be 3-18 characters", "", true);
+      return
+    }
+
+    if (!email || !/^\S+@\S+\.\S+$/.test(email)) {
+      showAlert("Invalid email address", "", true);
+      return;
+    }
+
+    if (!password) {
+      showAlert("Password is required", "", true);
+      return;
+    } else if (password.length < 8) {
+      showAlert("Password too short", "", true);
+      return;
+    }
+
+    if (confirm !== password) {
+      showAlert("Passwords do not match", "", true);
+      return;
+    }
+
     setName("");
     setDob("");
     setUsername("");
@@ -37,7 +68,6 @@ const Signup: FunctionComponent<SignupProps> = ({ onSubmit }) => {
     setConfirm("");
     setNotify(false);
 
-    e.preventDefault();
     onSubmit({
       name,
       dob,

@@ -24,7 +24,8 @@
     "sequelize-typescript": "^2.1.6",
     "ts-node": "^10.9.2",
     "tslint": "^5.20.1",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "zod": "^4.1.12"
   },
   "description": "",
   "files": [
