@@ -15,6 +15,7 @@ import Alert from './components/Alert';
 import AdminPanel from './components/AdminPanel';
 import Gallery from './components/Gallery';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import AlertContext from './AlertContext';
 
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = "http://localhost:4004";
@@ -30,14 +31,15 @@ const App: FunctionComponent = () => {
 
   // check for admin authorization for conditional rendering of admin panel
   useEffect(() => {
-    (async () => {
+    const fetchAsync = async () => {
       try {
         const adminRes = await axios.get("http://localhost:4004/api/admin/auth");
         if (adminRes.data) {
           setIsAdmin(true);
         }
       } catch (error) { }
-    })();
+    }
+    fetchAsync();
   });
 
   const showAlert = (content: string, title: string, error: boolean) => {
@@ -67,10 +69,11 @@ const App: FunctionComponent = () => {
       const res = await axios.post("http://localhost:4004/api/login", data);
       showAlert("Login succesful", "", false);
       setUser({
-        id: res.data.id,
         username: res.data.username
       });
-      localStorage.setItem('user', JSON.stringify(user));
+      localStorage.setItem('user', JSON.stringify({
+        username: res.data.username
+      }));
     } catch (error) {
       showAlert("Login failed", "", true);
     }
@@ -89,27 +92,31 @@ const App: FunctionComponent = () => {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <UserContext.Provider value={[user, setUser, showAlert]}>
-        <Router>
-          <Alert
-            title={alertTitle}
-            content={alertContent}
-            error={isError}
-          />
-          <Navbar isAdmin={isAdmin} />
-          <Routes>
-            <Route path="/" element={<FrontPage />} />
-            <Route path="/signup" element={<Signup onSubmit={createAccount} />} />
-            <Route path="/trips" element={<TripsPage />} />
-            <Route path="/prices" element={<PriceTable prices={[]} />} />
-            <Route path="/contact" element={<Contact onSubmit={addFeedback} />} />
-            <Route path="/login" element={<Login onSubmit={login} />} />
-            {isAdmin &&
-              <Route path="/admin" element={<AdminPanel />} />}
-            <Route path="/gallery" element={<Gallery />} />
-          </Routes>
-        </Router>
-      </UserContext.Provider>
+      <AlertContext.Provider value={showAlert}>
+        <UserContext.Provider value={[user, setUser]}>
+          <Router>
+            <Alert
+              title={alertTitle}
+              content={alertContent}
+              error={isError}
+            />
+
+            <Navbar isAdmin={isAdmin} />
+
+            <Routes>
+              <Route path="/" element={<FrontPage />} />
+              <Route path="/signup" element={<Signup onSubmit={createAccount} />} />
+              <Route path="/trips" element={<TripsPage />} />
+              <Route path="/prices" element={<PriceTable />} />
+              <Route path="/contact" element={<Contact onSubmit={addFeedback} />} />
+              <Route path="/login" element={<Login onSubmit={login} />} />
+              {isAdmin &&
+                <Route path="/admin" element={<AdminPanel />} />}
+              <Route path="/gallery" element={<Gallery />} />
+            </Routes>
+          </Router>
+        </UserContext.Provider>
+      </AlertContext.Provider>
     </QueryClientProvider>
   );
 };

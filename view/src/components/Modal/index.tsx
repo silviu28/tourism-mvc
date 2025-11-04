@@ -12,8 +12,10 @@ const Modal: FC<ModalProps> = ({ isVisible, visibilitySetter, children }) => {
 
   return (
     <div className="modal">
-      <button onClick={() => visibilitySetter(false)}>x</button>
       {children}
+      <button onClick={() => visibilitySetter(false)}>
+        Close
+      </button>
     </div>
   );
 };

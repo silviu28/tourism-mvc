@@ -52,7 +52,7 @@ const CommentSection: FC = () => {
 
   return (
     <div className="slight-margin, container">
-      <p>Comments</p>
+      <p>{`Comments (${comments.length})`}</p>
       <div style={{ display: "flex" }}>
         <input
           type="text"

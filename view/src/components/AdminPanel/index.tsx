@@ -1,18 +1,18 @@
 import { useContext, useState, type FC } from "react";
 import { type AdminPanelItem, type Feedback, type Image, type Price } from "../../types";
 import axios from "axios";
-import UserContext from "../../UserContext";
 import Modal from "../Modal";
 import AdminForm from "../AdminForm";
 import { useQuery } from "@tanstack/react-query";
+import AlertContext from "../../AlertContext";
 
 const selectedStyle = {
-  background: 'blue'
+  background: 'lightblue'
 };
 
 const AdminPanel: FC = () => {
 
-  const [, , showAlert] = useContext(UserContext);
+  const showAlert = useContext(AlertContext);
 
   const [selectedItem, setSelectedItem] = useState<AdminPanelItem | null>(null);
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
@@ -31,7 +31,7 @@ const AdminPanel: FC = () => {
           const pricesRes = await axios.get("http://localhost:4004/api/prices");
           return pricesRes.data;
         } catch (error) {
-          showAlert("Unable to load prices", true);
+          showAlert("Unable to load prices", "", true);
         }
       }
     });
@@ -43,7 +43,7 @@ const AdminPanel: FC = () => {
           const imagesRes = await axios.get("http://localhost:4004/api/images");
           return imagesRes.data;
         } catch (error) {
-          showAlert("Unable to load images", true);
+          showAlert("Unable to load images", "", true);
         }
       }
     });
@@ -55,7 +55,7 @@ const AdminPanel: FC = () => {
           const feedbackRes = await axios.get("http://localhost:4004/api/feedback");
           return feedbackRes.data;
         } catch (error) {
-          showAlert("Unable to load feedback", true);
+          showAlert("Unable to load feedback", "", true);
         }
       }
     });
@@ -65,10 +65,10 @@ const AdminPanel: FC = () => {
     if (!selectedItem) return;
     if (window.confirm("Are you sure you want to delete this?")) {
       try {
-        await axios.delete(`http://localhost:4004/${path}/${selectedItem.id}`);
-        showAlert("Item deleted", false);
+        await axios.delete(`http://localhost:4004/api/${path}/${selectedItem.id}`);
+        showAlert("Item deleted", "", false);
       } catch (error) {
-        showAlert("Unable to delete this item", true);
+        showAlert("Unable to delete this item", "", true);
         console.error(error);
       }
     }
@@ -76,19 +76,19 @@ const AdminPanel: FC = () => {
 
   const submitImage = async (src: string) => {
     try {
-      await axios.post("http://localhost:4004/images", { src });
-      showAlert("Image uploaded", false);
+      await axios.post("http://localhost:4004/api/images", { src });
+      showAlert("Image uploaded", "", false);
     } catch (error) {
-      showAlert("Unable to upload image", true);
+      showAlert("Unable to upload image", "", true);
     }
   };
 
   const submitPrice = async (price: Price) => {
     try {
-      await axios.post("http://localhost:4004/prices", price);
-      showAlert("Price uploaded", false);
+      await axios.post("http://localhost:4004/api/prices", price);
+      showAlert("Price uploaded", "", false);
     } catch (error) {
-      showAlert("Unable to add pricing", true);
+      showAlert("Unable to add pricing", "", true);
     }
   }
 

@@ -1,7 +1,7 @@
 @import url('https://fonts.cdnfonts.com/css/helvetica-neue-5');
 
 body {
-  background-color: #ffffff;
+  background-color: orange;
   margin: 0;
 }
 
@@ -10,7 +10,7 @@ ul {
   margin: 0;
   padding: 0;
   overflow: hidden;
-  background-color: rgb(255, 255, 255);
+  background-color: orange;
   color: black;
 }
 
@@ -121,7 +121,7 @@ button {
 }
 
 .container {
-  background-color: #333;
+  background-color: #ffffff;
 }
 
 .column3 {
@@ -218,7 +218,7 @@ input {
 
 .container {
   border-width: 2px;
-  background-color: rgb(255, 255, 255);
+  background-color: white;
   padding: 2%;
   margin: 2%;
 }
@@ -299,7 +299,6 @@ table {
 }
 
 input {
-  width: 300px;
   padding: 0.75rem 1rem;
   font-size: 1rem;
   outline: none;

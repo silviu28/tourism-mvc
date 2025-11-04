@@ -1,30 +1,30 @@
 import { useContext, type FC } from "react";
 import type { Price } from "../../types";
 import { useQuery } from "@tanstack/react-query";
-import UserContext from "../../UserContext";
 import axios from "axios";
+import AlertContext from "../../AlertContext";
 
-interface PriceTableProps {
-  prices: Price[],
-};
+const PriceTable: FC = () => {
+  const showAlert = useContext(AlertContext);
 
-const PriceTable: FC<PriceTableProps> = () => {
-  const [, , setAlert] = useContext(UserContext);
-
-  const { data: prices = [], isLoading } = useQuery<Price[]>({
+  const { data: prices = [], isLoading, isError } = useQuery<Price[]>({
     queryKey: ["prices"],
     queryFn: async () => {
       try {
         const pricesRes = await axios.get("http://localhost:4004/api/prices");
         return pricesRes.data;
       } catch (error) {
-        setAlert("Unable to load prices", "", true);
+        showAlert("Unable to load prices", "", true);
       }
     }
   });
 
   if (isLoading) {
     return <p>Loading...</p>;
+  }
+
+  if (isError) {
+    showAlert("Cannot retrieve prices", "", true);
   }
 
   return (

@@ -1,4 +1,5 @@
 import type { FC } from "react";
+import "./style.css";
 
 interface AlertProps {
   title: string;
@@ -8,11 +9,7 @@ interface AlertProps {
 
 const Alert: FC<AlertProps> = ({ title, content, error }) => {
   const style = {
-    width: "80%",
-    left: "10%",
-    top: "5%",
-    backgroundColor: error ? "red" : "green",
-    zIndex: 1000,
+    backgroundColor: error ? "rgba(247, 97, 97, .9)" : "rgba(92, 243, 92, .9)",
   };
 
   console.log({ title, content, error });
@@ -20,7 +17,7 @@ const Alert: FC<AlertProps> = ({ title, content, error }) => {
   if (!content) return;
 
   return (
-    <div style={style}>
+    <div className="alert" style={style}>
       {(title && <h1>{title}</h1>)}
       <p>{content}</p>
     </div>

@@ -19,8 +19,8 @@
 }
 
 .carousel-image {
-  max-width: 100%;
-  max-height: 100%;
+  width: 80%;
+  height: 80%;
   object-fit: cover;
   position: absolute;
   opacity: 0;
@@ -53,26 +53,6 @@
 .right-image {
   right: -30%;
 }
-
-/* .left-image-transitioning {
-  animation: right-slide 1s ease-in-out forwards;
-}
-
-@keyframes right-slide {
-  to {
-    left: 0%;
-    z-index: 0;
-    transform: scale(1);
-  }
-}
-
-.right-side-transitioning {
-  animation: right-slide 1s ease-in-out forwards;
-}
-
-.center-image-transitioning {
-  animation: right-slide 1s ease-in-out forwards;
-} */
 
 .nav-button {
   background-color: rgba(0, 0, 0, 0.5);
