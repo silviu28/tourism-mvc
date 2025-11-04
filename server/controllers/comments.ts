@@ -20,9 +20,19 @@ router.get("/api/comments", async (_req, res) => {
 
 router.post("/api/comments", userTokenAuthenticator, async (req, res) => {
   try {
-    const { id, comment } = req.body;
+    const { username, comment } = req.body;
+    const user = await User.findOne({
+      where: {
+        username
+      }
+    });
+    if (!user) {
+      res.status(404).json({ error: "User not found" });
+      return;
+    }
+
     const query = await Comment.create({
-      userId: id,
+      userId: user.id,
       comment,
       date: new Date()
     });
