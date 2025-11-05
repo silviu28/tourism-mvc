@@ -3,7 +3,6 @@ import ImageParallax from "../ImageParallax";
 import TypeText from "../TypeText";
 import ColumnSplit from "../ColumnSplit";
 import CommentSection from "../CommentSection";
-import Badge from "../Badge";
 import "./style.css";
 import content from "../../content.json";
 import Gallery from "../Gallery";

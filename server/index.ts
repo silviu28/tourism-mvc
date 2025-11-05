@@ -12,14 +12,26 @@ const userRouter = require('./controllers/users');
 const imageRouter = require("./controllers/images");
 const adminRouter = require("./controllers/admins");
 
-const PORT = 4004;
+const rateLimiter = require("express-rate-limit");
 
+const PORT = 4004;
 const app = express();
+
+app.use(rateLimiter({
+  windowMs: 60000,
+  max: 50,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: "You are being rate limited"
+}));
+
 app.use(cors({
   origin: "http://localhost:5173",
   credentials: true
 }));
+
 app.use(express.static(path.join(__dirname, "dist")));
+
 app.use(express.json());
 app.use(cookieParser());
 

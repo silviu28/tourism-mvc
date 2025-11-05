@@ -3,7 +3,17 @@ import { Comment } from "../models/Comment";
 import { User } from "../models/User";
 import userTokenAuthenticator from "../middleware/userTokenAuthenticator";
 import adminTokenAuthenticator from "../middleware/adminTokenAuthenticator";
+import rateLimit from "express-rate-limit";
+
 const router = express.Router();
+
+const commentRateLimiter = rateLimit({
+  windowMs: 60000,
+  max: 1,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: "You are being rate limited"
+});
 
 router.get("/api/comments", async (_req, res) => {
   const comments = await Comment.findAll({
@@ -18,7 +28,7 @@ router.get("/api/comments", async (_req, res) => {
   res.json(comments);
 });
 
-router.post("/api/comments", userTokenAuthenticator, async (req, res) => {
+router.post("/api/comments", commentRateLimiter, userTokenAuthenticator, async (req, res) => {
   try {
     const { username, comment } = req.body;
     const user = await User.findOne({
