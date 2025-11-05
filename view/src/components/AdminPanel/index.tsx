@@ -3,7 +3,7 @@ import { type AdminPanelItem, type Feedback, type Image, type Price } from "../.
 import axios from "axios";
 import Modal from "../Modal";
 import AdminForm from "../AdminForm";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import AlertContext from "../../AlertContext";
 
 const selectedStyle = {
@@ -11,14 +11,15 @@ const selectedStyle = {
 };
 
 const AdminPanel: FC = () => {
+  const queryClient = useQueryClient();
 
   const showAlert = useContext(AlertContext);
 
   const [selectedItem, setSelectedItem] = useState<AdminPanelItem | null>(null);
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
-  const [formType, setFormType] = useState<"image" | "price">("image");
+  const [formType, setFormType] = useState<"image" | "price" | "updatePrice">("image");
 
-  const openForm = (type: "image" | "price") => {
+  const openForm = (type: "image" | "price" | "updatePrice") => {
     setFormType(type);
     setIsModalVisible(true);
   };
@@ -66,6 +67,9 @@ const AdminPanel: FC = () => {
     if (window.confirm("Are you sure you want to delete this?")) {
       try {
         await axios.delete(`http://localhost:4004/api/${path}/${selectedItem.id}`);
+        queryClient.invalidateQueries({
+          queryKey: [path]
+        });
         showAlert("Item deleted", "", false);
       } catch (error) {
         showAlert("Unable to delete this item", "", true);
@@ -78,6 +82,9 @@ const AdminPanel: FC = () => {
     try {
       await axios.post("http://localhost:4004/api/images", { src });
       showAlert("Image uploaded", "", false);
+      queryClient.invalidateQueries({
+        queryKey: ["images"]
+      });
     } catch (error) {
       showAlert("Unable to upload image", "", true);
     }
@@ -87,8 +94,23 @@ const AdminPanel: FC = () => {
     try {
       await axios.post("http://localhost:4004/api/prices", price);
       showAlert("Price uploaded", "", false);
+      queryClient.invalidateQueries({
+        queryKey: ["prices"]
+      });
     } catch (error) {
       showAlert("Unable to add pricing", "", true);
+    }
+  }
+
+  const updatePrice = async (price: Price) => {
+    try {
+      await axios.put(`http://localhost:4004/api/prices/${price.id}`, { price });
+      showAlert("Price updated", "", false);
+      queryClient.invalidateQueries({
+        queryKey: ["prices"]
+      });
+    } catch (error) {
+      showAlert("Unable to update price", "", true);
     }
   }
 
@@ -99,8 +121,10 @@ const AdminPanel: FC = () => {
         visibilitySetter={setIsModalVisible}>
         <AdminForm
           which={formType}
+          item={selectedItem!}
           onSubmitImage={submitImage}
           onSubmitPrice={submitPrice}
+          onUpdatePrice={updatePrice}
         />
       </Modal>
       <h1>Edit price page</h1>
@@ -111,12 +135,13 @@ const AdminPanel: FC = () => {
               key={price.id}
               style={price === selectedItem ? selectedStyle : {}}
               onClick={() => setSelectedItem(price)}>
-              {price.country},{price.travelHost},{price.status ? "available" : "unavailable"},{price.insurance ?? "-"},{price.travelHost},{price.priceLower || ""},{price.priceUpper || ""}
+              {price.country},{price.travelHost},{price.isAvailable ? "available" : "unavailable"},{price.travelHost},{price.priceLower || ""},{price.priceUpper || ""}
             </li>
           )}
         </ul>}
         <button onClick={() => openForm("price")}>+</button>
         <button onClick={() => remove(selectedItem!, "prices")}>Delete</button>
+        <button onClick={() => openForm("updatePrice")}>Update</button>
       </div>
       <h1>Edit images shown in gallery</h1>
       <div className="container">

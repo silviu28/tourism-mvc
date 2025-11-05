@@ -10,8 +10,6 @@ const PriceForm: FC<PriceFormProps> = ({ onSubmit }) => {
     country: "",
     travelHost: "",
     isAvailable: false,
-    status: "",
-    insurance: "",
   });
 
   const submit = (e: SyntheticEvent) => {
@@ -43,22 +41,6 @@ const PriceForm: FC<PriceFormProps> = ({ onSubmit }) => {
         onChange={e => setPrice({
           ...price,
           isAvailable: Boolean(e.target.value)
-        })}
-      />
-      <label>Status</label>
-      <input
-        type="text"
-        onChange={e => setPrice({
-          ...price,
-          status: e.target.value
-        })}
-      />
-      <label>Insurance Agency</label>
-      <input
-        type="text"
-        onChange={e => setPrice({
-          ...price,
-          insurance: e.target.value
         })}
       />
       <label>Price Lower Range (optional)</label>

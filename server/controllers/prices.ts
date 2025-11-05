@@ -38,14 +38,17 @@ router.post("/api/prices", adminTokenAuthenticator, async (req, res) => {
 });
 
 router.put("/api/prices/:id", async (req, res) => {
+  const id = req.params.id;
   try {
-    const price = req.body;
-    let updatedPrice = await Price.findByPk(price.id);
+    const { price } = req.body;
+    let updatedPrice = await Price.findByPk(id);
     if (!updatedPrice) {
-      res.status(404).json({ error: "Does not exist " });
+      res.status(404).json({ error: "Does not exist" });
       return;
     }
-    updatedPrice = { ...price };
+
+    updatedPrice.set(price);
+    await updatedPrice.save();
     res.status(200).json(updatedPrice);
   } catch (error) {
     res.status(400).json({ error });

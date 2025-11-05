@@ -3,6 +3,18 @@ import type { Price } from "../../types";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import AlertContext from "../../AlertContext";
+import "./style.css";
+
+const EmptyRow: FC = () => {
+  return (
+    <tr>
+      <td>-</td>
+      <td>-</td>
+      <td>-</td>
+      <td>-</td>
+    </tr>
+  );
+};
 
 const PriceTable: FC = () => {
   const showAlert = useContext(AlertContext);
@@ -35,8 +47,6 @@ const PriceTable: FC = () => {
           <tr className="table-head">
             <th>Country</th>
             <th>Available?</th>
-            <th>Status</th>
-            <th>Insurance</th>
             <th>Travel Host</th>
             <th>Pricing</th>
           </tr>
@@ -44,23 +54,13 @@ const PriceTable: FC = () => {
             <tr>
               <td>{price.country}</td>
               <td>{price.isAvailable ? "yes" : "no"}</td>
-              <td>{price.status}</td>
-              <td>{price.insurance}</td>
               <td>{price.travelHost}</td>
               <td>
                 {(price.priceLower && price.priceUpper) &&
                   `${price.priceLower} - ${price.priceUpper}`}
               </td>
             </tr>)}
-          {!prices.length
-            && <tr>
-              <td>-</td>
-              <td>-</td>
-              <td>-</td>
-              <td>-</td>
-              <td>-</td>
-              <td>-</td>
-            </tr>}
+          {!prices.length && <EmptyRow />}
         </tbody>
       </table>
       <br />

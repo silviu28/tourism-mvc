@@ -15,8 +15,6 @@ export interface Price {
   id?: number;
   country: string;
   isAvailable: boolean;
-  status: string;
-  insurance: string;
   travelHost: string;
   priceLower?: number;
   priceUpper?: number;
