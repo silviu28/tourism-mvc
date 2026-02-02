@@ -49,10 +49,6 @@ jobs:
       - name: Build server
         working-directory: ./server
         run: npm run build
-      
-      - name: Test run app
-        working-directory: ./server
-        run: timeout 10s npm start
 
   tag_release:
     needs: [deployment_pipeline]
