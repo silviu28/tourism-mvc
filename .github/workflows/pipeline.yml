@@ -12,6 +12,11 @@ on:
 jobs:
   deployment_pipeline:
     runs-on: ubuntu-latest
+    if: |
+      !(
+        contains(github.event.head_commit.message, '#skip') ||
+        contains(github.event.commits[0].message, '#skip')
+      )
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -52,8 +57,13 @@ jobs:
 
   tag_release:
     needs: [deployment_pipeline]
+    if: |
+      github.event_name == 'push' &&
+      !(
+        contains(github.event.head_commit.message, '#skip') ||
+        contains(github.event.commits[0].message, '#skip')
+      )
     runs-on: ubuntu-latest
-    if: ${{ github.event_name == 'push' }}
     steps:
       - uses: actions/checkout@v4
       - name: Bump version and push tag
