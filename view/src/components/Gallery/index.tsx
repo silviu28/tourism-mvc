@@ -1,12 +1,12 @@
 import { useContext, useState, type FC } from "react";
 import type { Image } from "../../types";
 import axios from "axios";
-import UserContext from "../../UserContext";
 import "./style.css";
 import { useQuery } from "@tanstack/react-query";
+import AlertContext from "../../AlertContext";
 
 const Gallery: FC = () => {
-  const [, , showAlert] = useContext(UserContext);
+  const showAlert = useContext(AlertContext);
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const { data: images = [], isLoading } = useQuery<Image[]>({
@@ -15,8 +15,8 @@ const Gallery: FC = () => {
       try {
         const imagesRes = await axios.get("http://localhost:4004/api/images");
         return imagesRes.data;
-      } catch (error) {
-        showAlert("Unable to get gallery images.");
+      } catch (_error) {
+        showAlert("Unable to get gallery images.", "", true);
       }
     },
   });

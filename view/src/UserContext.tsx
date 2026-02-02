@@ -1,3 +1,8 @@
-import { createContext } from "react";
+import { createContext, type Dispatch, type SetStateAction } from "react";
+import type { UserData } from "./types";
 
-export default createContext<any>([]);
+type NullableUserContextArgs = [UserData?, Dispatch<SetStateAction<UserData>>?];
+
+const UserContext = createContext<NullableUserContextArgs>([]);
+
+export default UserContext;
