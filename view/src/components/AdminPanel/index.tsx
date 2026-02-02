@@ -31,7 +31,7 @@ const AdminPanel: FC = () => {
         try {
           const pricesRes = await axios.get("http://localhost:4004/api/prices");
           return pricesRes.data;
-        } catch (error) {
+        } catch (_error) {
           showAlert("Unable to load prices", "", true);
         }
       }
@@ -43,7 +43,7 @@ const AdminPanel: FC = () => {
         try {
           const imagesRes = await axios.get("http://localhost:4004/api/images");
           return imagesRes.data;
-        } catch (error) {
+        } catch (_error) {
           showAlert("Unable to load images", "", true);
         }
       }
@@ -55,7 +55,7 @@ const AdminPanel: FC = () => {
         try {
           const feedbackRes = await axios.get("http://localhost:4004/api/feedback");
           return feedbackRes.data;
-        } catch (error) {
+        } catch (_error) {
           showAlert("Unable to load feedback", "", true);
         }
       }
@@ -85,7 +85,7 @@ const AdminPanel: FC = () => {
       queryClient.invalidateQueries({
         queryKey: ["images"]
       });
-    } catch (error) {
+    } catch (_error) {
       showAlert("Unable to upload image", "", true);
     }
   };
@@ -97,7 +97,7 @@ const AdminPanel: FC = () => {
       queryClient.invalidateQueries({
         queryKey: ["prices"]
       });
-    } catch (error) {
+    } catch (_error) {
       showAlert("Unable to add pricing", "", true);
     }
   }
@@ -109,7 +109,7 @@ const AdminPanel: FC = () => {
       queryClient.invalidateQueries({
         queryKey: ["prices"]
       });
-    } catch (error) {
+    } catch (_error) {
       showAlert("Unable to update price", "", true);
     }
   }

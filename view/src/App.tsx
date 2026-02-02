@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState, type FunctionComponent } from 'react'
 import './App.css';
 import { Route, BrowserRouter as Router, Routes } from 'react-router';
@@ -37,7 +38,9 @@ const App: FunctionComponent = () => {
         if (adminRes.data) {
           setIsAdmin(true);
         }
-      } catch (error) { }
+      } catch (error) {
+        console.error(error)
+      }
     }
     fetchAsync();
   });
@@ -59,7 +62,7 @@ const App: FunctionComponent = () => {
       console.log(data);
       await axios.post('http://localhost:4004/api/users', data);
       showAlert("Succesfully created account", "", false);
-    } catch (error) {
+    } catch (_error) {
       showAlert("Unable to create account", "", true);
     }
   };
@@ -69,12 +72,13 @@ const App: FunctionComponent = () => {
       const res = await axios.post("http://localhost:4004/api/login", data);
       showAlert("Login succesful", "", false);
       setUser({
+        id: res.data.id,
         username: res.data.username
       });
       localStorage.setItem('user', JSON.stringify({
         username: res.data.username
       }));
-    } catch (error) {
+    } catch (_error) {
       showAlert("Login failed", "", true);
     }
   };
@@ -85,7 +89,7 @@ const App: FunctionComponent = () => {
         feedback
       });
       showAlert("Feedback added", "", false);
-    } catch (error) {
+    } catch (_error) {
       showAlert("Unable to add your feedback", "", true);
     }
   };

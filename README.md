@@ -1,0 +1,1 @@
+A minimal tourism site built using Node.js and React using the MVC architecture. Uses a MySQL database, running in the backend using the Sequelize object-relational mapper.

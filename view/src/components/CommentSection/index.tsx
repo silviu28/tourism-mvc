@@ -22,7 +22,7 @@ const CommentSection: FC = () => {
       try {
         const commentsRes = await axios.get("http://localhost:4004/api/comments");
         return commentsRes.data;
-      } catch (error) {
+      } catch (_error) {
         showAlert("Cannot display comments", "", true);
       }
     }
@@ -40,11 +40,13 @@ const CommentSection: FC = () => {
         queryClient.invalidateQueries({
           queryKey: ["comments"],
         });
-      } catch (error) {
+      } catch (_error) {
         showAlert("Unable to add your comment", "", true);
       }
     }
   });
+
+  if (!user) return <div>Context error</div>;
 
   if (isLoading) {
     return <p>Loading...</p>;
@@ -62,7 +64,7 @@ const CommentSection: FC = () => {
           disabled={!user.username}
         />
         <button
-          onClick={() => mutate({ username: user.username, comment })}
+          onClick={() => mutate({ username: user.username!, comment })}
           disabled={!user.username}>
           Send
         </button>

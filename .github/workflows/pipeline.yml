@@ -1,0 +1,96 @@
+name: Deployment pipeline
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize]
+
+  push:
+    branches:
+      - main
+
+jobs:
+  deployment_pipeline:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install dependencies for backend
+        working-directory: ./server
+        run: npm install
+
+      - name: Install dependencies for frontend
+        working-directory: ./view
+        run: npm install
+
+      - name: Run database unit tests
+        working-directory: ./server
+        run: npm run test
+
+      - name: Run server linter
+        working-directory: ./server
+        run: npm run lint
+
+      - name: Run view linter
+        working-directory: ./view
+        run: npm run lint
+
+      - name: Build React
+        working-directory: ./view
+        run: npm run build
+
+      - name: Move view build for static serve
+        working-directory: ./view
+        run: mv dist ../server
+
+      - name: Build server
+        working-directory: ./server
+        run: npm run build
+
+  tag_release:
+    needs: [deployment_pipeline]
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'push' }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Bump version and push tag
+        uses: anothrNick/github-tag-action@1.75.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  notify_through_discord:
+    needs: [deployment_pipeline]
+    runs-on: ubuntu-latest
+    if: ${{ always() && github.event_name == 'push' }}
+    steps:
+      - name: Success message
+        uses: sarisia/actions-status-discord@v1
+        if: success()
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          status: Success
+          title: Deployment successful
+          description: Deployment successful for `${{ github.repository }}`. `(${{ github.sha }})`
+
+      - name: Failure message
+        uses: sarisia/actions-status-discord@v1
+        if: failure()
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          status: Failure
+          title: Deployment failed
+          description: Deployment failed for `${{ github.repository }}`! `(${{ github.sha }})`
+
+  health_check:
+    needs: [deployment_pipeline]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check health URL
+        uses: jtalk/url-health-check-action@v4
+        with:
+          url: ${{ secrets.HEALTH_CHECK_URL }}
+          max-attempts: 3
+          retry-delay: 5s

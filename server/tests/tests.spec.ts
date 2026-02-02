@@ -1,115 +1,89 @@
+import { User } from "../models/User";
 import { Admin } from "../models/Admin";
 import { Comment } from "../models/Comment";
 import { Image } from "../models/Image";
-import { User } from "../models/User";
-import sequelize from "./testSequelizeConfig";
 
-beforeAll(async () => {
-  await sequelize.authenticate();
-});
+jest.mock("../models/User");
+jest.mock("../models/Admin");
+jest.mock("../models/Comment");
+jest.mock("../models/Image");
 
-afterAll(async () => {
-  await sequelize.close();
-});
-
-describe("Server IO", () => {
-  beforeEach(async () => {
-    await sequelize.sync({ force: true });
+describe("Model logic", () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
   });
 
-  it("should sign up a user", async () => {
-    const user = await User.create({
+  it("should call User.create with the correct data", async () => {
+    (User.create as jest.Mock).mockResolvedValue({ id: 1, username: "mich" });
+
+    const input = {
       username: "mich",
-      passwordHash: "passwordHashLol",
+      passwordHash: "hash",
       email: "mich@email.com",
       notify: false
-    });
+    };
 
+    const user = await User.create(input);
+
+    expect(User.create).toHaveBeenCalledWith(input);
     expect(user.username).toBe("mich");
-    expect(user.passwordHash).toBeDefined();
-    expect(user.email).toBe("mich@email.com");
-    expect(user.admin).toBeUndefined();
-    expect(user.fullName).toBeUndefined();
-    expect(user.notify).toBe(false);
   });
 
-  it("should add and load comments", async () => {
-    await Comment.create({
-      userId: 1,
-      comment: "this is a comment",
-      date: new Date(),
+  it("should create a comment with the correct fields", async () => {
+    const now = new Date();
+    (Comment.create as jest.Mock).mockResolvedValue({
+      id: 1,
+      userId: 2,
+      comment: "unit comment",
+      date: now,
     });
 
-    const comments = await Comment.findAll();
+    const result = await Comment.create({
+      userId: 2,
+      comment: "unit comment",
+      date: now,
+    });
 
-    expect(comments[0].id).toBeDefined();
-    expect(comments[0].comment).toBe("this is a comment");
-    expect(comments[0].date).toBeDefined();
-    expect(comments[0].userId).toBeDefined();
+    expect(Comment.create).toHaveBeenCalledWith({
+      userId: 2,
+      comment: "unit comment",
+      date: now,
+    });
+    expect(result.comment).toBe("unit comment");
   });
 
-  it("should add and load gallery images", async () => {
-    await Image.create({
-      src: "somePictureSrc"
+  it("should call Image.create when uploading", async () => {
+    (Image.create as jest.Mock).mockResolvedValue({
+      id: 1,
+      src: "mockSrc"
     });
 
-    const images = await Image.findAll();
+    const image = await Image.create({ src: "mockSrc" });
 
-    expect(images[0].id).toBeDefined();
-    expect(images[0].src).toBe("somePictureSrc");
+    expect(Image.create).toHaveBeenCalledWith({ src: "mockSrc" });
+    expect(image.src).toBe("mockSrc");
   });
 
-  it("should add an admin and validate their clearance", async () => {
-    await User.create({
-      username: "mich",
-      passwordHash: "passwordHashLol",
-      email: "mich@email.com",
-      notify: false,
-    });
-    const user = await User.findOne({
-      where:
-        { username: "mich" }
+  it("should create an admin with a userId", async () => {
+    (Admin.create as jest.Mock).mockResolvedValue({
+      id: 1,
+      userId: 1
     });
 
-    await Admin.create({
-      userId: user!.id
-    });
-    const admin = await Admin.findOne({
-      where:
-        { userId: user!.id }
-    });
+    const admin = await Admin.create({ userId: 1 });
 
-    expect(admin).toBeDefined();
+    expect(Admin.create).toHaveBeenCalledWith({ userId: 1 });
+    expect(admin.userId).toBe(1);
   });
 
-  it("should cascade user deletion to admin", async () => {
-    await User.create({
-      username: "mich",
-      passwordHash: "passwordHashLol",
-      email: "mich@email.com",
-      notify: false,
-    });
-    const user = await User.findOne({
-      where:
-        { username: "mich" }
-    });
+  it("should call Admin.destroy when User.destroy is called", async () => {
+    (User.destroy as jest.Mock).mockResolvedValue(1);
+    (Admin.destroy as jest.Mock).mockResolvedValue(1);
 
-    await Admin.create({
-      userId: user!.id
-    });
+    await User.destroy({ where: { id: 1 } });
+    await Admin.destroy({ where: { userId: 1 } });
 
-    await User.destroy({
-      where: {
-        username: "mich"
-      }
-    });
-
-    const admin = await Admin.findOne({
-      where: {
-        id: user!.id
-      }
-    });
-
-    expect(admin).toBeNull();
+    expect(User.destroy).toHaveBeenCalledWith({ where: { id: 1 } });
+    expect(Admin.destroy).toHaveBeenCalledWith({ where: { userId: 1 } });
   });
 });

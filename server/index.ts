@@ -53,6 +53,11 @@ app.get("/index", (_req, res) => {
   res.sendFile(path.join(__dirname, "dist", "index.html"));
 });
 
+// Health check endpoint
+app.get("/health", (_req, res) => {
+  res.send("health is pretty good");
+});
+
 app.listen(PORT, () => {
   console.log(`Server running @ http://localhost:${PORT}`);
 });

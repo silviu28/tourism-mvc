@@ -56,7 +56,7 @@ const FrontPage: FunctionComponent = () => {
         </div>
 
         <div className="container">
-          <p>👋​</p>
+          <p>👋</p>
           <h2>Travel Like a Local</h2>
           <p>Our team of local guides and experts provide insider tips and authentic experiences, helping you explore off-the-beaten-path gems.</p>
         </div>

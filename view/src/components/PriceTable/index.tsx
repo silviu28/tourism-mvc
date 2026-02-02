@@ -25,7 +25,7 @@ const PriceTable: FC = () => {
       try {
         const pricesRes = await axios.get("http://localhost:4004/api/prices");
         return pricesRes.data;
-      } catch (error) {
+      } catch (_error) {
         showAlert("Unable to load prices", "", true);
       }
     }
