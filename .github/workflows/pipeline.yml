@@ -19,35 +19,45 @@ jobs:
           node-version: '22'
 
       - name: Install dependencies for backend
-        run: cd ./server && npm install
+        working-directory: ./server
+        run: npm install
 
       - name: Install dependencies for frontend
-        run: cd ../view && npm install
+        working-directory: ./view
+        run: npm install
 
       - name: Run database unit tests
-        run: cd ../server && npm run test
+        working-directory: ./server
+        run: npm run test
 
       - name: Run server linter
+        working-directory: ./server
         run: npm run lint
 
       - name: Run view linter
-        run: cd ../view && npm run lint
+        working-directory: ./view
+        run: npm run lint
 
       - name: Build React
+        working-directory: ./view
         run: npm run build
 
       - name: Move view build for static serve
+        working-directory: ./view
         run: mv dist ../server
 
       - name: Build server
-        run: cd ../server && npm run build
+        working-directory: ./server
+        run: npm run build
       
       - name: Test run app
-        run: npm start
+        working-directory: ./server
+        run: timeout 10s npm start
 
   tag_release:
     needs: [deployment_pipeline]
     runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'push' }}
     steps:
       - uses: actions/checkout@v4
       - name: Bump version and push tag
