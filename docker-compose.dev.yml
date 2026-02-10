@@ -1,0 +1,51 @@
+services:
+  mysql:
+    image: mysql:9.6.0
+    ports:
+      - 3306:3306
+    environment:
+      # MYSQL_ROOT_PASSWORD: root_password
+      # MYSQL_DATABASE: your_database_name
+      # MYSQL_USER: your_username
+      # MYSQL_PASSWORD: your_password
+    volumes:
+      - ./mysql_data:/var/lib/mysql:z
+    # command: --default-authentication-plugin=mysql_native_password
+  
+  server:
+    image: tourism-server-dev
+    build:
+      context: ./server
+      dockerfile: dev.Dockerfile
+    volumes:
+      - ./backend:/usr/src/app:z
+    ports:
+      - 4004:4004
+    environment:
+      # - DB_HOST=mysql
+      # - DB_PORT=3306
+      # - DB_NAME=your_database_name
+      # - DB_USER=your_username
+      # - DB_PASSWORD=your_password
+    depends_on:
+      - mysql
+
+  app:
+    image: tourism-view-dev
+    build:
+      context: ./view
+      dockerfile: dev.Dockerfile
+    volumes:
+      - ./frontend:/usr/src/app:z
+    ports:
+      - 5173:5173
+  
+  nginx:
+    image: nginx:1.29.4
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.dev.conf:z
+    ports:
+      - 8080:80
+    depends_on:
+      - app
+      - server
