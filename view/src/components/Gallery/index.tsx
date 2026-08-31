@@ -40,8 +40,8 @@ const Gallery: FC = () => {
 
   if (!images.length) {
     return (
-      <div>
-        <p>Seems there's no images uploaded..</p>
+      <div className='carousel-container'>
+        <p style={{ background: 'red' }}>Unable to get images, contact the administrator of this page.</p>
       </div>
     );
   }

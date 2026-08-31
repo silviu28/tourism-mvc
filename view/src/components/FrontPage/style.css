@@ -1,6 +1,9 @@
 .scroll-btn {
   position: fixed;
+  width: 67px;
+  height: 67px;
   left: 100%;
   top: 100%;
-  transform: translate(-10vw, -10vh);
+  transform: translate(-8vw, -15vh);
+  z-index: 20;
 }
