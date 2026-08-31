@@ -2,49 +2,7 @@ import { useContext, useState, type FunctionComponent, type SyntheticEvent } fro
 import { useNavigate } from "react-router";
 import content from "../../content.json";
 import AlertContext from "../../AlertContext";
-import styled from "styled-components";
-import z, { set } from "zod";
-
-const PageWrapper = styled.div`
-  position: relative;
-  width: 100vw;
-  height: 94vh;
-  overflow: hidden;
-  z-index: 0;
-`;
-
-const Background = styled.img`
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  z-index: -1;
-`;
-
-const FloatContainer = styled.div`
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  padding: 3rem 3rem;
-  background-color: white;
-  border-radius: 8px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-`;
-
-const FlexCol = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-`;
-
-const CheckboxRow = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin: 8px 0;
-`;
+import { PageWrapper, Background, FloatContainer, FlexCol, CheckboxRow } from "../styled";
 
 interface FormData {
   name?: string,
@@ -122,30 +80,30 @@ const Signup: FunctionComponent<SignupProps> = ({ onSubmit }) => {
             <div style={{ display: 'flex', flexDirection: 'row', gap: '10px' }}>
               <div style={{ display: 'flex', flexDirection: 'column' }}>
                 <label>Username: *</label>
-                <input type="text" onChange={e => setCreds({ ... creds, username: e.target.value })} value={creds.username} />
+                <input type="text" onChange={(e) => setCreds({ ... creds, username: e.target.value })} value={creds.username} />
               </div>
               <div style={{ display: 'flex', flexDirection: 'column' }}>
                 <label>Full Name: </label>
-                <input type="text" onChange={e => setCreds({ ... creds, name: e.target.value })} value={creds.name} />
+                <input type="text" onChange={(e) => setCreds({ ... creds, name: e.target.value })} value={creds.name} />
               </div>
             </div>
 
             <label>Date of Birth: </label>
-            <input type="date" onChange={e => setCreds({ ... creds, dob: e.target.value })} value={creds.dob} />
+            <input type="date" onChange={(e) => setCreds({ ... creds, dob: e.target.value })} value={creds.dob} />
 
             <label>Email: *</label>
-            <input type="text" onChange={e => setCreds({ ... creds, email: e.target.value })} value={creds.email} />
+            <input type="text" onChange={(e) => setCreds({ ... creds, email: e.target.value })} value={creds.email} />
 
             <div style={{ display: 'flex', flexDirection: 'row', gap: '10px' }}>
 
               <div style={{ display: 'flex', flexDirection: 'column' }}>
                 <label>Password: *</label>
-                <input type="password" onChange={e => setCreds({ ... creds, password: e.target.value })} value={creds.password} />
+                <input type="password" onChange={(e) => setCreds({ ... creds, password: e.target.value })} value={creds.password} />
               </div>
 
               <div style={{ display: 'flex', flexDirection: 'column' }}>
                 <label>Confirm password: *</label>
-                <input type="password" onChange={e => setCreds({ ... creds, confirm: e.target.value })} value={creds.confirm} />
+                <input type="password" onChange={(e) => setCreds({ ... creds, confirm: e.target.value })} value={creds.confirm} />
               </div>
 
             </div>
@@ -159,7 +117,7 @@ const Signup: FunctionComponent<SignupProps> = ({ onSubmit }) => {
               <button className="button1" type="submit">
                 Sign Up
               </button>
-              <button className="button1" onClick={() => navigate('/login')} style={{ alignSelf: 'center' }}>
+              <button type="button" className="button1" onClick={() => navigate('/login')} style={{ alignSelf: 'center' }}>
                 Already logged?
               </button>
             </div>
