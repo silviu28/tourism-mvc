@@ -10,6 +10,20 @@ const selectedStyle = {
   background: 'lightblue'
 };
 
+interface Notification {
+  category: string,
+  duration: number,
+  title: string,
+  content: string
+}
+
+const NOTIFY_DEFAULT: Notification = {
+  category: "",
+  duration: 24 * 3600,
+  title: "",
+  content: ""
+} as const;
+
 const AdminPanel: FC = () => {
   const queryClient = useQueryClient();
 
@@ -18,6 +32,14 @@ const AdminPanel: FC = () => {
   const [selectedItem, setSelectedItem] = useState<AdminPanelItem | null>(null);
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
   const [formType, setFormType] = useState<"image" | "price" | "updatePrice">("image");
+  const [notificationCategory, setNotificationCategory] = useState('Announcement')
+  const [addingNewNotificationCategory, setAddingNewNotificationCategory] = useState(false)
+  const [notificationCategoryName, setNotificationCategoryName] = useState('')
+  const [notificationTime, setNotificationTime] = useState({
+    time: 'A day',
+    ms: 24 * 3600 * 1000
+  })
+  const [notification, setNotification] = useState<Notification>(() => NOTIFY_DEFAULT);
 
   const openForm = (type: "image" | "price" | "updatePrice") => {
     setFormType(type);
@@ -61,6 +83,18 @@ const AdminPanel: FC = () => {
       }
     });
 
+  const { data: notificationCategories = [], isLoading: categoriesLoading }
+    = useQuery<{ id: number, name: string }[]>({
+    queryKey: ["notification-categories"],
+    queryFn: async () => {
+      try {
+        const notifRes = await axios.get("http://localhost:4004/api/notificationCategory");
+        return notifRes.data;
+      } catch (_error) {
+        showAlert("Unable to retrieve notification categories", "", true);
+      }
+    }
+  });
 
   const remove = async (selectedItem: AdminPanelItem, path: string) => {
     if (!selectedItem) return;
@@ -114,8 +148,50 @@ const AdminPanel: FC = () => {
     }
   }
 
+  const addCategory = async () => {
+    try {
+      await axios.post('http://localhost:4004/api/notificationCategory', { name: notificationCategoryName });
+      showAlert("Category added", "", false);
+      queryClient.invalidateQueries({
+        queryKey: ["notification-categories"]
+      });
+    } catch (_error) {
+      showAlert("Unable to add category", "", true);
+    }
+  }
+
+  const sendNotification = async (noti: Notification) => {
+    try {
+      await axios.post('http://localhost:4004/api/notifications', noti);
+      showAlert("Notification sent", "", false);
+      queryClient.invalidateQueries({
+        queryKey: ["notifications-all"]
+      });
+    } catch (_error) {
+      showAlert("Unable to send notification", "", true);
+    }
+  }
+
   return (
     <div className="slight-margin">
+      <Modal
+        isVisible={addingNewNotificationCategory}
+        visibilitySetter={setAddingNewNotificationCategory}
+      >
+        <label>Category:</label>
+        <input
+          type="text"
+          value={notificationCategoryName}
+          onChange={(e) => setNotificationCategoryName(e.target.value)}
+        />
+        <button
+          disabled={!notificationCategoryName}
+          onClick={() => addCategory()}
+        >
+          Add
+        </button>
+      </Modal>
+
       <Modal
         isVisible={isModalVisible}
         visibilitySetter={setIsModalVisible}>
@@ -127,6 +203,7 @@ const AdminPanel: FC = () => {
           onUpdatePrice={updatePrice}
         />
       </Modal>
+
       <h1>Edit price page</h1>
       <div className="container">
         {!pricesLoading && <ul>
@@ -143,6 +220,7 @@ const AdminPanel: FC = () => {
         <button onClick={() => remove(selectedItem!, "prices")}>Delete</button>
         <button onClick={() => openForm("updatePrice")}>Update</button>
       </div>
+
       <h1>Edit images shown in gallery</h1>
       <div className="container">
         {!galleryLoading && <ul>
@@ -155,6 +233,7 @@ const AdminPanel: FC = () => {
         <button onClick={() => openForm("image")}>+</button>
         <button onClick={() => remove(selectedItem!, "images")}>Delete</button>
       </div>
+
       <h1>View feedbacks sent by users</h1>
       <div className="container">
         {!feedbackLoading && <ul>
@@ -165,6 +244,49 @@ const AdminPanel: FC = () => {
               onClick={() => setSelectedItem(fb)}>{fb.feedback}</li>)}
         </ul>}
         <button onClick={() => remove(selectedItem!, "feedback")}>Delete</button>
+      </div>
+
+      <h1>Alert users via notification</h1>
+      <div className="container" style={{ display: 'flex', flexDirection: 'column' }}>
+        
+        <label>Category:</label>
+        <select value={notificationCategory} onChange={(e) => setNotificationCategory(e.target.value)}>
+          {notificationCategories.length
+            ? notificationCategories.map((nc) => 
+              <option key={nc.id} value={nc.name}>{nc.name}</option>
+            )
+            : <option>An error occured.</option>
+          }
+          <option onClick={() => setAddingNewNotificationCategory(true)}>Add new...</option>
+        </select>
+
+        <p>Duration:</p>
+        <select value={notificationTime.time}>
+          <option onClick={() => setNotificationTime({ time: 'One day', ms: 24 * 3600 * 1000 })}>One day</option>
+          <option onClick={() => setNotificationTime({ time: 'One week', ms: 24 * 3600 * 1000 * 7 })}>One week</option>
+          <option onClick={() => setNotificationTime({ time: 'One month', ms: 24 * 3600 * 1000 * 31 })}>One month</option>
+          <option onClick={() => setNotificationTime({ time: 'One year', ms: 24 * 3600 * 1000 * 365 })}>One year</option>
+        </select>
+
+        <label>Title:</label>
+        <input
+          type="text"
+          value={notification.title}
+          onChange={(e) => setNotification({ ...notification, title: e.target.value })}
+        />
+
+        <label>Content:</label>
+        <input
+          type="text"
+          style={{ width: '90%' }}
+          value={notification.content}
+          onChange={(e) => setNotification({ ...notification, content: e.target.value })}/>
+        <button
+          disabled={!!0}
+          onClick={() => sendNotification({ ...notification, duration: notificationTime.ms })}
+        >
+            Send
+        </button>
       </div>
     </div>
   );

@@ -50,7 +50,7 @@ router.post("/api/notifications", adminTokenAuthenticator, async (req, res) => {
       content,
       category,
       duration,
-      createdAt: new Date(),
+      publishDate: new Date(),
     });
 
     return res.status(201).json(notification);
