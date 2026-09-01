@@ -1,5 +1,4 @@
 import { useState, type FunctionComponent, type ReactNode } from "react";
-import './style.css';
 import styled from "styled-components";
 
 const ImgThumbnail = styled.img`
