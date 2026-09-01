@@ -9,11 +9,12 @@ const PolaroidFrame = styled.div`
   border: 1px solid #ddd;
   border-radius: 2px;
   padding: 20px;
-  padding-bottom: 80px;
+  padding-bottom: 20px;
   text-align: center;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15), 0 1px 3px rgba(0, 0, 0, 0.1);
 
   sub {
+    margin-top: 20px;
     color: black;
   }
 

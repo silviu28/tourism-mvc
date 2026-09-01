@@ -1,7 +1,6 @@
 import { useContext, useState, type FC } from "react";
 import type { Image } from "../../types";
 import axios from "axios";
-import "./style.css";
 import { useQuery } from "@tanstack/react-query";
 import AlertContext from "../../AlertContext";
 import styled from "styled-components";
