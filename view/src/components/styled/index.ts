@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 
 export const PageWrapper = styled.div`
   position: relative;
@@ -39,4 +39,21 @@ export const CheckboxRow = styled.div`
   align-items: center;
   gap: 8px;
   margin: 8px 0;
+`;
+
+const fadeIn = keyframes`
+  from { opacity: 0; }
+  to { opacity: 1; }
+`;
+
+export const Backdrop = styled.div`
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 11, 14, 0.65);
+  backdrop-filter: blur(2px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: ${fadeIn} 0.15s ease;
 `;
