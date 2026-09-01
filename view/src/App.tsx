@@ -5,7 +5,6 @@ import { Route, BrowserRouter as Router, Routes } from 'react-router';
 import Navbar from './components/Navbar';
 import FrontPage from './components/FrontPage';
 import Signup from './components/Signup';
-import TripsPage from './components/Wiki';
 import PriceTable from './components/PriceTable';
 import Contact from './components/Contact';
 import axios from 'axios';

@@ -63,8 +63,8 @@ const BlogPosts = () => {
   const [title, setTitle] = useState("");
   const [blogHtml, setBlogHtml] = useState("");
   const [preview, setPreview] = useState<PreviewState | null>(null);
-  const [saving, setSaving] = useState(false);
-  const [saveError, setSaveError] = useState<string | null>(null);
+  const [saving, _setSaving] = useState(false);
+  const [saveError, _setSaveError] = useState<string | null>(null);
 
   useEffect(() => {
     const last = localStorage.getItem("lastBlog");
