@@ -31,3 +31,10 @@ export interface Image {
 };
 
 export type AdminPanelItem = Price | Feedback | Image;
+
+export interface Notification {
+  category: string,
+  duration: number,
+  title: string,
+  content: string
+};

@@ -1,5 +1,5 @@
 import { useContext, useState, type FC } from "react";
-import { type AdminPanelItem, type Feedback, type Image, type Price } from "../../types";
+import { type AdminPanelItem, type Feedback, type Image, type Notification, type Price } from "../../types";
 import axios from "axios";
 import Modal from "../Modal";
 import AdminForm from "../AdminForm";
@@ -9,13 +9,6 @@ import AlertContext from "../../AlertContext";
 const selectedStyle = {
   background: 'lightblue'
 };
-
-interface Notification {
-  category: string,
-  duration: number,
-  title: string,
-  content: string
-}
 
 const NOTIFY_DEFAULT: Notification = {
   category: "",
@@ -285,7 +278,7 @@ const AdminPanel: FC = () => {
           disabled={!!0}
           onClick={() => sendNotification({ ...notification, duration: notificationTime.ms })}
         >
-            Send
+          Send
         </button>
       </div>
     </div>

@@ -7,7 +7,7 @@ const router = express.Router();
 router.get("/api/notifications", adminTokenAuthenticator, async (_req, res) => {
   try {
     const notifications = await Notification.findAll({
-      order: [["createdAt", "DESC"]],
+      order: [["publishDate", "DESC"]],
     });
 
     res.status(200).json(notifications);
@@ -22,11 +22,11 @@ router.get("/api/notifications/active", async (_req, res) => {
     const now = Date.now();
 
     const notifications = await Notification.findAll({
-      order: [["createdAt", "DESC"]],
+      order: [["publishDate", "DESC"]],
     });
 
     const active = notifications.filter(n => {
-      const createdAtMs = new Date(n.createdAt).getTime();
+      const createdAtMs = new Date(n.publishDate).getTime();
       return createdAtMs + n.duration > now;
     });
 

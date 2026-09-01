@@ -6,6 +6,8 @@ import AlertContext from "../../AlertContext";
 
 import styled from "styled-components";
 import { useState, useRef, useEffect, type FunctionComponent } from "react";
+import { useQuery } from "@tanstack/react-query";
+import type { Notification } from "../../types";
 
 const Bar = styled.div`
   display: flex;
@@ -157,14 +159,6 @@ const EmptyState = styled.div`
   color: #9ca3af;
 `;
 
-interface Notification {
-  id: string;
-  title: string;
-  message: string;
-  time: string;
-  unread: boolean;
-}
-
 interface NotificationNotificationProps {
   notifications: Notification[];
 }
@@ -173,7 +167,7 @@ const NotificationNotification: FunctionComponent<NotificationNotificationProps>
   const [open, setOpen] = useState(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
 
-  const unreadCount = notifications.filter(n => n.unread).length;
+  const unreadCount = notifications.filter(n => n).length;
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -204,12 +198,12 @@ const NotificationNotification: FunctionComponent<NotificationNotificationProps>
           {notifications.length === 0 
           ? <EmptyState>You're all caught up.</EmptyState>
           : notifications.map((n) =>
-              <NotificationItem key={n.id}>
-                {n.unread && <UnreadDot />}
+              <NotificationItem key={n.title}>
+                {/* {n.unread && <UnreadDot />} */}
+                <UnreadDot />
                 <NotificationContent>
                   <NotificationTitle>{n.title}</NotificationTitle>
-                  <NotificationMessage>{n.message}</NotificationMessage>
-                  <NotificationTime>{n.time}</NotificationTime>
+                  <NotificationMessage>{n.content}</NotificationMessage>
                 </NotificationContent>
               </NotificationItem>
             )
@@ -229,6 +223,18 @@ interface NavbarProps {
 const Navbar: FC<NavbarProps> = ({ isAdmin }) => {
   const [user, setUser] = useContext(UserContext);
   const showAlert = useContext(AlertContext);
+
+  const { data: notifications } = useQuery<Notification[]>({
+    queryKey: ["recent-notifs"],
+    queryFn: async () => {
+      try {
+        const notifs = await axios.get('http://localhost:4004/api/notifications/active');
+        return notifs.data;
+      } catch (_error) {
+        return [];
+      }
+    }
+  })
 
   const promptLogout = async () => {
     if (window.confirm("Logout?")) {
@@ -267,7 +273,7 @@ const Navbar: FC<NavbarProps> = ({ isAdmin }) => {
           <Link to="/blog">Blog</Link>
         </li>
       </NavFlex>
-      <NotificationNotification notifications={[]} />
+      <NotificationNotification notifications={notifications || []} />
 
       <ul>
         {user!.username && (
