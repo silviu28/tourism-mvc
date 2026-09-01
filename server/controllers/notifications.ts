@@ -4,16 +4,30 @@ import { Notification } from "../models/Notification";
 
 const router = express.Router();
 
-router.get("/api/notifications", adminTokenAuthenticator, async (_req, res) => {
+router.get("/api/notifications", adminTokenAuthenticator, async (req, res) => {
   try {
-    const notifications = await Notification.findAll({
+    const page = parseInt(req.query.page as string, 10) || 1;
+    const pageSize = 10;
+
+    if (page < 1) {
+      return res.status(400).json({ error: "page must be 1 or greater" });
+    }
+
+    const { rows, count } = await Notification.findAndCountAll({
       order: [["publishDate", "DESC"]],
+      limit: pageSize,
+      offset: pageSize * (page - 1),
     });
 
-    res.status(200).json(notifications);
+    return res.status(200).json({
+      notifications: rows,
+      totalCount: count,
+      totalPages: Math.ceil(count / pageSize),
+      currentPage: page,
+    });
   } catch (err) {
     console.error("Failed to fetch notifications:", err);
-    res.status(500).json({ error: "Failed to fetch notifications" });
+    return res.status(500).json({ error: "Failed to fetch notifications" });
   }
 });
 
@@ -57,6 +71,25 @@ router.post("/api/notifications", adminTokenAuthenticator, async (req, res) => {
   } catch (err) {
     console.error("Failed to create notification:", err);
     return res.status(500).json({ error: "Failed to create notification" });
+  }
+});
+
+router.put("/api/notifications/:id", adminTokenAuthenticator, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updated = req.body;
+
+    const notification = await Notification.findByPk(id);
+
+    if (!notification) {
+      return res.status(404).json({ error: "Notification not found" });
+    }
+
+    await notification.update({ ...updated });
+    return res.status(200).json(notification);
+  } catch (err) {
+    console.error("Failed to update notification:", err);
+    return res.status(500).json({ error: "Failed to update notification" });
   }
 });
 
