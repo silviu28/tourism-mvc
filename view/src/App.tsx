@@ -17,11 +17,22 @@ import AdminPanel from './components/AdminPanel';
 import Gallery from './components/Gallery';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import AlertContext from './AlertContext';
+import BlogPosts from './components/BlogPosts';
+import styled from 'styled-components';
+import Footer from './components/Footer';
 
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = "http://localhost:4004";
 
 const queryClient = new QueryClient();
+
+const AppWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+`;
+
+const Content = styled.main`flex: 1;`;
 
 const App: FunctionComponent = () => {
   const [user, setUser] = useState<UserData>(() => JSON.parse(localStorage.getItem('user') || "{}"));
@@ -98,27 +109,32 @@ const App: FunctionComponent = () => {
     <QueryClientProvider client={queryClient}>
       <AlertContext.Provider value={showAlert}>
         <UserContext.Provider value={[user, setUser]}>
-          <Router>
-            <Alert
-              title={alertTitle}
-              content={alertContent}
-              error={isError}
-            />
+          <AppWrapper>
+            <Router>
+              <Content>
+               <Alert
+                  title={alertTitle}
+                  content={alertContent}
+                  error={isError}
+                />
 
-            <Navbar isAdmin={isAdmin} />
-
-            <Routes>
-              <Route path="/" element={<FrontPage />} />
-              <Route path="/signup" element={<Signup onSubmit={createAccount} />} />
-              <Route path="/trips" element={<TripsPage />} />
-              <Route path="/prices" element={<PriceTable />} />
-              <Route path="/contact" element={<Contact onSubmit={addFeedback} />} />
-              <Route path="/login" element={<Login onSubmit={login} />} />
-              {isAdmin &&
-                <Route path="/admin" element={<AdminPanel />} />}
-              <Route path="/gallery" element={<Gallery />} />
-            </Routes>
-          </Router>
+                <Navbar isAdmin={isAdmin} />
+              </Content>
+              <Routes>
+                <Route path="/" element={<FrontPage />} />
+                <Route path="/signup" element={<Signup onSubmit={createAccount} />} />
+                <Route path="/trips" element={<TripsPage />} />
+                <Route path="/prices" element={<PriceTable />} />
+                <Route path="/contact" element={<Contact onSubmit={addFeedback} />} />
+                <Route path="/login" element={<Login onSubmit={login} />} />
+                {isAdmin &&
+                  <Route path="/admin" element={<AdminPanel />} />}
+                <Route path="/gallery" element={<Gallery />} />
+                <Route path="/blog" element={<BlogPosts />} />
+              </Routes>
+            </Router>
+            <Footer />
+          </AppWrapper>
         </UserContext.Provider>
       </AlertContext.Provider>
     </QueryClientProvider>
