@@ -1,7 +1,7 @@
 import type { FunctionComponent } from "react";
 import Collapsible from "../Collapsible";
 
-const TripsPage: FunctionComponent = () => {
+const Wiki: FunctionComponent = () => {
   return (
     <div className="slight-margin">
       <Collapsible
@@ -29,7 +29,7 @@ const TripsPage: FunctionComponent = () => {
       <Collapsible
         title="Transylvania"
         thumbnailSrc="https://chasingthedonkey.b-cdn.net/wp-content/uploads/2018/04/Draculas-castle_Transylvania_shutterstock_153673181.jpg"
-        alt="Image of Transylvanai from Chasing The Donkey"
+        alt="Image of Transylvania from Chasing The Donkey"
       >
         <h2>Transylvania</h2>
         <p>Transylvania is home to some of Europe's best-preserved medieval towns and outstanding rural landscapes. Brasov - home to the largest Gothic church in Eastern Europe, Sibiu - with its cobblestone streets and Transylvanian Baroque architecture, and Sighisoara hilltop citadel with secret passageways and a 14th century clock tower are some of Transylvania most popular destinations. Tiny shops that offer antiques and handicrafts made by local artisans line the narrow streets flanked by pastel-colored houses of the historic sections of many other towns in Transylvania.</p>
@@ -51,4 +51,4 @@ const TripsPage: FunctionComponent = () => {
   );
 };
 
-export default TripsPage;
+export default Wiki;

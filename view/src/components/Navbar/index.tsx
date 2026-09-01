@@ -258,7 +258,7 @@ const Navbar: FC<NavbarProps> = ({ isAdmin }) => {
             <li><Link to="/login">Login</Link></li>
           </>
         }
-        <li><Link to="/trips">Trips</Link></li>
+        <li><Link to="/wiki">Wiki</Link></li>
         <li><Link to="/prices">Prices</Link></li>
         <li><Link to="/gallery">Gallery</Link></li>
         {user!.username && isAdmin &&
