@@ -13,7 +13,7 @@ router.get("/api/notificationCategory", adminTokenAuthenticator, async (_req, re
 });
 
 router.post("/api/notificationCategory", adminTokenAuthenticator, async (req, res) => {
-  const name = req.body as string;
+  const { name } = req.body;
   try {
     const query = await NotificationCategory.create({ name });
     res.status(200).json(query);
