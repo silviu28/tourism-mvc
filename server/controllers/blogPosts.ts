@@ -1,12 +1,12 @@
 import express from "express";
 import adminTokenAuthenticator from "../middleware/adminTokenAuthenticator";
-import { Blog } from "../models/Blog";
+import { BlogPost } from "../models/BlogPost";
 
 const router = express.Router();
 
 const PAGE_SIZE = 10;
 
-router.get("/api/blogs", async (req, res) => {
+router.get("/api/blog", async (req, res) => {
   try {
     const page = parseInt(req.query.page as string, 10) || 1;
 
@@ -14,7 +14,7 @@ router.get("/api/blogs", async (req, res) => {
       return res.status(400).json({ error: "page must be 1 or greater" });
     }
 
-    const { rows, count } = await Blog.findAndCountAll({
+    const { rows, count } = await BlogPost.findAndCountAll({
       where: { archived: false },
       order: [["date", "DESC"]],
       limit: PAGE_SIZE,
@@ -28,29 +28,29 @@ router.get("/api/blogs", async (req, res) => {
       currentPage: page,
     });
   } catch (err) {
-    console.error("Failed to fetch blogs:", err);
-    return res.status(500).json({ error: "Failed to fetch blogs" });
+    console.error("Failed to fetch blog posts:", err);
+    return res.status(500).json({ error: "Failed to fetch blog posts" });
   }
 });
 
-router.get("/api/blogs/:id", async (req, res) => {
+router.get("/api/blog/:id", async (req, res) => {
   try {
     const { id } = req.params;
 
-    const blog = await Blog.findByPk(id);
+    const blog = await BlogPost.findByPk(id);
 
     if (!blog) {
-      return res.status(404).json({ error: "Blog not found" });
+      return res.status(404).json({ error: "BlogPost post not found" });
     }
 
     return res.status(200).json(blog);
   } catch (err) {
-    console.error("Failed to fetch blog:", err);
-    return res.status(500).json({ error: "Failed to fetch blog" });
+    console.error("Failed to fetch blog post:", err);
+    return res.status(500).json({ error: "Failed to fetch blog post" });
   }
 });
 
-router.post("/api/blogs", adminTokenAuthenticator, async (req, res) => {
+router.post("/api/blog", adminTokenAuthenticator, async (req, res) => {
   try {
     const { title, html } = req.body;
     const { adminId } = (req as any).admin as { adminId: number }; // ts gaslighting
@@ -59,7 +59,7 @@ router.post("/api/blogs", adminTokenAuthenticator, async (req, res) => {
       return res.status(400).json({ error: "title and html are required" });
     }
 
-    const blog = await Blog.create({
+    const blog = await BlogPost.create({
       title,
       html,
       adminId,
@@ -69,47 +69,47 @@ router.post("/api/blogs", adminTokenAuthenticator, async (req, res) => {
 
     return res.status(201).json(blog);
   } catch (err) {
-    console.error("Failed to create blog:", err);
-    return res.status(500).json({ error: "Failed to create blog" });
+    console.error("Failed to create blog post:", err);
+    return res.status(500).json({ error: "Failed to create blog post" });
   }
 });
 
-router.put("/api/blogs/:id", adminTokenAuthenticator, async (req, res) => {
+router.put("/api/blog/:id", adminTokenAuthenticator, async (req, res) => {
   try {
     const { id } = req.params;
     const updated = req.body;
 
-    const blog = await Blog.findByPk(id);
+    const blog = await BlogPost.findByPk(id);
 
     if (!blog) {
-      return res.status(404).json({ error: "Blog not found" });
+      return res.status(404).json({ error: "BlogPost post not found" });
     }
 
     await blog.update({ ...updated });
 
     return res.status(200).json(blog);
   } catch (err) {
-    console.error("Failed to update blog:", err);
-    return res.status(500).json({ error: "Failed to update blog" });
+    console.error("Failed to update blog post:", err);
+    return res.status(500).json({ error: "Failed to update blog post" });
   }
 });
 
-router.delete("/api/blogs/:id", adminTokenAuthenticator, async (req, res) => {
+router.delete("/api/blog/:id", adminTokenAuthenticator, async (req, res) => {
   try {
     const { id } = req.params;
 
-    const blog = await Blog.findByPk(id);
+    const blog = await BlogPost.findByPk(id);
 
     if (!blog) {
-      return res.status(404).json({ error: "Blog not found" });
+      return res.status(404).json({ error: "BlogPost post not found" });
     }
 
     await blog.destroy();
 
     return res.status(204).end();
   } catch (err) {
-    console.error("Failed to delete blog:", err);
-    return res.status(500).json({ error: "Failed to delete blog" });
+    console.error("Failed to delete blog post:", err);
+    return res.status(500).json({ error: "Failed to delete blog post" });
   }
 });
 

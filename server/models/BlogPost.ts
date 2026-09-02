@@ -2,10 +2,10 @@ import { Table, Model, PrimaryKey, AutoIncrement, Column, DataType, ForeignKey, 
 import { Admin } from "./Admin";
 
 @Table({
-  tableName: "blogs",
+  tableName: "blog_posts",
   timestamps: false,
 })
-export class Blog extends Model {
+export class BlogPost extends Model {
   @PrimaryKey
   @AutoIncrement
   @Column({
