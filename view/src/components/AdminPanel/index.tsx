@@ -322,6 +322,7 @@ const AdminPanel: FC = () => {
 
       <h1>Manage broadcasted notifications</h1>
       <div className="container">
+        {oldNotifsLoading && <p>Please wait...</p>}
         {oldNotifsPage?.notifications.map((noti) => 
           <p
             key={noti.id}

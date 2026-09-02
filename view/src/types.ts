@@ -33,6 +33,7 @@ export interface Image {
 export type AdminPanelItem = Price | Feedback | Image | Notification;
 
 export interface Notification {
+  id?: number,
   category: string,
   duration: number,
   title: string,
