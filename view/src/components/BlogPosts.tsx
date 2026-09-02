@@ -2,6 +2,8 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
+import useAdminAuth from "../hooks/useAdminAuth";
+import Collapsible from "./Collapsible";
 
 interface PreviewState {
   title: string;
@@ -61,14 +63,18 @@ const PreviewContent = styled.div`
   line-height: 1.6;
 `;
 
-interface BlogPost {
+interface BaseBlogPost {
   id: number,
   title: string,
+  description?: string,
   html: string,
-  date: string,
 };
 
-type UnpostedBlogPost = Omit<Omit<BlogPost, "date">, "id">;
+interface BlogPost extends BaseBlogPost {
+  id: number,
+  date: string,
+  likes: number
+};
 
 interface BlogPagedQuery {
   blogPosts: BlogPost[],
@@ -91,6 +97,8 @@ const BlogPosts = () => {
   const [saving, _setSaving] = useState(false);
   const [saveError, _setSaveError] = useState<string | null>(null);
   const [pageNo, setPageNo] = useState(1);
+
+  const isAdmin = useAdminAuth();
 
   useEffect(() => {
     const last = localStorage.getItem("lastBlog");
@@ -127,61 +135,66 @@ const BlogPosts = () => {
 
   return (
     <Wrapper>
-      <h1>Blog</h1>
-      <p>Write a new post</p>
+      {isAdmin && (
+        <Collapsible title="Write a new post...">
+          <div className="container">
+            <h1>Blog</h1>
+            <p>Write a new post</p>
 
-      <Field>
-        <label>Title</label>
-        <TitleInput
-          id="title"
-          type="text"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          placeholder="Post Title"
-        />
-      </Field>
+            <Field>
+              <label>Title</label>
+              <TitleInput
+                id="title"
+                type="text"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                placeholder="Post Title"
+              />
+            </Field>
 
-      <Field>BlogPost
-        <label>Content (HTML)</label>
-        <ContentTextarea
-          value={blogHtml}
-          onChange={(e) => setBlogHtml(e.target.value)}
-          placeholder="<html>Write your content here...</html>"
-          rows={12}
-        />
-      </Field>
+            <Field>
+              <label>Content (HTML)</label>
+              <ContentTextarea
+                value={blogHtml}
+                onChange={(e) => setBlogHtml(e.target.value)}
+                placeholder="<html>Write your content here...</html>"
+                rows={12}
+              />
+            </Field>
 
-      <button onClick={handlePreview}>Preview</button>
-      <button onClick={handlePublish} disabled={saving}>
-        Publish
-      </button>
-      <button onClick={handleLocalSave} disabled={saving}>
-        Save Locally
-      </button>
+            <button onClick={handlePreview}>Preview</button>
+            <button onClick={handlePublish} disabled={saving}>
+              Publish
+            </button>
+            <button onClick={handleLocalSave} disabled={saving}>
+              Save Locally
+            </button>
 
-      {saveError && <ErrorText>{saveError}</ErrorText>}
+            {saveError && <ErrorText>{saveError}</ErrorText>}
 
-      {preview && (
-        <PreviewPanel>
-          <PreviewTitle>{preview.title || "Untitled post"}</PreviewTitle>
-          <PreviewContent
-            dangerouslySetInnerHTML={{
-              __html: preview.html,
-            }}
-          />
-        </PreviewPanel>
+            {preview && (
+              <PreviewPanel>
+                <PreviewTitle>{preview.title || "Untitled post"}</PreviewTitle>
+                <PreviewContent
+                  dangerouslySetInnerHTML={{
+                    __html: preview.html,
+                  }}
+                />
+              </PreviewPanel>
+            )}
+           </div>
+        </Collapsible>
       )}
-
+      
       {blogsLoading && <p>Please wait...</p>}
+
       {blogPage && (
         <>
           {blogPage.blogPosts.map((post) =>
-            <div className="container">
+            <div className="container" style={{ cursor: 'pointer' }}>
               <h1>{post.title}</h1>
-              <div 
-                dangerouslySetInnerHTML={{ __html: post.html }}
-              />
-              <p>Posted on {post.date}</p>
+              <p>{post.description || "No description provided."}</p>
+              <p>{post.likes} Likes | Posted on {post.date}</p>
             </div>
           )}
           <button onClick={() => setPageNo(pageNo > 0 ? pageNo - 1 : 0)}>{'<'}</button>
