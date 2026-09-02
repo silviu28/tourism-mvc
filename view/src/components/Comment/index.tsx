@@ -1,8 +1,9 @@
 import type { FC } from "react";
+import type { CommentData } from "../../types";
 
 interface CommentProps {
-  username: string,
-  comment: string,
+  comment: CommentData,
+  onLike?: () => void
 };
 
 const style = {
@@ -12,11 +13,16 @@ const style = {
   boxShadow: "0 2px 5px rgba(0, 0, 0, 0.05)"
 };
 
-const Comment: FC<CommentProps> = ({ username, comment }) => {
+const Comment: FC<CommentProps> = ({ comment, onLike }) => {
   return (
     <div style={style}>
-      <h2>{username} says...</h2>
-      <p>{comment}</p>
+      <h2>{comment.user.username} says...</h2>
+      <p>{comment.comment}</p>
+      {onLike && (
+        <>
+          {comment.likes} <button onClick={onLike}>Like</button>
+        </>
+      )}
     </div>
   );
 };

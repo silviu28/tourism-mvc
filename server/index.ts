@@ -13,6 +13,7 @@ const imageRouter = require("./controllers/images");
 const adminRouter = require("./controllers/admins");
 const notificationCategoryRouter = require("./controllers/notificationCategories");
 const notificationRouter = require("./controllers/notifications");
+const blogPostsRouter = require("./controllers/blogPosts");
 
 const rateLimiter = require("express-rate-limit");
 
@@ -45,7 +46,8 @@ app.use(
   imageRouter,
   adminRouter,
   notificationCategoryRouter,
-  notificationRouter
+  notificationRouter,
+  blogPostsRouter
 );
 
 (async function () {

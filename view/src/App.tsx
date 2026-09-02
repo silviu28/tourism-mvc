@@ -21,6 +21,7 @@ import styled from 'styled-components';
 import Footer from './components/Footer';
 import Wiki from './components/Wiki';
 import NotFound from './components/NotFound';
+import ExpandedBlogPost from './components/ExpandedBlogPost';
 
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = "http://localhost:4004";
@@ -88,6 +89,7 @@ const App: FunctionComponent = () => {
         username: res.data.username
       });
       localStorage.setItem('user', JSON.stringify({
+        id: res.data.id,
         username: res.data.username
       }));
     } catch (_error) {
@@ -133,6 +135,7 @@ const App: FunctionComponent = () => {
                   <Route path="/admin" element={<AdminPanel />} />}
                 <Route path="/gallery" element={<Gallery />} />
                 <Route path="/blog" element={<BlogPosts />} />
+                <Route path="/blog/:id" element={<ExpandedBlogPost />} />
               </Routes>
             </Router>
             <Footer />

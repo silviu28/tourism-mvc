@@ -1,4 +1,4 @@
-import type { FunctionComponent } from "react";
+import { useContext, type FunctionComponent } from "react";
 import ImageParallax from "../ImageParallax";
 import TypeText from "../TypeText";
 import ColumnSplit from "../ColumnSplit";
@@ -8,10 +8,48 @@ import Gallery from "../Gallery";
 import PolaroidImage from "../PolaroidImage";
 import ScrollButton from "../ScrollButton";
 import RecentBlogPosts from "../RecentBlogPosts";
+import axios from "axios";
+import type { CommentData } from "../../types";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import AlertContext from "../../AlertContext";
+import UserContext from "../../UserContext";
 
 const toTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
 
 const FrontPage: FunctionComponent = () => {
+  const queryClient = useQueryClient();
+  const [user] = useContext(UserContext);
+  const showAlert = useContext(AlertContext);
+
+  const { data: comments = [], isLoading } = useQuery<CommentData[]>({
+    queryKey: ["comments"],
+    queryFn: async () => {
+      try {
+        const commentsRes = await axios.get("http://localhost:4004/api/comments");
+        return commentsRes.data;
+      } catch (_error) {
+        showAlert("Cannot display comments", "", true);
+      }
+    }
+  });
+  const { mutate } = useMutation({
+    mutationFn: async (newComment: {
+      username: string,
+      comment: string
+    }) => {
+      try {
+        await axios.post("http://localhost:4004/api/comments", newComment, {
+          withCredentials: true
+        });
+        queryClient.invalidateQueries({
+          queryKey: ["comments"],
+        });
+      } catch (_error) {
+        showAlert("Unable to add your comment", "", true);
+      }
+    }
+  });
+
   return (
     <div style={{ color: 'white', height: '100%' }}>
       <ScrollButton toTop={toTop} />
@@ -82,7 +120,19 @@ const FrontPage: FunctionComponent = () => {
           <hr style={{ margin: 100 }}></hr>
 
           <h1 style={{ textAlign: "center" }}>Leave a rating for everyone to see!</h1>
-          <CommentSection />
+          {isLoading && <p>Please wait...</p>}
+          <CommentSection
+            user={user}
+            comments={comments}
+            onComment={({ username }, comment) => {
+              try {
+                mutate({ username: username!, comment})
+                return true;
+              } catch (_error) {
+                return false;
+              }
+            }}
+          />
         </div>
       </div>
     </div>

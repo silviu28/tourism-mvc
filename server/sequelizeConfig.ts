@@ -7,17 +7,21 @@ import { Admin } from "./models/Admin";
 import { Image } from "./models/Image";
 import { NotificationCategory } from "./models/NotificationCategory";
 import { Notification } from "./models/Notification";
+import { BlogPost } from "./models/BlogPost";
+import BlogLike from "./models/BlogLike";
+import { BlogPostComment } from "./models/BlogPostComment";
+import BlogPostCommentLike from "./models/BlogPostCommentLike";
 require('dotenv').config({ quiet: true });
 
-const con: Sequelize = new Sequelize({
+const con = new Sequelize({
   dialect: "mysql",
   database: process.env.DB_NAME,
   username: process.env.DB_USER,
   password: process.env.PASSWORD || "",
   host: process.env.HOST,
-  models: [User, Comment, Price, Feedback, Admin, Image, NotificationCategory, Notification],
+  models: [User, Comment, Price, Feedback, Admin, Image, NotificationCategory, Notification, BlogPost, BlogLike, BlogPostComment, BlogPostCommentLike],
 });
 
-// con.sync({ alter: true });
+con.sync({ alter: process.env.DB_ALTER === "true" });
 
 export default con;
