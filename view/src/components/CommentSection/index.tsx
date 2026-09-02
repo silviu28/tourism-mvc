@@ -1,56 +1,23 @@
-import { useContext, useState, type FC } from "react";
-import UserContext from "../../UserContext";
-import { type CommentData } from "../../types";
+import { useState, type FC } from "react";
+import { type CommentData, type UserData } from "../../types";
 import axios from "axios";
 import Comment from "../Comment";
 import "./style.css";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import AlertContext from "../../AlertContext";
 
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = "http://localhost:4004";
 
-const CommentSection: FC = () => {
-  const queryClient = useQueryClient();
-  const [user] = useContext(UserContext);
-  const showAlert = useContext(AlertContext);
+interface CommentSectionProps {
+  comments: CommentData[],
+  user?: UserData,
+  onComment: (user: UserData, comment: string) => boolean
+};
+
+const CommentSection: FC<CommentSectionProps> = ({ comments, user, onComment }) => {
+ 
   const [comment, setComment] = useState<string>("");
 
-  const { data: comments = [], isLoading } = useQuery<CommentData[]>({
-    queryKey: ["comments"],
-    queryFn: async () => {
-      try {
-        const commentsRes = await axios.get("http://localhost:4004/api/comments");
-        return commentsRes.data;
-      } catch (_error) {
-        showAlert("Cannot display comments", "", true);
-      }
-    }
-  });
-  const { mutate } = useMutation({
-    mutationFn: async (newComment: {
-      username: string,
-      comment: string
-    }) => {
-      try {
-        setComment("");
-        await axios.post("http://localhost:4004/api/comments", newComment, {
-          withCredentials: true
-        });
-        queryClient.invalidateQueries({
-          queryKey: ["comments"],
-        });
-      } catch (_error) {
-        showAlert("Unable to add your comment", "", true);
-      }
-    }
-  });
-
-  if (!user) return <div>Context error</div>;
-
-  if (isLoading) {
-    return <p>Loading...</p>;
-  }
+  if (!user) return <div>User error</div>;
 
   return (
     <div className="slight-margin, container">
@@ -64,7 +31,10 @@ const CommentSection: FC = () => {
           disabled={!user.username}
         />
         <button
-          onClick={() => mutate({ username: user.username!, comment })}
+          onClick={() => {
+            if (onComment(user, comment))
+              setComment("");
+          }}
           disabled={!user.username}>
           Send
         </button>
