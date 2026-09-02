@@ -4,6 +4,8 @@ import { BlogPost } from "../models/BlogPost";
 import DOMPurify from "isomorphic-dompurify";
 import userTokenAuthenticator from "../middleware/userTokenAuthenticator";
 import BlogLike from "../models/BlogLike";
+import { BlogPostComment } from "../models/BlogPostComment";
+import BlogPostCommentLike from "../models/BlogPostCommentLike";
 
 const router = express.Router();
 
@@ -145,6 +147,79 @@ router.post("/api/blog/:id/like", userTokenAuthenticator, async (req, res) => {
   } catch (err) {
     console.error("Failed to like blog:", err);
     return res.status(500).json({ error: "Failed to like blog" });
+  }
+});
+
+router.post("/api/blog/:id/comment", userTokenAuthenticator, async (req, res) => {
+  try {
+    const blogPostId = parseInt(req.params.id, 10);
+    const { id } = (req as any).user;
+    const { comment } = req.body;
+
+    if (isNaN(blogPostId)) {
+      return res.status(400).json({ error: "Invalid blog id" });
+    }
+
+    if (!comment || !comment.trim()) {
+      return res.status(400).json({ error: "Comment cannot be empty" });
+    }
+
+    const blog = await BlogPost.findByPk(blogPostId);
+    if (!blog) {
+      return res.status(404).json({ error: "Blog not found" });
+    }
+
+    const newComment = await BlogPostComment.create({
+      comment,
+      userId: id,
+      blogPostId,
+      date: new Date(),
+    });
+
+    return res.status(201).json(newComment);
+  } catch (err) {
+    console.error("Failed to create comment:", err);
+    return res.status(500).json({ error: "Failed to create comment" });
+  }
+});
+
+router.post("/api/blog/:id/comment/like", userTokenAuthenticator, async (req, res) => {
+  try {
+    const { id } = (req as any).user;
+    const { commentId } = req.body;
+
+    if (!commentId) {
+      return res.status(400).json({ error: "commentId is required" });
+    }
+
+    const comment = await BlogPostComment.findByPk(commentId);
+    if (!comment) {
+      return res.status(404).json({ error: "Comment not found" });
+    }
+
+    try {
+      await BlogPostCommentLike.create({
+        blogPostCommentId: commentId,
+        userId: id,
+        createdAt: new Date(),
+      });
+    } catch (err: any) {
+      if (err.name === "SequelizeUniqueConstraintError") {
+        return res.status(409).json({ error: "Already liked" });
+      }
+      throw err;
+    }
+
+    const likeCount = await BlogPostCommentLike.count({
+      where: { blogPostCommentId: commentId },
+    });
+
+    await comment.update({ likes: likeCount });
+
+    return res.status(201).json({ liked: true, likeCount });
+  } catch (err) {
+    console.error("Failed to like comment:", err);
+    return res.status(500).json({ error: "Failed to like comment" });
   }
 });
 
