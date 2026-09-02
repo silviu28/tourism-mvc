@@ -89,6 +89,7 @@ const App: FunctionComponent = () => {
         username: res.data.username
       });
       localStorage.setItem('user', JSON.stringify({
+        id: res.data.id,
         username: res.data.username
       }));
     } catch (_error) {

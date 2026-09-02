@@ -6,6 +6,7 @@ import userTokenAuthenticator from "../middleware/userTokenAuthenticator";
 import BlogLike from "../models/BlogLike";
 import { BlogPostComment } from "../models/BlogPostComment";
 import BlogPostCommentLike from "../models/BlogPostCommentLike";
+import { User } from "../models/User";
 
 const router = express.Router();
 
@@ -169,6 +170,12 @@ router.get("/api/blog/:id/comments", async (req, res) => {
       order: [["date", "DESC"]],
       limit: pageSize,
       offset: pageSize * (page - 1),
+      include: [
+        {
+          model: User,
+          attributes: ["username"]
+        },
+      ],
     });
 
     return res.status(200).json({
@@ -216,13 +223,17 @@ router.post("/api/blog/:id/comment", userTokenAuthenticator, async (req, res) =>
   }
 });
 
-router.post("/api/blog/:id/comment/like", userTokenAuthenticator, async (req, res) => {
+router.post("/api/blog/:id/comment/:commentId/like", userTokenAuthenticator, async (req, res) => {
   try {
-    const { id } = (req as any).user;
-    const { commentId } = req.body;
+    const commentId = parseInt(req.params.commentId, 10);
+    const { userId } = req.body;
 
     if (!commentId) {
       return res.status(400).json({ error: "commentId is required" });
+    }
+
+    if (isNaN(commentId)) {
+      return res.status(400).json({ error: "Invalid comment id" });
     }
 
     const comment = await BlogPostComment.findByPk(commentId);
@@ -233,7 +244,7 @@ router.post("/api/blog/:id/comment/like", userTokenAuthenticator, async (req, re
     try {
       await BlogPostCommentLike.create({
         blogPostCommentId: commentId,
-        userId: id,
+        userId,
         createdAt: new Date(),
       });
     } catch (err: any) {

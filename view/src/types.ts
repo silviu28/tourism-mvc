@@ -9,6 +9,7 @@ export interface CommentData {
     username: string,
   },
   comment: string,
+  likes?: number
 };
 
 export interface Price {
