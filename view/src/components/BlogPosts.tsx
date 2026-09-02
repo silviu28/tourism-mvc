@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
@@ -89,6 +89,7 @@ const BlogPosts = () => {
 
   const isAdmin = useAdminAuth();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     const last = localStorage.getItem("lastBlog");
@@ -107,6 +108,20 @@ const BlogPosts = () => {
         return blogRes.data;
       } catch (_error) {
         return EMPTY_PAGE;
+      }
+    }
+  });
+
+  const archiveMutation = useMutation({
+    mutationFn: async ({ blogPost }: { blogPost: BlogPost }) => {
+      try {
+        await axios.put(`http://localhost:4004/api/blog/${blogPost.id}`, {
+          ...blogPost,
+          archived: true
+        });
+        queryClient.invalidateQueries({ queryKey: ["blog-posts"] });
+      } catch (_error) {
+        // ...
       }
     }
   });
@@ -186,6 +201,16 @@ const BlogPosts = () => {
               style={{ cursor: 'pointer' }}
               onClick={() => navigate(`/blog/${post.id}`)}
             >
+              {isAdmin && (
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    archiveMutation.mutate({ blogPost: post })
+                  }}
+                >
+                  Archive post
+                </button>
+              )}
               <h1>{post.title}</h1>
               <p>{post.description || "No description provided."}</p>
               <p>{post.likes} Likes | Posted on {post.date}</p>

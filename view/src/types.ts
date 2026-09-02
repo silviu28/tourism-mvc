@@ -66,5 +66,6 @@ export interface BaseBlogPost {
 export interface BlogPost extends BaseBlogPost {
   id: number,
   date: string,
-  likes: number
+  likes: number,
+  adminId: number
 };
