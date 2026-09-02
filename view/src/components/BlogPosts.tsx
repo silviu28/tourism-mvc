@@ -1,3 +1,5 @@
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 
@@ -59,12 +61,36 @@ const PreviewContent = styled.div`
   line-height: 1.6;
 `;
 
+interface BlogPost {
+  id: number,
+  title: string,
+  html: string,
+  date: string,
+};
+
+type UnpostedBlogPost = Omit<Omit<BlogPost, "date">, "id">;
+
+interface BlogPagedQuery {
+  blogPosts: BlogPost[],
+  totalCount: number,
+  totalPages: number,
+  currentPage: number
+};
+
+const EMPTY_PAGE: BlogPagedQuery = {
+  blogPosts: [],
+  totalCount: 0,
+  totalPages: 0,
+  currentPage: 0,
+}
+
 const BlogPosts = () => {
   const [title, setTitle] = useState("");
   const [blogHtml, setBlogHtml] = useState("");
   const [preview, setPreview] = useState<PreviewState | null>(null);
   const [saving, _setSaving] = useState(false);
   const [saveError, _setSaveError] = useState<string | null>(null);
+  const [pageNo, setPageNo] = useState(1);
 
   useEffect(() => {
     const last = localStorage.getItem("lastBlog");
@@ -73,7 +99,19 @@ const BlogPosts = () => {
       setTitle(title);
       setBlogHtml(blogHtml);
     }
-  }, [])
+  }, []);
+
+  const { data: blogPage, isLoading: blogsLoading } = useQuery<BlogPagedQuery>({
+    queryKey: ["blog-posts"],
+    queryFn: async () => {
+      try {
+        const blogRes = await axios.get<BlogPagedQuery>(`http://localhost:4004/api/blog?page=${pageNo}`);
+        return blogRes.data;
+      } catch (_error) {
+        return EMPTY_PAGE;
+      }
+    }
+  });
 
    const handlePreview = () => {
     setPreview({ title, html: blogHtml });
@@ -103,7 +141,7 @@ const BlogPosts = () => {
         />
       </Field>
 
-      <Field>
+      <Field>BlogPost
         <label>Content (HTML)</label>
         <ContentTextarea
           value={blogHtml}
@@ -132,6 +170,24 @@ const BlogPosts = () => {
             }}
           />
         </PreviewPanel>
+      )}
+
+      {blogsLoading && <p>Please wait...</p>}
+      {blogPage && (
+        <>
+          {blogPage.blogPosts.map((post) =>
+            <div className="container">
+              <h1>{post.title}</h1>
+              <div 
+                dangerouslySetInnerHTML={{ __html: post.html }}
+              />
+              <p>Posted on {post.date}</p>
+            </div>
+          )}
+          <button onClick={() => setPageNo(pageNo > 0 ? pageNo - 1 : 0)}>{'<'}</button>
+          {blogPage.currentPage} of {blogPage.totalPages}
+          <button onClick={() => setPageNo((pageNo + 1) % blogPage.totalPages)}>{'>'}</button>
+        </>
       )}
     </Wrapper>
   );

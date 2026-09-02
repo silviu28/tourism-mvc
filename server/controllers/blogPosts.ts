@@ -1,6 +1,7 @@
 import express from "express";
 import adminTokenAuthenticator from "../middleware/adminTokenAuthenticator";
 import { BlogPost } from "../models/BlogPost";
+import DOMPurify from "isomorphic-dompurify";
 
 const router = express.Router();
 
@@ -22,7 +23,7 @@ router.get("/api/blog", async (req, res) => {
     });
 
     return res.status(200).json({
-      blogs: rows,
+      blogPosts: rows,
       totalCount: count,
       totalPages: Math.ceil(count / PAGE_SIZE),
       currentPage: page,
@@ -61,7 +62,7 @@ router.post("/api/blog", adminTokenAuthenticator, async (req, res) => {
 
     const blog = await BlogPost.create({
       title,
-      html,
+      html: DOMPurify.sanitize(html),
       adminId,
       date: new Date(),
       archived: false,
