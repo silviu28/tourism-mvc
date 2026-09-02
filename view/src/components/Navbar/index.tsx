@@ -6,6 +6,8 @@ import AlertContext from "../../AlertContext";
 
 import styled from "styled-components";
 import { useState, useRef, useEffect, type FunctionComponent } from "react";
+import { useQuery } from "@tanstack/react-query";
+import type { ClientsideNotification, ReceivedNotification } from "../../types";
 
 const Bar = styled.div`
   display: flex;
@@ -144,12 +146,6 @@ const NotificationMessage = styled.span`
   color: #4b5563;
 `;
 
-const NotificationTime = styled.span`
-  font-size: 0.7rem;
-  color: #9ca3af;
-  margin-top: 2px;
-`;
-
 const EmptyState = styled.div`
   padding: 32px 16px;
   text-align: center;
@@ -157,23 +153,17 @@ const EmptyState = styled.div`
   color: #9ca3af;
 `;
 
-interface Notification {
-  id: string;
-  title: string;
-  message: string;
-  time: string;
-  unread: boolean;
-}
-
 interface NotificationNotificationProps {
-  notifications: Notification[];
+  notifications: ClientsideNotification[],
+  onMarkAsRead: (id: number) => void,
+  onMarkAllAsRead: () => void
 }
 
-const NotificationNotification: FunctionComponent<NotificationNotificationProps> = ({ notifications }) => {
+const NotificationNotification: FunctionComponent<NotificationNotificationProps> = ({ notifications, onMarkAsRead, onMarkAllAsRead }) => {
   const [open, setOpen] = useState(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
 
-  const unreadCount = notifications.filter(n => n.unread).length;
+  const unreadCount = notifications.filter(n => !n.read).length;
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -197,19 +187,18 @@ const NotificationNotification: FunctionComponent<NotificationNotificationProps>
       <Panel $open={open}>
         <PanelHeader>
           <h4>Notifications</h4>
-          <button>Mark all as read</button>
+          <button onClick={onMarkAllAsRead}>Mark all as read</button>
         </PanelHeader>
 
         <NotificationList>
           {notifications.length === 0 
           ? <EmptyState>You're all caught up.</EmptyState>
           : notifications.map((n) =>
-              <NotificationItem key={n.id}>
-                {n.unread && <UnreadDot />}
-                <NotificationContent>
+              <NotificationItem key={n.title}>
+                {!n.read && <UnreadDot />}
+                <NotificationContent onClick={() => onMarkAsRead(n.id)}>
                   <NotificationTitle>{n.title}</NotificationTitle>
-                  <NotificationMessage>{n.message}</NotificationMessage>
-                  <NotificationTime>{n.time}</NotificationTime>
+                  <NotificationMessage>{n.content}</NotificationMessage>
                 </NotificationContent>
               </NotificationItem>
             )
@@ -222,6 +211,8 @@ const NotificationNotification: FunctionComponent<NotificationNotificationProps>
   );
 };
 
+const READ_KEY = "reads";
+
 interface NavbarProps {
   isAdmin: boolean;
 };
@@ -229,6 +220,32 @@ interface NavbarProps {
 const Navbar: FC<NavbarProps> = ({ isAdmin }) => {
   const [user, setUser] = useContext(UserContext);
   const showAlert = useContext(AlertContext);
+  const [read] = useState(() => {
+    const stored = localStorage.getItem(READ_KEY);
+    return stored ? JSON.parse(stored) : [];
+  });
+
+  const markAsRead = (id: number) => {
+    if (!read.includes(id)) {
+      localStorage.setItem(READ_KEY, JSON.stringify([...read, id]));
+    }
+  };
+
+  const isRead = (id: number): boolean => {
+    return read.includes(id);
+  };
+
+  const { data: notifications } = useQuery<ClientsideNotification[]>({
+    queryKey: ["recent-notifs"],
+    queryFn: async () => {
+      try {
+        const notifs = await axios.get<ReceivedNotification[]>('http://localhost:4004/api/notifications/active');
+        return notifs.data.map((noti) => ({ ... noti, read: isRead(noti.id) }));
+      } catch (_error) {
+        return [];
+      }
+    }
+  })
 
   const promptLogout = async () => {
     if (window.confirm("Logout?")) {
@@ -267,7 +284,11 @@ const Navbar: FC<NavbarProps> = ({ isAdmin }) => {
           <Link to="/blog">Blog</Link>
         </li>
       </NavFlex>
-      <NotificationNotification notifications={[]} />
+      <NotificationNotification
+         notifications={notifications || []}
+         onMarkAsRead={markAsRead}
+         onMarkAllAsRead={() => notifications?.forEach(({ id }) => markAsRead(id))}
+      />
 
       <ul>
         {user!.username && (

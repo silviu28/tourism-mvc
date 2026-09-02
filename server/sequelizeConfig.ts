@@ -5,6 +5,8 @@ import { Price } from "./models/Price";
 import { Feedback } from "./models/Feedback";
 import { Admin } from "./models/Admin";
 import { Image } from "./models/Image";
+import { NotificationCategory } from "./models/NotificationCategory";
+import { Notification } from "./models/Notification";
 require('dotenv').config({ quiet: true });
 
 const con: Sequelize = new Sequelize({
@@ -13,7 +15,7 @@ const con: Sequelize = new Sequelize({
   username: process.env.DB_USER,
   password: process.env.PASSWORD || "",
   host: process.env.HOST,
-  models: [User, Comment, Price, Feedback, Admin, Image],
+  models: [User, Comment, Price, Feedback, Admin, Image, NotificationCategory, Notification],
 });
 
 // con.sync({ alter: true });

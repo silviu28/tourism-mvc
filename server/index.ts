@@ -11,6 +11,8 @@ const priceRouter = require('./controllers/prices');
 const userRouter = require('./controllers/users');
 const imageRouter = require("./controllers/images");
 const adminRouter = require("./controllers/admins");
+const notificationCategoryRouter = require("./controllers/notificationCategories");
+const notificationRouter = require("./controllers/notifications");
 
 const rateLimiter = require("express-rate-limit");
 
@@ -42,6 +44,8 @@ app.use(
   userRouter,
   imageRouter,
   adminRouter,
+  notificationCategoryRouter,
+  notificationRouter
 );
 
 (async function () {
