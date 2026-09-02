@@ -2,6 +2,8 @@ import express from "express";
 import adminTokenAuthenticator from "../middleware/adminTokenAuthenticator";
 import { BlogPost } from "../models/BlogPost";
 import DOMPurify from "isomorphic-dompurify";
+import userTokenAuthenticator from "../middleware/userTokenAuthenticator";
+import BlogLike from "../models/BlogLike";
 
 const router = express.Router();
 
@@ -111,6 +113,38 @@ router.delete("/api/blog/:id", adminTokenAuthenticator, async (req, res) => {
   } catch (err) {
     console.error("Failed to delete blog post:", err);
     return res.status(500).json({ error: "Failed to delete blog post" });
+  }
+});
+
+router.post("/api/blog/:id/like", userTokenAuthenticator, async (req, res) => {
+  try {
+    const blogPostId = parseInt(req.params.id, 10);
+    const { id: userId } = (req as any).user as { id: number };
+
+    if (isNaN(blogPostId)) {
+      return res.status(400).json({ error: "Invalid blog id" });
+    }
+
+    const blog = await BlogPost.findByPk(blogPostId);
+    if (!blog) {
+      return res.status(404).json({ error: "Blog not found" });
+    }
+
+    try {
+      await BlogLike.create({ blogPostId, userId });
+    } catch (err: any) {
+      if (err.name === "SequelizeUniqueConstraintError") {
+        return res.status(409).json({ error: "Already liked" });
+      }
+      throw err;
+    }
+
+    const likeCount = await BlogLike.count({ where: { blogPostId } });
+
+    return res.status(201).json({ liked: true, likeCount });
+  } catch (err) {
+    console.error("Failed to like blog:", err);
+    return res.status(500).json({ error: "Failed to like blog" });
   }
 });
 

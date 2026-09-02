@@ -22,6 +22,12 @@ export class BlogPost extends Model {
 
   @Column({
     type: DataType.STRING,
+    allowNull: true
+  })
+  declare description?: string;
+
+  @Column({
+    type: DataType.STRING,
     allowNull: false
   })
   declare html: string;
@@ -52,4 +58,11 @@ export class BlogPost extends Model {
     allowNull: false
   })
   declare archived: boolean;
-}
+
+  @Column({
+    type: DataType.DOUBLE,
+    allowNull: false,
+    defaultValue: 0
+  })
+  declare likes: number;
+};
