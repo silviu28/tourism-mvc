@@ -150,6 +150,39 @@ router.post("/api/blog/:id/like", userTokenAuthenticator, async (req, res) => {
   }
 });
 
+router.get("/api/blog/:id/comments", async (req, res) => {
+  try {
+    const blogPostId = parseInt(req.params.id, 10);
+    const page = parseInt(req.query.page as string, 10) || 1;
+    const pageSize = 10;
+
+    if (isNaN(blogPostId)) {
+      return res.status(400).json({ error: "Invalid blog id" });
+    }
+
+    if (page < 1) {
+      return res.status(400).json({ error: "page must be 1 or greater" });
+    }
+
+    const { rows, count } = await BlogPostComment.findAndCountAll({
+      where: { blogPostId },
+      order: [["date", "DESC"]],
+      limit: pageSize,
+      offset: pageSize * (page - 1),
+    });
+
+    return res.status(200).json({
+      content: rows,
+      totalCount: count,
+      totalPages: Math.ceil(count / pageSize),
+      currentPage: page,
+    });
+  } catch (err) {
+    console.error("Failed to fetch comments:", err);
+    return res.status(500).json({ error: "Failed to fetch comments" });
+  }
+});
+
 router.post("/api/blog/:id/comment", userTokenAuthenticator, async (req, res) => {
   try {
     const blogPostId = parseInt(req.params.id, 10);
