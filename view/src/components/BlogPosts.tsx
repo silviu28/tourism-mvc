@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import useAdminAuth from "../hooks/useAdminAuth";
 import Collapsible from "./Collapsible";
+import type { BlogPost } from "../types";
+import { useNavigate } from "react-router";
 
 interface PreviewState {
   title: string;
@@ -63,19 +65,6 @@ const PreviewContent = styled.div`
   line-height: 1.6;
 `;
 
-interface BaseBlogPost {
-  id: number,
-  title: string,
-  description?: string,
-  html: string,
-};
-
-interface BlogPost extends BaseBlogPost {
-  id: number,
-  date: string,
-  likes: number
-};
-
 interface BlogPagedQuery {
   blogPosts: BlogPost[],
   totalCount: number,
@@ -99,6 +88,7 @@ const BlogPosts = () => {
   const [pageNo, setPageNo] = useState(1);
 
   const isAdmin = useAdminAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const last = localStorage.getItem("lastBlog");
@@ -191,7 +181,11 @@ const BlogPosts = () => {
       {blogPage && (
         <>
           {blogPage.blogPosts.map((post) =>
-            <div className="container" style={{ cursor: 'pointer' }}>
+            <div 
+              className="container"
+              style={{ cursor: 'pointer' }}
+              onClick={() => navigate(`/blog/${post.id}`)}
+            >
               <h1>{post.title}</h1>
               <p>{post.description || "No description provided."}</p>
               <p>{post.likes} Likes | Posted on {post.date}</p>

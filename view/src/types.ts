@@ -47,3 +47,23 @@ export interface ReceivedNotification extends Notification {
 export interface ClientsideNotification extends ReceivedNotification {
   read: boolean
 };
+
+export interface PagedQuery<T> {
+  content: T[],
+  totalCount: number,
+  totalPages: number,
+  currentPage: number
+};
+
+export interface BaseBlogPost {
+  id: number,
+  title: string,
+  description?: string,
+  html: string,
+};
+
+export interface BlogPost extends BaseBlogPost {
+  id: number,
+  date: string,
+  likes: number
+};
