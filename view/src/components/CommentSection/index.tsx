@@ -11,9 +11,10 @@ interface CommentSectionProps {
   comments: CommentData[],
   user?: UserData,
   onComment: (user: UserData, comment: string) => boolean
+  onLikeComment?: (user: UserData, commentId: number) => void
 };
 
-const CommentSection: FC<CommentSectionProps> = ({ comments, user, onComment }) => {
+const CommentSection: FC<CommentSectionProps> = ({ comments, user, onComment, onLikeComment }) => {
  
   const [comment, setComment] = useState<string>("");
 
@@ -40,12 +41,13 @@ const CommentSection: FC<CommentSectionProps> = ({ comments, user, onComment }) 
         </button>
       </div>
       <div>
-        {comments.map(comment =>
+        {comments.map((comment) =>
           <Comment
             key={comment.id}
-            username={comment.user.username}
-            comment={comment.comment}
-          />)}
+            comment={comment}
+            onLike={() => onLikeComment?.(user, comment.id)}
+          />
+        )}
       </div>
     </div>
   );

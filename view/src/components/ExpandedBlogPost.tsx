@@ -46,7 +46,18 @@ const ExpandedBlogPost = () => {
         // ...
       }
     }
-  })
+  });
+
+  const commentLikeMutation = useMutation({
+    mutationFn: async ({ user, commentId }: { user: UserData, commentId: number }) => {
+      try {
+        await axios.post(`http://localhost:4004/api/blog/${id}/comment/${commentId}/like`, { userId: user.id, commentId });
+        queryClient.invalidateQueries({ queryKey: ["post-comments"] });
+      } catch (_error) {
+        // ...
+      }
+    }
+  });
 
   return (
     <div className="container" style={{ width: "95%", margin: '20px' }}>
@@ -70,10 +81,15 @@ const ExpandedBlogPost = () => {
               postMutation.mutate({ user, comment });
               return postMutation.isError;
             }}
+            onLikeComment={(user, commentId) => commentLikeMutation.mutate({ user, commentId })}
           />
-          <button onClick={() => setPageNo(pageNo === 0 ? 0 : pageNo - 1)}>{'<'}</button>
-          {pageNo} of {commentPage?.totalPages}
-          <button onClick={() => setPageNo(pageNo + 1)}>{'>'}</button>
+          {commentPage && (
+            <>
+            <button onClick={() => setPageNo(pageNo === 0 ? 0 : pageNo - 1)}>{'<'}</button>
+            {pageNo} of {commentPage?.totalPages}
+            <button onClick={() => setPageNo((pageNo + 1) % commentPage?.totalPages)}>{'>'}</button>
+            </>
+          )}
         </>
       )}
     </div>
