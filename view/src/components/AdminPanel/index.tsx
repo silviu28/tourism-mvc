@@ -1,5 +1,5 @@
 import { useContext, useState, type FC } from "react";
-import { type AdminPanelItem, type Feedback, type Image, type Notification, type Price } from "../../types";
+import { type AdminPanelItem, type Feedback, type Image, type Notification, type Price, type ReceivedNotification } from "../../types";
 import axios from "axios";
 import Modal from "../Modal";
 import AdminForm from "../AdminForm";
@@ -17,6 +17,13 @@ const NOTIFY_DEFAULT: Notification = {
   content: ""
 } as const;
 
+interface NotificationsPagedQuery {
+  notifications: ReceivedNotification[],
+  totalCount: number,
+  totalPages: number,
+  currentPage: number
+}
+
 const AdminPanel: FC = () => {
   const queryClient = useQueryClient();
 
@@ -33,6 +40,11 @@ const AdminPanel: FC = () => {
     ms: 24 * 3600 * 1000
   })
   const [notification, setNotification] = useState<Notification>(() => NOTIFY_DEFAULT);
+  const [pageNo, setPageNo] = useState(0);
+  const [extension, setExtension] = useState({
+    time: 'a day',
+    ms: 24 * 3600 * 100
+  })
 
   const openForm = (type: "image" | "price" | "updatePrice") => {
     setFormType(type);
@@ -76,7 +88,7 @@ const AdminPanel: FC = () => {
       }
     });
 
-  const { data: notificationCategories = [], isLoading: categoriesLoading }
+  const { data: notificationCategories = [], isLoading: _categoriesLoading }
     = useQuery<{ id: number, name: string }[]>({
     queryKey: ["notification-categories"],
     queryFn: async () => {
@@ -88,6 +100,20 @@ const AdminPanel: FC = () => {
       }
     }
   });
+
+  const { data: oldNotifsPage, isLoading: oldNotifsLoading }
+    = useQuery<NotificationsPagedQuery>({
+    queryKey: ["notifications"],
+    queryFn: async () => {
+      try {
+        const notifRes = await axios.get(`http://localhost:4004/api/notifications?page=${pageNo}`)
+        return notifRes.data;
+      } catch (_error) {
+        showAlert("Unable to retrieve old notifications", "", true);
+        return [];
+      }
+    }
+  })
 
   const remove = async (selectedItem: AdminPanelItem, path: string) => {
     if (!selectedItem) return;
@@ -163,7 +189,19 @@ const AdminPanel: FC = () => {
     } catch (_error) {
       showAlert("Unable to send notification", "", true);
     }
-  }
+  };
+
+  const updateNotification = async (noti: ReceivedNotification) => {
+    try {
+      await axios.put(`http://localhost:4004/api/notifications/${noti.id}`, noti);
+      showAlert("Notification updated", "", false);
+      queryClient.invalidateQueries({
+        queryKey: ["notifications-all"]
+      });
+    } catch (_error) {
+      showAlert("Unable to update notification", "", true);
+    }
+  };
 
   return (
     <div className="slight-margin">
@@ -281,6 +319,48 @@ const AdminPanel: FC = () => {
           Send
         </button>
       </div>
+
+      <h1>Manage broadcasted notifications</h1>
+      <div className="container">
+        {oldNotifsPage?.notifications.map((noti) => 
+          <p
+            key={noti.id}
+            onClick={() => setSelectedItem(noti)}
+            style={selectedItem === noti ? selectedStyle : {}}
+          >
+            {Object.entries(noti).map(([k, v]) => `${k}: ${v} `)}
+          </p>
+        )}
+        <button
+          onClick={() => {
+            const z = selectedItem as ReceivedNotification;
+            updateNotification({ ...z, duration: z.duration + extension.ms })
+          }}
+        >
+          Extend duration with
+          <select
+            onClick={(e) => e.stopPropagation()}
+          >
+            <option onClick={() => setExtension({ ...extension, ms: 24 * 3600 })}>a day</option>
+            <option onClick={() => setExtension({ ... extension, ms: 24 * 3600 * 7 })}>a week</option>
+            <option onClick={() => setExtension({ ...extension, ms: 3600 * 24 * 30 })}>a month</option>
+            <option onClick={() => setExtension({ ...extension, ms: 3600 * 24 * 365 })}>a year</option>
+          </select>
+        </button>
+        <button
+          onClick={() => updateNotification({ ...selectedItem as ReceivedNotification, duration: 0 })}
+        >
+          Cancel
+        </button>
+        {oldNotifsPage && (
+          <>
+            <button onClick={() => setPageNo((pageNo + 1) % oldNotifsPage.totalPages)}>{'<'}</button>
+            <p>Page {oldNotifsPage.currentPage} of {oldNotifsPage.totalPages}</p>
+            <button onClick={() => setPageNo(pageNo > 0 ? pageNo - 1 : 0)}>{'>'}</button>
+          </>
+        )}
+      </div>
+
     </div>
   );
 };

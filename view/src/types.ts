@@ -30,11 +30,19 @@ export interface Image {
   src: string;
 };
 
-export type AdminPanelItem = Price | Feedback | Image;
+export type AdminPanelItem = Price | Feedback | Image | Notification;
 
 export interface Notification {
   category: string,
   duration: number,
   title: string,
   content: string
+};
+
+export interface ReceivedNotification extends Notification {
+  id: number
+};
+
+export interface ClientsideNotification extends ReceivedNotification {
+  read: boolean
 };
