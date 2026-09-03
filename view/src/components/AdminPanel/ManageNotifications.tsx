@@ -4,10 +4,7 @@ import type { Notification, ReceivedNotification } from "../../types";
 import { useContext, useState } from "react";
 import Modal from "../Modal";
 import AlertContext from "../../AlertContext";
-
-const selectedStyle = {
-  background: 'lightblue'
-};
+import DynamicTable from "../DynamicTable";
 
 const NOTIFY_DEFAULT: Notification = {
   category: "",
@@ -168,16 +165,14 @@ const ManageNotifications = () => {
       <h1>Manage broadcasted notifications</h1>
       <div className="container">
         {oldNotifsLoading && <p>Please wait...</p>}
-        {oldNotifsPage?.notifications.map((noti) => 
-          <p
-            key={noti.id}
-            onClick={() => setSelected(noti)}
-            style={selected === noti ? selectedStyle : {}}
-          >
-            {Object.entries(noti).map(([k, v]) => `${k}: ${v} `)}
-          </p>
+        {oldNotifsPage && (
+          <DynamicTable
+            items={oldNotifsPage.notifications}
+            onRowSelect={(item) => setSelected(item as Notification)}
+          />
         )}
         <button
+          style={{ display: "flex", justifyContent: "center", alignItems: "center" }}
           onClick={() => {
             const z = selected as ReceivedNotification;
             updateNotification({ ...z, duration: z.duration + extension.ms })

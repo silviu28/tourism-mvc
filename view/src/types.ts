@@ -3,7 +3,11 @@ export interface UserData {
   username?: string,
 };
 
-export interface CommentData {
+interface KeyAccesible {
+  [key: string]: unknown;
+}
+
+export interface CommentData extends KeyAccesible {
   id: number,
   user: {
     username: string,
@@ -12,7 +16,7 @@ export interface CommentData {
   likes?: number
 };
 
-export interface Price {
+export interface Price extends KeyAccesible {
   id?: number;
   country: string;
   isAvailable: boolean;
@@ -21,19 +25,19 @@ export interface Price {
   priceUpper?: number;
 };
 
-export interface Feedback {
+export interface Feedback extends KeyAccesible {
   id?: number;
   feedback: string;
 };
 
-export interface Image {
+export interface Image extends KeyAccesible {
   id?: number;
   src: string;
 };
 
 export type AdminPanelItem = Price | Feedback | Image | Notification;
 
-export interface Notification {
+export interface Notification extends KeyAccesible {
   id?: number,
   category: string,
   duration: number,
@@ -56,7 +60,7 @@ export interface PagedQuery<T> {
   currentPage: number
 };
 
-export interface BaseBlogPost {
+export interface BaseBlogPost extends KeyAccesible {
   id: number,
   title: string,
   description?: string,

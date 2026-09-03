@@ -4,10 +4,7 @@ import type { Feedback } from "../../types";
 import { useContext, useState } from "react";
 import AlertContext from "../../AlertContext";
 import useInvalidatingRemove from "../../hooks/useInvalidatingRemove";
-
-const selectedStyle = {
-  background: 'lightblue'
-};
+import DynamicTable from "../DynamicTable";
 
 const ManageFeedback = () => {
   const showAlert = useContext(AlertContext);
@@ -31,13 +28,10 @@ const ManageFeedback = () => {
       <h1>View feedbacks sent by users</h1>
       <div className="container">
         {!feedbackLoading && (
-          <ul>
-            {feedback.map((fb) =>
-              <li
-                key={fb.id}
-                style={fb === selected ? selectedStyle : {}}
-                onClick={() => setSelected(fb)}>{fb.feedback}</li>)}
-          </ul>
+          <DynamicTable
+            items={feedback}
+            onRowSelect={(item) => setSelected(item as Feedback)}
+          />
         )}
         <button
           onClick={() => remove(selected as { id: number })}

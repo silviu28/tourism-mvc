@@ -67,7 +67,7 @@ const ManageGallery = () => {
               style={img === selected ? selectedStyle : {}}
               onClick={() => setSelected(img)}
             >
-              {img.src}
+              <img src={img.src} />
             </li>
           )}
         </ul>}

@@ -4,10 +4,7 @@ import type { Price } from "../../types";
 import { type FC, useState, type SyntheticEvent, useContext } from "react";
 import AlertContext from "../../AlertContext";
 import useInvalidatingRemove from "../../hooks/useInvalidatingRemove";
-
-const selectedStyle = {
-  background: 'lightblue'
-};
+import DynamicTable from "../DynamicTable";
 
 interface PriceFormProps {
   onSubmit: (price: Price) => void;
@@ -194,16 +191,12 @@ const ManagePrices = () => {
       )}
       <h1>Edit price page</h1>
       <div className="container">
-        {!pricesLoading && <ul>
-          {prices.map(price =>
-            <li
-              key={price.id}
-              style={price === selected ? selectedStyle : {}}
-              onClick={() => setSelected(price)}>
-              {price.country},{price.travelHost},{price.isAvailable ? "available" : "unavailable"},{price.travelHost},{price.priceLower || ""},{price.priceUpper || ""}
-            </li>
-          )}
-        </ul>}
+        {!pricesLoading && (
+          <DynamicTable
+            items={prices}
+            onRowSelect={(item) => setSelected(item as Price)}
+          />
+        )}
         <button onClick={() => setFormVisible(true)}>+</button>
         <button disabled={!selected} onClick={() => remove(selected as { id: number })}>Delete</button>
         <button onClick={() => setUpdateFormVisible(true)}>Update</button>
