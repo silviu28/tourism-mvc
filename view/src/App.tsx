@@ -22,6 +22,12 @@ import Footer from './components/Footer';
 import Wiki from './components/Wiki';
 import NotFound from './components/NotFound';
 import ExpandedBlogPost from './components/ExpandedBlogPost';
+import ManagePrices from './components/AdminPanel/ManagePrices';
+import ManageGallery from './components/AdminPanel/ManageGallery';
+import ManageFeedback from './components/AdminPanel/ManageFeedback';
+import ManageNotifications from './components/AdminPanel/ManageNotifications';
+import ManageBlog from './components/AdminPanel/ManageBlog';
+import ManageAnalytics from './components/AdminPanel/ManageAnalytics';
 
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = "http://localhost:4004";
@@ -131,8 +137,17 @@ const App: FunctionComponent = () => {
                 <Route path="/prices" element={<PriceTable />} />
                 <Route path="/contact" element={<Contact onSubmit={addFeedback} />} />
                 <Route path="/login" element={<Login onSubmit={login} />} />
-                {isAdmin &&
-                  <Route path="/admin" element={<AdminPanel />} />}
+                {isAdmin && (
+                  <Route path="/admin" element={<AdminPanel />}>
+                    <Route index element={<h1 style={{ textAlign: "center" }}>Select something from the left.</h1>} />
+                    <Route path="analytics" element={<ManageAnalytics />} />
+                    <Route path="prices" element={<ManagePrices />} />
+                    <Route path="gallery" element={<ManageGallery />} />
+                    <Route path="feedback" element={<ManageFeedback />} />
+                    <Route path="notifications" element={<ManageNotifications />} />
+                    <Route path="blog" element={<ManageBlog />} />
+                  </Route>
+                )}
                 <Route path="/gallery" element={<Gallery />} />
                 <Route path="/blog" element={<BlogPosts />} />
                 <Route path="/blog/:id" element={<ExpandedBlogPost />} />

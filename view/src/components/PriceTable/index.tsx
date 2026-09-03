@@ -1,32 +1,24 @@
 import { useContext, type FC } from "react";
-import type { Price } from "../../types";
+import type { PagedQuery, Price } from "../../types";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import AlertContext from "../../AlertContext";
 import "./style.css";
 
-const EmptyRow: FC = () => {
-  return (
-    <tr>
-      <td>-</td>
-      <td>-</td>
-      <td>-</td>
-      <td>-</td>
-    </tr>
-  );
-};
-
 const PriceTable: FC = () => {
   const showAlert = useContext(AlertContext);
 
-  const { data: prices = [], isLoading, isError } = useQuery<Price[]>({
+  const { data: prices, isLoading, isError } = useQuery<PagedQuery<Price>>({
     queryKey: ["prices"],
     queryFn: async () => {
       try {
-        const pricesRes = await axios.get("http://localhost:4004/api/prices");
+        const pricesRes = await axios.get(`http://localhost:4004/api/prices?page=${1}`);
         return pricesRes.data;
       } catch (_error) {
         showAlert("Unable to load prices", "", true);
+        return {
+
+        } as PagedQuery<Price>;
       }
     }
   });
@@ -50,7 +42,7 @@ const PriceTable: FC = () => {
             <th>Travel Host</th>
             <th>Pricing</th>
           </tr>
-          {prices?.map(price =>
+          {prices?.content.map((price) =>
             <tr>
               <td>{price.country}</td>
               <td>{price.isAvailable ? "yes" : "no"}</td>
@@ -60,7 +52,6 @@ const PriceTable: FC = () => {
                   `${price.priceLower} - ${price.priceUpper}`}
               </td>
             </tr>)}
-          {!prices.length && <EmptyRow />}
         </tbody>
       </table>
       <br />

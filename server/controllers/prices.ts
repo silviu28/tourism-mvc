@@ -3,12 +3,30 @@ import { Price } from '../models/Price';
 import adminTokenAuthenticator from '../middleware/adminTokenAuthenticator';
 const router = express.Router();
 
-router.get("/api/prices", async (_req, res) => {
+const PAGE_SIZE=10;
+
+router.get("/api/prices", async (req, res) => {
   try {
-    const query = await Price.findAll();
-    res.json(query);
-  } catch (error) {
-    res.status(400).json({ error });
+    const page = parseInt(req.query.page as string, 10) || 1;
+
+    if (page < 1) {
+      return res.status(400).json({ error: "page must be 1 or greater" });
+    }
+
+    const { rows, count } = await Price.findAndCountAll({
+      limit: PAGE_SIZE,
+      offset: PAGE_SIZE * (page - 1),
+    });
+
+    return res.status(200).json({
+      content: rows,
+      totalCount: count,
+      totalPages: Math.ceil(count / PAGE_SIZE),
+      currentPage: page,
+    });
+  } catch (err) {
+    console.error("Failed to fetch pricing:", err);
+    return res.status(500).json({ error: "Failed to fetch pricing" });
   }
 });
 
