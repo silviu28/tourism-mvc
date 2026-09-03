@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import useAdminAuth from "../hooks/useAdminAuth";
 import Collapsible from "./Collapsible";
-import type { BlogPost } from "../types";
+import type { BlogPagedQuery, BlogPost } from "../types";
 import { useNavigate } from "react-router";
 
 interface PreviewState {
@@ -64,13 +64,6 @@ const PreviewTitle = styled.h2`
 const PreviewContent = styled.div`
   line-height: 1.6;
 `;
-
-interface BlogPagedQuery {
-  blogPosts: BlogPost[],
-  totalCount: number,
-  totalPages: number,
-  currentPage: number
-};
 
 const EMPTY_PAGE: BlogPagedQuery = {
   blogPosts: [],

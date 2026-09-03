@@ -6,12 +6,13 @@ interface DynamicTableProps {
 }
 
 const DynamicTable: FC<DynamicTableProps> = ({ items, onRowSelect })  => {
-  const headers = Object.keys(items[0]);
   const [selected, setSelected] = useState<object | null>(null);
 
   if (!items || items.length === 0) {
     return <p>No data to display.</p>;
   }
+
+  const headers = Object.keys(items[0]);
 
   return (
     <table className="pricetable">

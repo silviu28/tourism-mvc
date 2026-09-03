@@ -71,5 +71,20 @@ export interface BlogPost extends BaseBlogPost {
   id: number,
   date: string,
   likes: number,
-  adminId: number
+  adminId: number,
+  archived: boolean
 };
+
+export interface BlogPagedQuery {
+  blogPosts: BlogPost[],
+  totalCount: number,
+  totalPages: number,
+  currentPage: number
+};
+
+export const EMPTY_PAGE: BlogPagedQuery = {
+  blogPosts: [],
+  totalCount: 0,
+  totalPages: 0,
+  currentPage: 0,
+}
