@@ -64,7 +64,7 @@ const ManageBlog = ( ) => {
     queryKey: ["blog-posts"],
     queryFn: async () => {
       try {
-        const blogRes = await axios.get<BlogPagedQuery>(`http://localhost:4004/api/blog?page=${pageNo}`);
+        const blogRes = await axios.get<BlogPagedQuery>(`http://localhost:4004/api/blog/all?page=${pageNo}`);
         return blogRes.data;
       } catch (_error) {
         return EMPTY_PAGE;

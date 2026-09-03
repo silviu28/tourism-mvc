@@ -1,5 +1,5 @@
 import { useState, type FC } from "react";
-import { NavLink, Outlet } from "react-router";
+import { NavLink, Outlet, useLocation } from "react-router";
 import styled from "styled-components";
 
 const PanelWrapper = styled.div`
@@ -37,7 +37,8 @@ const links = [
 ];
 
 const AdminPanel: FC = () => {
-  const [route, setRoute] = useState("/admin");
+  const location = useLocation().pathname;
+  const [route, setRoute] = useState(location);
 
   return (
     <PanelWrapper>

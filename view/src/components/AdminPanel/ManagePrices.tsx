@@ -1,6 +1,6 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
-import { EMPTY_PAGE, EMPTY_QUERY_PAGE, type PagedQuery, type Price } from "../../types";
+import { EMPTY_QUERY_PAGE, type PagedQuery, type Price } from "../../types";
 import { type FC, useState, type SyntheticEvent, useContext } from "react";
 import AlertContext from "../../AlertContext";
 import useInvalidatingRemove from "../../hooks/useInvalidatingRemove";
@@ -184,7 +184,7 @@ const ManagePrices = () => {
   return (
     <>
       <Modal
-        isVisible={formVisible && selected !== null}
+        isVisible={formVisible}
         visibilitySetter={setFormVisible}
       >
         <PriceForm onSubmit={(price) => submitPrice(price)} />
