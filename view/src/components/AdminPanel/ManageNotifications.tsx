@@ -5,6 +5,7 @@ import { useContext, useState } from "react";
 import Modal from "../Modal";
 import AlertContext from "../../AlertContext";
 import DynamicTable from "../DynamicTable";
+import Pager from "../Pager";
 
 const NOTIFY_DEFAULT: Notification = {
   category: "",
@@ -31,7 +32,7 @@ const ManageNotifications = () => {
     ms: 24 * 3600 * 1000
   });
   const [notification, setNotification] = useState<Notification>(() => NOTIFY_DEFAULT);
-  const [pageNo, setPageNo] = useState(0);
+  const [pageNo, setPageNo] = useState(1);
   const [extension, setExtension] = useState({
     time: 'a day',
     ms: 24 * 3600 * 100
@@ -171,34 +172,35 @@ const ManageNotifications = () => {
             onRowSelect={(item) => setSelected(item as Notification)}
           />
         )}
-        <button
-          style={{ display: "flex", justifyContent: "center", alignItems: "center" }}
-          onClick={() => {
-            const z = selected as ReceivedNotification;
-            updateNotification({ ...z, duration: z.duration + extension.ms })
-          }}
-        >
-          Extend duration with
-          <select
-            onClick={(e) => e.stopPropagation()}
+        <div style={{ display: "flex", flexDirection: "row", justifyContent: "center" }}>
+          <button
+            style={{ display: "flex", justifyContent: "center", alignItems: "center" }}
+            onClick={() => {
+              const z = selected as ReceivedNotification;
+              updateNotification({ ...z, duration: z.duration + extension.ms })
+            }}
           >
-            <option onClick={() => setExtension({ ...extension, ms: 24 * 3600 })}>a day</option>
-            <option onClick={() => setExtension({ ... extension, ms: 24 * 3600 * 7 })}>a week</option>
-            <option onClick={() => setExtension({ ...extension, ms: 3600 * 24 * 30 })}>a month</option>
-            <option onClick={() => setExtension({ ...extension, ms: 3600 * 24 * 365 })}>a year</option>
-          </select>
-        </button>
-        <button
-          onClick={() => updateNotification({ ...selected as ReceivedNotification, duration: 0 })}
-        >
-          Cancel
-        </button>
+            Extend duration with
+            <select
+              onClick={(e) => e.stopPropagation()}
+            >
+              <option onClick={() => setExtension({ ...extension, ms: 24 * 3600 })}>a day</option>
+              <option onClick={() => setExtension({ ... extension, ms: 24 * 3600 * 7 })}>a week</option>
+              <option onClick={() => setExtension({ ...extension, ms: 3600 * 24 * 30 })}>a month</option>
+              <option onClick={() => setExtension({ ...extension, ms: 3600 * 24 * 365 })}>a year</option>
+            </select>
+          </button>
+          <button
+            onClick={() => updateNotification({ ...selected as ReceivedNotification, duration: 0 })}
+          >
+            Cancel
+          </button>
+        </div>
         {oldNotifsPage && (
-          <>
-            <button onClick={() => setPageNo((pageNo + 1) % oldNotifsPage.totalPages)}>{'<'}</button>
-            <p>Page {oldNotifsPage.currentPage} of {oldNotifsPage.totalPages}</p>
-            <button onClick={() => setPageNo(pageNo > 0 ? pageNo - 1 : 0)}>{'>'}</button>
-          </>
+          <Pager
+            state={{ pageNo, ...oldNotifsPage }}
+            onPageChange={(no) => setPageNo(no)}
+          />
         )}
       </div>
     </>
