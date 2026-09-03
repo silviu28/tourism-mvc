@@ -5,6 +5,7 @@ import { type FC, useState, type SyntheticEvent, useContext } from "react";
 import AlertContext from "../../AlertContext";
 import useInvalidatingRemove from "../../hooks/useInvalidatingRemove";
 import DynamicTable from "../DynamicTable";
+import Modal from "../Modal";
 
 interface PriceFormProps {
   onSubmit: (price: Price) => void;
@@ -180,15 +181,21 @@ const ManagePrices = () => {
 
   return (
     <>
-      {formVisible && selected && (
+      <Modal
+        isVisible={formVisible && selected !== null}
+        visibilitySetter={setFormVisible}
+      >
         <PriceForm onSubmit={(price) => submitPrice(price)} />
-      )}
-      {updateFormVisible && selected && (
+      </Modal>
+      <Modal
+        isVisible={updateFormVisible && selected !== null}
+        visibilitySetter={setUpdateFormVisible}
+      >
         <UpdatePriceForm
-          price={selected} 
+          price={selected!} 
           onUpdate={(price) => updatePrice(price)}
         />
-      )}
+      </Modal>
       <h1>Edit price page</h1>
       <div className="container">
         {!pricesLoading && (

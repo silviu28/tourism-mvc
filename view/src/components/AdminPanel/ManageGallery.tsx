@@ -6,6 +6,7 @@ import AlertContext from "../../AlertContext";
 import useInvalidatingSubmit from "../../hooks/useInvalidatingSubmit";
 import useInvalidatingRemove from "../../hooks/useInvalidatingRemove";
 import styled from "styled-components";
+import Modal from "../Modal";
 
 const GalleryGrid = styled.ul`
   display: grid;
@@ -79,9 +80,9 @@ const ManageGallery = () => {
 
   return (
     <>
-      {formVisible && (
+      <Modal isVisible={formVisible} visibilitySetter={setFormVisible}>
         <ImageForm onSubmit={(src) => submitImage({ src })} />
-      )}
+      </Modal>
       <h1>Edit images shown in gallery</h1>
       <div className="container">
         {!galleryLoading && (
