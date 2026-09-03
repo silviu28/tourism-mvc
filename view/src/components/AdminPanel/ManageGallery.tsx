@@ -5,10 +5,34 @@ import { useContext, useState, type FC, type SyntheticEvent } from "react";
 import AlertContext from "../../AlertContext";
 import useInvalidatingSubmit from "../../hooks/useInvalidatingSubmit";
 import useInvalidatingRemove from "../../hooks/useInvalidatingRemove";
+import styled from "styled-components";
 
-const selectedStyle = {
-  background: 'lightblue'
-};
+const GalleryGrid = styled.ul`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 12px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  background-color: transparent;
+`;
+
+const GalleryItem = styled.li<{ $selected: boolean }>`
+  position: relative;
+  aspect-ratio: 1 / 1;
+  border-radius: 10px;
+  overflow: hidden;
+  cursor: pointer;
+  border: 3px solid ${({ $selected }) => ($selected ? "orange" : "transparent")};
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
+`;
+
+const GalleryImage = styled.img`
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+`;
 
 interface ImageFormProps {
   onSubmit: (src: string) => void;
@@ -60,17 +84,19 @@ const ManageGallery = () => {
       )}
       <h1>Edit images shown in gallery</h1>
       <div className="container">
-        {!galleryLoading && <ul>
-          {gallery.map((img) =>
-            <li
-              key={img.id}
-              style={img === selected ? selectedStyle : {}}
-              onClick={() => setSelected(img)}
-            >
-              <img src={img.src} />
-            </li>
+        {!galleryLoading && (
+          <GalleryGrid>
+            {gallery.map((img) => (
+              <GalleryItem
+                key={img.id}
+                $selected={img === selected}
+                onClick={() => setSelected(img)}
+              >
+                <GalleryImage src={img.src} alt="" />
+              </GalleryItem>
+            ))}
+          </GalleryGrid>
           )}
-        </ul>}
         <button onClick={() => setFormVisible(true)}>+</button>
         <button
          disabled={!selected}
