@@ -28,11 +28,12 @@ const AdminLink = styled(NavLink)`
 `;
 
 const links = [
+  { "to": "/admin/analytics", "name": "Analytics" },
   { "to": "/admin/prices", "name": "Prices" },
   { "to": "/admin/gallery", "name": "Gallery" },
   { "to": "/admin/feedback", "name": "Feedback" },
   { "to": "/admin/notifications", "name": "Notifications" },
-  { "to": "/admin/blog", "name": "Blog Posts" }
+  { "to": "/admin/blog", "name": "Blog Posts" },
 ];
 
 const AdminPanel: FC = () => {

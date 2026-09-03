@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState, type FunctionComponent } from 'react'
 import './App.css';
-import { Outlet, Route, BrowserRouter as Router, Routes } from 'react-router';
+import { Route, BrowserRouter as Router, Routes } from 'react-router';
 import Navbar from './components/Navbar';
 import FrontPage from './components/FrontPage';
 import Signup from './components/Signup';
@@ -27,6 +27,7 @@ import ManageGallery from './components/AdminPanel/ManageGallery';
 import ManageFeedback from './components/AdminPanel/ManageFeedback';
 import ManageNotifications from './components/AdminPanel/ManageNotifications';
 import ManageBlog from './components/AdminPanel/ManageBlog';
+import ManageAnalytics from './components/AdminPanel/ManageAnalytics';
 
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = "http://localhost:4004";
@@ -139,6 +140,7 @@ const App: FunctionComponent = () => {
                 {isAdmin && (
                   <Route path="/admin" element={<AdminPanel />}>
                     <Route index element={<h1 style={{ textAlign: "center" }}>Select something from the left.</h1>} />
+                    <Route path="analytics" element={<ManageAnalytics />} />
                     <Route path="prices" element={<ManagePrices />} />
                     <Route path="gallery" element={<ManageGallery />} />
                     <Route path="feedback" element={<ManageFeedback />} />
