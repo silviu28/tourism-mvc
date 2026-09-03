@@ -1,11 +1,12 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
-import type { Price } from "../../types";
+import { EMPTY_PAGE, EMPTY_QUERY_PAGE, type PagedQuery, type Price } from "../../types";
 import { type FC, useState, type SyntheticEvent, useContext } from "react";
 import AlertContext from "../../AlertContext";
 import useInvalidatingRemove from "../../hooks/useInvalidatingRemove";
 import DynamicTable from "../DynamicTable";
 import Modal from "../Modal";
+import Pager from "../Pager";
 
 interface PriceFormProps {
   onSubmit: (price: Price) => void;
@@ -141,16 +142,17 @@ const ManagePrices = () => {
   const [updateFormVisible, setUpdateFormVisible] = useState(false);
   const [selected, setSelected] = useState<Price | null>(null);
   const remove = useInvalidatingRemove("prices");
+  const [pageNo, setPageNo] = useState(1);
 
-
-  const { data: prices = [], isLoading: pricesLoading } = useQuery<Price[]>({
+  const { data: pricePage = [], isLoading: pricesLoading } = useQuery<PagedQuery<Price>>({
     queryKey: ["prices"],
     queryFn: async () => {
       try {
-        const pricesRes = await axios.get("http://localhost:4004/api/prices");
+        const pricesRes = await axios.get(`http://localhost:4004/api/prices?page=${pageNo}`);
         return pricesRes.data;
       } catch (_error) {
         showAlert("Unable to load prices", "", true);
+        return EMPTY_QUERY_PAGE;
       }
     }
   });
@@ -199,10 +201,16 @@ const ManagePrices = () => {
       <h1>Edit price page</h1>
       <div className="container">
         {!pricesLoading && (
-          <DynamicTable
-            items={prices}
-            onRowSelect={(item) => setSelected(item as Price)}
-          />
+          <>
+            <DynamicTable
+              items={(pricePage as PagedQuery<Price>).content}
+              onRowSelect={(item) => setSelected(item as Price)}
+            />
+            <Pager 
+              state={{ pageNo, ...pricePage as PagedQuery<Price> }}
+              onPageChange={(no) => setPageNo(no)}
+            />
+          </>
         )}
         <button onClick={() => setFormVisible(true)}>+</button>
         <button disabled={!selected} onClick={() => remove(selected as { id: number })}>Delete</button>

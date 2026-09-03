@@ -82,9 +82,16 @@ export interface BlogPagedQuery {
   currentPage: number
 };
 
+export const EMPTY_QUERY_PAGE: PagedQuery<unknown> = {
+  content: [],
+  totalCount: 0,
+  totalPages: 0,
+  currentPage: 0
+};
+
 export const EMPTY_PAGE: BlogPagedQuery = {
   blogPosts: [],
   totalCount: 0,
   totalPages: 0,
   currentPage: 0,
-}
+};

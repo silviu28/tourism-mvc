@@ -8,7 +8,7 @@ const Pager = ({ state, onPageChange }: { state: PagerState, onPageChange: (page
     <div style={{ display: "flex", flexDirection: "row", justifyContent: "center" }}>
       <button onClick={() => onPageChange((state.pageNo + 1) % state.totalPages)}>{'<'}</button>
       <p>Page {state.pageNo} of {state.totalPages}</p>
-      <button onClick={() => onPageChange(state.pageNo > 1 ? state.pageNo - 1 : 0)}>{'>'}</button>
+      <button onClick={() => onPageChange(state.pageNo > 1 ? state.pageNo - 1 : 1)}>{'>'}</button>
     </div>
   );
 };
