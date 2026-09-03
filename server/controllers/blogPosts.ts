@@ -39,6 +39,32 @@ router.get("/api/blog", async (req, res) => {
   }
 });
 
+router.get("/api/blog/all", adminTokenAuthenticator, async (req, res) => {
+  try {
+    const page = parseInt(req.query.page as string, 10) || 1;
+
+    if (page < 1) {
+      return res.status(400).json({ error: "page must be 1 or greater" });
+    }
+
+    const { rows, count } = await BlogPost.findAndCountAll({
+      order: [["date", "DESC"]],
+      limit: PAGE_SIZE,
+      offset: PAGE_SIZE * (page - 1),
+    });
+
+    return res.status(200).json({
+      blogPosts: rows,
+      totalCount: count,
+      totalPages: Math.ceil(count / PAGE_SIZE),
+      currentPage: page,
+    });
+  } catch (err) {
+    console.error("Failed to fetch blog posts:", err);
+    return res.status(500).json({ error: "Failed to fetch blog posts" });
+  }
+});
+
 router.get("/api/blog/:id", async (req, res) => {
   try {
     const { id } = req.params;
