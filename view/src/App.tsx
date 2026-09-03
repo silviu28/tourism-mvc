@@ -138,7 +138,7 @@ const App: FunctionComponent = () => {
                 <Route path="/login" element={<Login onSubmit={login} />} />
                 {isAdmin && (
                   <Route path="/admin" element={<AdminPanel />}>
-                    <Route index element={<h1>Select something from the left.</h1>} />
+                    <Route index element={<h1 style={{ textAlign: "center" }}>Select something from the left.</h1>} />
                     <Route path="prices" element={<ManagePrices />} />
                     <Route path="gallery" element={<ManageGallery />} />
                     <Route path="feedback" element={<ManageFeedback />} />

@@ -1,30 +1,60 @@
 import { useState, type FC } from "react";
-import Modal from "../Modal";
 import { NavLink, Outlet } from "react-router";
+import styled from "styled-components";
+
+const PanelWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  min-height: 100vh;
+`;
+
+const Sidebar = styled.div`
+  width: 10%;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background-color: #eb9900;
+`;
+
+const Content = styled.div`
+  width: 80%;
+  padding: 20px;
+  margin: 20px;
+`;
+
+const AdminLink = styled(NavLink)`
+  color: black;
+`;
+
+const links = [
+  { "to": "/admin/prices", "name": "Prices" },
+  { "to": "/admin/gallery", "name": "Gallery" },
+  { "to": "/admin/feedback", "name": "Feedback" },
+  { "to": "/admin/notifications", "name": "Notifications" },
+  { "to": "/admin/blog", "name": "Blog Posts" }
+];
 
 const AdminPanel: FC = () => {
-  const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+  const [route, setRoute] = useState("/admin");
 
   return (
-    <div style={{ display: "flex", flexDirection: "row", justifyContent: "center" }}>
-
-      <div style={{ marginRight: 20, marginTop: 20, display: "flex", flexDirection: "column" }}>
-        <NavLink to="/admin/blog">Prices</NavLink>
-        <NavLink to="/admin/gallery">Gallery</NavLink>
-        <NavLink to="/admin/feedback">Feedback</NavLink>
-        <NavLink to="/admin/notifications">Notifications</NavLink>
-        <NavLink to="/admin/blog">Blog Posts</NavLink>
-      </div>
-
-      <div className="slight-margin;width:100%;">
+    <PanelWrapper>
+      <Sidebar>
+        <p><b>MyTravel</b></p>
+        {links.map(({ to, name }) =>
+          <AdminLink
+            to={to}
+            onClick={() => setRoute(to)}
+          >
+            {route === to && '> '}{name}
+          </AdminLink>
+        )}
+      </Sidebar>
+      <Content>
         <Outlet />
-        
-        <Modal
-          isVisible={isModalVisible}
-          visibilitySetter={setIsModalVisible}>
-        </Modal>
-      </div>
-    </div>
+      </Content>
+    </PanelWrapper>
   );
 };
 
