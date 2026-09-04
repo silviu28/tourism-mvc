@@ -1,19 +1,45 @@
-const jwt = require("jsonwebtoken");
+import { Admin } from "../models/Admin";
+import { verifyAndRotateRefreshToken, setAuthCookies, verifyAccessToken, signAccessToken } from "../utils";
 
-// use this to validate server operations that require authentication
-const adminTokenAuthenticator = (req, res, next) => {
-  const token = req.cookies.token;
-  if (!token) {
-    return res.status(401).json({ message: "Unauthorized operation" });
-  }
-  jwt.verify(token, process.env.JWT_SECRET, (err, admin) => {
-    if (err || !admin.adminId || !admin.username || !admin.id) {
-      return res.status(403).json({ message: "Invalid token" });
+const adminTokenAuthenticator = async (req, res, next) => {
+  try {
+    const token = req.cookies?.token;
+
+    if (token) {
+      const payload = verifyAccessToken(token);
+      if (payload) {
+        if (!payload.adminId) {
+          return res.status(403).json({ error: "Forbidden" });
+        }
+        req.id = payload.id;
+        req.adminId = payload.adminId;
+        return next();
+      }
     }
 
-    req.admin = admin;
-    next();
-  });
+    const rotated = await verifyAndRotateRefreshToken(req);
+    if (!rotated) {
+      return res.status(401).json({ error: "Session expired" });
+    }
+
+    const { storedToken, newRefreshToken, newExpiresAt } = rotated;
+
+    const admin = await Admin.findOne({ where: { userId: storedToken.userId } });
+    if (!admin) {
+      return res.status(403).json({ error: "Forbidden" });
+    }
+
+    const newAccessToken = signAccessToken({ id: storedToken.userId, adminId: admin.id });
+    setAuthCookies(res, newAccessToken, newRefreshToken, newExpiresAt);
+
+    req.id = storedToken.userId;
+    req.adminId = admin.id;
+  next();
+  } catch (err) {
+    console.error("Admin auth failed:", err);
+    res.status(500).json({ error: "Authentication error" });
+  }
+
 };
 
 export default adminTokenAuthenticator;
