@@ -63,6 +63,12 @@ router.post("/api/logout", (_req, res) => {
     sameSite: "strict",
     secure: process.env.NODE_ENV === "production"
   });
+  
+  res.clearCookie("adminToken", {
+    httpOnly: true,
+    sameSite: "strict",
+    secure: process.env.NODE_ENV === "production"
+  });
   res.send("Logged out");
 })
 

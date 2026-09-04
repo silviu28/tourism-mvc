@@ -4,7 +4,7 @@ import { useNavigate } from "react-router";
 import { Background, CheckboxRow, FloatContainer, PageWrapper } from "../styled";
 
 interface LoginProps {
-  onSubmit: ({ username, password }: { username: string, password: string }) => void;
+  onSubmit: ({ username, password, rememberMe }: { username: string, password: string, rememberMe: boolean }) => void;
 };
 
 const Login: FunctionComponent<LoginProps> = ({ onSubmit }) => {
@@ -22,6 +22,7 @@ const Login: FunctionComponent<LoginProps> = ({ onSubmit }) => {
     onSubmit({
       username,
       password,
+      rememberMe
     });
 
     navigate("/");
