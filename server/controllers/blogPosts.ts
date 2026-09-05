@@ -1,7 +1,7 @@
 import express from "express";
 import adminTokenAuthenticator from "../middleware/adminTokenAuthenticator";
 import { BlogPost } from "../models/BlogPost";
-import DOMPurify from "isomorphic-dompurify";
+const DOMPurify = require("isomorphic-dompurify");
 import userTokenAuthenticator from "../middleware/userTokenAuthenticator";
 import BlogLike from "../models/BlogLike";
 import { BlogPostComment } from "../models/BlogPostComment";

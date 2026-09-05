@@ -1,7 +1,6 @@
 {
 	"compilerOptions": {
 		"target": "es2020",
-		"ignoreDeprecations": "6.0",
 		"module": "commonjs",
 		"moduleResolution": "node",
 		"lib": [
@@ -23,7 +22,6 @@
 		"noUnusedParameters": true,
 		"emitDecoratorMetadata": true,
 		"experimentalDecorators": true,
-		"downlevelIteration": true,
 		"declaration": true,
 		"pretty": true,
 		"esModuleInterop": true,
