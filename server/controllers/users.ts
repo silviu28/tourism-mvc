@@ -1,11 +1,9 @@
 import express from 'express';
 import { User } from '../models/User';
-import { Admin } from '../models/Admin';
-import { TokenParams } from '../types';
 import userTokenAuthenticator from '../middleware/userTokenAuthenticator';
+import { generateRefreshToken } from '../utils';
 const router = express.Router();
 const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
 
 router.get("/api/users", async (_req, res) => {
   res.json(await User.findAll());
@@ -35,60 +33,38 @@ router.post("/api/users", async (req, res) => {
 });
 
 router.post("/api/login", async (req, res) => {
-  const { username, password } = req.body;
   try {
-    const user = await User.findOne({
-      where: {
-        username
-      }
-    });
+    const { username, password, remember } = req.body;
 
-    if (!user) {
-      res.status(404).send("User does not exist");
-      return;
+    const user = await User.findOne({ where: { username } });
+    if (!user || !(await bcrypt.compare(password, user.passwordHash))) {
+      return res.status(401).json({ error: "Invalid credentials" });
     }
 
-    const admin = await Admin.findOne({
-      where: {
-        userId: user.id
-      }
+    const { token, expiresAt } = await generateRefreshToken(user.id, Boolean(remember));
+
+    res.cookie("refreshToken", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      expires: expiresAt,
     });
 
-    if (!await bcrypt.compare(password, user.passwordHash)) {
-      throw Error("Invalid password");
-    } else {
-      const tokenParams: TokenParams = {
-        id: user.id,
-        username,
-      };
-
-      if (admin) {
-        tokenParams.adminId = admin.id;
-      }
-
-      const token = await jwt.sign(
-        tokenParams,
-        process.env.JWT_SECRET,
-        { expiresIn: 3600 * 24 * 31 }
-      );
-
-      res
-        .cookie("token", token, {
-          httpOnly: true,
-          // secure: process.env.NODE_ENV === "production",
-          secure: false,
-          sameSite: "lax",
-          maxAge: 3600 * 24 * 31
-        })
-        .json({ id: user.id, username });
-    }
-  } catch (error) {
-    res.status(400).json({ error });
+    return res.status(200).json({ id: user.id, username: user.username });
+  } catch (err) {
+    console.error("Login failed:", err);
+    return res.status(500).json({ error: "Login failed" });
   }
 });
 
 router.post("/api/logout", (_req, res) => {
   res.clearCookie("token", {
+    httpOnly: true,
+    sameSite: "strict",
+    secure: process.env.NODE_ENV === "production"
+  });
+  
+  res.clearCookie("adminToken", {
     httpOnly: true,
     sameSite: "strict",
     secure: process.env.NODE_ENV === "production"

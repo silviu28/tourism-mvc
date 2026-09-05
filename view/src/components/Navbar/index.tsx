@@ -245,19 +245,21 @@ const Navbar: FC<NavbarProps> = ({ isAdmin }) => {
         return [];
       }
     }
-  })
+  });
+
+  const logout = () => {
+    axios.post("http://localhost:4004/api/logout")
+      .then((_res) => {
+        showAlert("Logged out.", "", false);
+        setUser!({});
+        localStorage.removeItem('user');
+      })
+      .catch((_e) => showAlert("Unable to logout right now.", "", true));
+  };
 
   const promptLogout = async () => {
-    if (window.confirm("Logout?")) {
-      localStorage.removeItem('user');
-      try {
-        await axios.post("http://localhost:4004/api/logout");
-        showAlert("Succesfully logged out", "", false);
-        setUser!({});
-      } catch (_error) {
-        showAlert("Cannot logout", "", true);
-      }
-    }
+    if (window.confirm("Logout?"))
+      logout();
   };
 
   return (

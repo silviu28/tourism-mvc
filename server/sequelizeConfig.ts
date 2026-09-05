@@ -11,6 +11,7 @@ import { BlogPost } from "./models/BlogPost";
 import BlogLike from "./models/BlogLike";
 import { BlogPostComment } from "./models/BlogPostComment";
 import BlogPostCommentLike from "./models/BlogPostCommentLike";
+import RefreshToken from "./models/RefreshToken";
 require('dotenv').config({ quiet: true });
 
 const con = new Sequelize({
@@ -19,7 +20,7 @@ const con = new Sequelize({
   username: process.env.DB_USER,
   password: process.env.PASSWORD || "",
   host: process.env.HOST,
-  models: [User, Comment, Price, Feedback, Admin, Image, NotificationCategory, Notification, BlogPost, BlogLike, BlogPostComment, BlogPostCommentLike],
+  models: [User, Comment, Price, Feedback, Admin, Image, NotificationCategory, Notification, BlogPost, BlogLike, BlogPostComment, BlogPostCommentLike, RefreshToken],
 });
 
 con.sync({ alter: process.env.DB_ALTER === "true" });
