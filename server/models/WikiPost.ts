@@ -1,5 +1,6 @@
-import { Table, Model, PrimaryKey, AutoIncrement, Column, DataType, ForeignKey, BelongsTo } from "sequelize-typescript";
+import { Table, Model, PrimaryKey, AutoIncrement, Column, DataType, ForeignKey, BelongsTo, BelongsToMany } from "sequelize-typescript";
 import { User } from "./User";
+import WikiPostCoauthor from "./WikiPostCoauthor";
 
 @Table({
   tableName: "wiki_posts",
@@ -67,4 +68,7 @@ export default class WikiPost extends Model {
     defaultValue: 0
   })
   declare likes: number;
+
+  @BelongsToMany(() => User, () => WikiPostCoauthor)
+  declare coauthors: User[];
 };

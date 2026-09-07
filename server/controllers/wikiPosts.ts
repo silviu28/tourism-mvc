@@ -3,6 +3,7 @@ import userTokenAuthenticator from "../middleware/userTokenAuthenticator";
 import adminTokenAuthenticator from "../middleware/adminTokenAuthenticator";
 import WikiPost from "../models/WikiPost";
 import { placeAsDocumentAndGetPath, readDocument } from "../utils";
+import { User } from "../models/User";
 
 const router = express.Router();
 
@@ -38,14 +39,19 @@ router.get("/api/wiki/:id", async (req, res) => {
   try {
     const { id } = req.params;
 
-    const wikiPage = await WikiPost.findByPk(id);
+    const wikiPost = await WikiPost.findByPk(id, {
+      include: [
+          { model: User, as: "user", attributes: ["id", "username"] },
+          { model: User, as: "coauthors", attributes: ["id", "username"] },
+        ],
+    });
 
-    if (!wikiPage) {
+    if (!wikiPost) {
       return res.status(404).json({ error: "Wiki page not found" });
     }
 
-    const html = await readDocument(wikiPage.htmlRef);
-    return res.status(200).json({ wikiPage, html });
+    const html = await readDocument(wikiPost.htmlRef);
+    return res.status(200).json({ wikiPost, html });
   } catch (err) {
     console.error("Failed to fetch wiki page:", err);
     return res.status(500).json({ error: "Failed to fetch wiki page" });
@@ -63,7 +69,7 @@ router.post("/api/wiki", userTokenAuthenticator, async (req, res) => {
 
     const htmlRef = await placeAsDocumentAndGetPath("/wiki", html, title);
 
-    const wikiPage = await WikiPost.create({
+    const wikiPost = await WikiPost.create({
       title,
       htmlRef,
       userId,
@@ -71,7 +77,7 @@ router.post("/api/wiki", userTokenAuthenticator, async (req, res) => {
       archived: false,
     });
 
-    return res.status(201).json(wikiPage);
+    return res.status(201).json(wikiPost);
   } catch (err) {
     console.error("Failed to create wiki page:", err);
     return res.status(500).json({ error: "Failed to create wiki page" });
@@ -83,15 +89,15 @@ router.post("/api/wiki/:id", adminTokenAuthenticator, async (req, res) => {
     const { id } = req.params;
     const { title, htmlRef, archived } = req.body;
 
-    const wikiPage = await WikiPost.findByPk(id);
+    const wikiPost = await WikiPost.findByPk(id);
 
-    if (!wikiPage) {
+    if (!wikiPost) {
       return res.status(404).json({ error: "Wiki page not found" });
     }
 
-    await wikiPage.update({ title, htmlRef, archived });
+    await wikiPost.update({ title, htmlRef, archived });
 
-    return res.status(200).json(wikiPage);
+    return res.status(200).json(wikiPost);
   } catch (err) {
     console.error("Failed to update wiki page:", err);
     return res.status(500).json({ error: "Failed to update wiki page" });

@@ -1,8 +1,8 @@
 import crypto from "crypto";
 import RefreshToken from "../models/RefreshToken";
 import { Response } from "express";
-const path = require("path");
-const fs = require("fs");
+import path from "path";
+import fs from "fs/promises";
 const jwt = require("jsonwebtoken");
 
 const WIKI_DOCS_ROOT = path.join(process.cwd(), "storage", "wiki");
