@@ -4,7 +4,8 @@ import type { WikiPost } from "../../types";
 import axios from "axios";
 import NotFound from "../NotFound";
 
-interface ExpandedWikiPost extends WikiPost {
+interface ExpandedWikiPost {
+  wikiPost: WikiPost;
   html: string
 };
 
@@ -24,15 +25,18 @@ const WikiPage = () => {
   });
 
   if (!isLoading && !data) return <NotFound />;
-  
+
   return (
     <div className="container">
-      {isLoading && <p>Please wait...</p>}
       {data && (
         <>
-          <h2>{data.title}</h2>
-          <p>Posted on {data.date}</p>
-          <p>{data.author} | {data.coauthors.join(", ")}</p>
+          <h2>{data.wikiPost.title}</h2>
+          <p>Posted on {data.wikiPost.date}</p>
+          <p>{data.wikiPost.user.username} | {data.wikiPost
+              .coauthors
+              .map((coauth) => coauth.username)
+              .join(", ") 
+              || "No co-authors"}</p>
           <div
             dangerouslySetInnerHTML={{
               __html: data.html

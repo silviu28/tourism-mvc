@@ -100,8 +100,14 @@ export interface WikiPost extends KeyAccesible {
   id?: number,
   title: string,
   htmlRef: string,
-  author: string,
-  coauthors: string[],
+  user: {
+    id: number,
+    username: string
+  }
+  coauthors: {
+    id: number,
+    username: string
+  }[],
   date: string,
   likes: number
 };
