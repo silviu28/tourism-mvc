@@ -28,6 +28,8 @@ import ManageFeedback from './components/AdminPanel/ManageFeedback';
 import ManageNotifications from './components/AdminPanel/ManageNotifications';
 import ManageBlog from './components/AdminPanel/ManageBlog';
 import ManageAnalytics from './components/AdminPanel/ManageAnalytics';
+import WikiPage from './components/Wiki/WikiPage';
+import WikiPageBuilder from './components/Wiki/WikiPageBuilder';
 
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = "http://localhost:4004";
@@ -134,6 +136,8 @@ const App: FunctionComponent = () => {
                 <Route path="/" element={<FrontPage />} />
                 <Route path="/signup" element={<Signup onSubmit={createAccount} />} />
                 <Route path="/wiki" element={<Wiki />} />
+                <Route path="/wiki/:id" element={<WikiPage />} />
+                <Route path="/wiki/new" element={<WikiPageBuilder />} />
                 <Route path="/prices" element={<PriceTable />} />
                 <Route path="/contact" element={<Contact onSubmit={addFeedback} />} />
                 <Route path="/login" element={<Login onSubmit={login} />} />
