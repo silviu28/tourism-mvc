@@ -14,6 +14,7 @@ const adminRouter = require("./controllers/admins");
 const notificationCategoryRouter = require("./controllers/notificationCategories");
 const notificationRouter = require("./controllers/notifications");
 const blogPostsRouter = require("./controllers/blogPosts");
+const wikiPostsRouter = require("./controllers/wikiPosts");
 
 const rateLimiter = require("express-rate-limit");
 
@@ -47,7 +48,8 @@ app.use(
   adminRouter,
   notificationCategoryRouter,
   notificationRouter,
-  blogPostsRouter
+  blogPostsRouter,
+  wikiPostsRouter,
 );
 
 (async function () {
