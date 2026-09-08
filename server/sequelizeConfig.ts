@@ -12,6 +12,10 @@ import BlogLike from "./models/BlogLike";
 import { BlogPostComment } from "./models/BlogPostComment";
 import BlogPostCommentLike from "./models/BlogPostCommentLike";
 import RefreshToken from "./models/RefreshToken";
+import WikiPost from "./models/WikiPost";
+import WikiPostLike from "./models/WikiPostLike";
+import WikiPostContribution from "./models/WikiPostContribution";
+import WikiPostCoauthor from "./models/WikiPostCoauthor";
 require('dotenv').config({ quiet: true });
 
 const con = new Sequelize({
@@ -20,7 +24,9 @@ const con = new Sequelize({
   username: process.env.DB_USER,
   password: process.env.PASSWORD || "",
   host: process.env.HOST,
-  models: [User, Comment, Price, Feedback, Admin, Image, NotificationCategory, Notification, BlogPost, BlogLike, BlogPostComment, BlogPostCommentLike, RefreshToken],
+  models: [User, Comment, Price, Feedback, Admin, Image, NotificationCategory, Notification, BlogPost, BlogLike, BlogPostComment, BlogPostCommentLike, RefreshToken,
+    WikiPost, WikiPostLike, WikiPostContribution, WikiPostCoauthor
+  ],
 });
 
 con.sync({ alter: process.env.DB_ALTER === "true" });

@@ -95,3 +95,19 @@ export const EMPTY_PAGE: BlogPagedQuery = {
   totalPages: 0,
   currentPage: 0,
 };
+
+export interface WikiPost extends KeyAccesible {
+  id?: number,
+  title: string,
+  htmlRef: string,
+  user: {
+    id: number,
+    username: string
+  }
+  coauthors: {
+    id: number,
+    username: string
+  }[],
+  date: string,
+  likes: number
+};

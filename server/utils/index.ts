@@ -1,7 +1,11 @@
 import crypto from "crypto";
 import RefreshToken from "../models/RefreshToken";
 import { Response } from "express";
+import path from "path";
+import fs from "fs/promises";
 const jwt = require("jsonwebtoken");
+
+const WIKI_DOCS_ROOT = path.join(process.cwd(), "storage", "wiki");
 
 export const generateRefreshToken = async (userId: number, remember: boolean) => {
   const token = crypto.randomBytes(48).toString("hex");
@@ -79,3 +83,28 @@ export const verifyAccessToken = (token: string) => {
   }
 };
 
+export const placeAsDocumentAndGetPath = async (dir: string, html: string, title: string): Promise<string> => {
+  const safeFolder = dir.replace(/^\/+/, "");
+  const dirPath = path.join(WIKI_DOCS_ROOT, safeFolder);
+
+  await fs.mkdir(dirPath, { recursive: true });
+
+  const slug = title
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "");
+
+  const uniqueSuffix = crypto.randomBytes(6).toString("hex");
+  const filename = `${slug}-${uniqueSuffix}.html`;
+
+  const filePath = path.join(dirPath, filename);
+  await fs.writeFile(filePath, html, "utf-8");
+
+  return path.join(safeFolder, filename);
+};
+
+export const readDocument = async (relativePath: string): Promise<string> => {
+  const fullPath = path.join(WIKI_DOCS_ROOT, relativePath);
+  return fs.readFile(fullPath, "utf-8");
+};

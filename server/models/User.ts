@@ -1,6 +1,8 @@
-import { AutoIncrement, Column, DataType, HasMany, HasOne, Model, PrimaryKey, Table, Unique } from "sequelize-typescript";
+import { AutoIncrement, BelongsToMany, Column, DataType, HasMany, HasOne, Model, PrimaryKey, Table, Unique } from "sequelize-typescript";
 import { Comment } from "./Comment";
 import { Admin } from "./Admin";
+import WikiPost from "./WikiPost";
+import WikiPostCoauthor from "./WikiPostCoauthor";
 
 @Table({
   tableName: "users",
@@ -63,4 +65,7 @@ export class User extends Model {
 
   @HasOne(() => Admin)
   declare admin?: Admin;
+
+  @BelongsToMany(() => WikiPost, () => WikiPostCoauthor)
+  declare coauthoredWikiPosts: WikiPost[];
 }
