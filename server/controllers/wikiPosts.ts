@@ -4,6 +4,7 @@ import adminTokenAuthenticator from "../middleware/adminTokenAuthenticator";
 import WikiPost from "../models/WikiPost";
 import { placeAsDocumentAndGetPath, readDocument } from "../utils";
 import { User } from "../models/User";
+import { Op } from "sequelize";
 
 const router = express.Router();
 
@@ -11,13 +12,55 @@ router.get("/api/wiki", async (req, res) => {
   try {
     const page = parseInt(req.query.page as string, 10) || 1;
     const pageSize = 10;
+    const search = req.query.search as string | undefined;
 
     if (page < 1) {
       return res.status(400).json({ error: "page must be 1 or greater" });
     }
 
+    const where: any = { pendingApproval: false };
+
+    if (search && search.trim()) {
+      where.title = { [Op.like]: `%${search.trim()}%` };
+    }
+
     const { rows, count } = await WikiPost.findAndCountAll({
-      where: { archived: false },
+      where,
+      order: [["date", "DESC"]],
+      limit: pageSize,
+      offset: pageSize * (page - 1),
+    });
+
+    return res.status(200).json({
+      content: rows,
+      totalCount: count,
+      totalPages: Math.ceil(count / pageSize),
+      currentPage: page,
+    });
+  } catch (err) {
+    console.error("Failed to fetch wiki pages:", err);
+    return res.status(500).json({ error: "Failed to fetch wiki pages" });
+  }
+});
+
+router.get("/api/wiki/admin", adminTokenAuthenticator, async (req, res) => {
+  try {
+    const page = parseInt(req.query.page as string, 10) || 1;
+    const pageSize = 10;
+    const search = req.query.search as string | undefined;
+
+    if (page < 1) {
+      return res.status(400).json({ error: "page must be 1 or greater" });
+    }
+
+    const where: any = { };
+
+    if (search && search.trim()) {
+      where.title = { [Op.like]: `%${search.trim()}%` };
+    }
+
+    const { rows, count } = await WikiPost.findAndCountAll({
+      where,
       order: [["date", "DESC"]],
       limit: pageSize,
       offset: pageSize * (page - 1),
@@ -84,10 +127,10 @@ router.post("/api/wiki", userTokenAuthenticator, async (req, res) => {
   }
 });
 
-router.post("/api/wiki/:id", adminTokenAuthenticator, async (req, res) => {
+router.put("/api/wiki/:id", adminTokenAuthenticator, async (req, res) => {
   try {
     const { id } = req.params;
-    const { title, htmlRef, archived } = req.body;
+    const { title, htmlRef, archived, pendingApproval } = req.body;
 
     const wikiPost = await WikiPost.findByPk(id);
 
@@ -95,7 +138,7 @@ router.post("/api/wiki/:id", adminTokenAuthenticator, async (req, res) => {
       return res.status(404).json({ error: "Wiki page not found" });
     }
 
-    await wikiPost.update({ title, htmlRef, archived });
+    await wikiPost.update({ title, htmlRef, archived, pendingApproval });
 
     return res.status(200).json(wikiPost);
   } catch (err) {
