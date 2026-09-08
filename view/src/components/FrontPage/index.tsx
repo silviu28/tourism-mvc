@@ -1,4 +1,4 @@
-import { useContext, type FunctionComponent } from "react";
+import { useContext, useState, type FunctionComponent } from "react";
 import ImageParallax from "../ImageParallax";
 import TypeText from "../TypeText";
 import ColumnSplit from "../ColumnSplit";
@@ -6,13 +6,14 @@ import CommentSection from "../CommentSection";
 import content from "../../content.json";
 import Gallery from "../Gallery";
 import PolaroidImage from "../PolaroidImage";
-import ScrollButton from "../ScrollButton";
+import ScrollButton, { Button } from "../ScrollButton";
 import RecentBlogPosts from "../RecentBlogPosts";
 import axios from "axios";
 import type { CommentData } from "../../types";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import AlertContext from "../../AlertContext";
 import UserContext from "../../UserContext";
+import TechSupport from "../TechSupport";
 
 const toTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
 
@@ -20,6 +21,7 @@ const FrontPage: FunctionComponent = () => {
   const queryClient = useQueryClient();
   const [user] = useContext(UserContext);
   const showAlert = useContext(AlertContext);
+  const [chatVisible, setChatVisible] = useState(false);
 
   const { data: comments = [], isLoading } = useQuery<CommentData[]>({
     queryKey: ["comments"],
@@ -53,10 +55,17 @@ const FrontPage: FunctionComponent = () => {
   return (
     <div style={{ color: 'white', height: '100%' }}>
       <ScrollButton toTop={toTop} />
+      <Button style={{ left: "95%" }} onClick={() => setChatVisible(true)}>
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+          <path d="M16 8c0 3.866-3.582 7-8 7a9 9 0 0 1-2.347-.306c-.584.296-1.925.864-4.181 1.234-.2.032-.352-.176-.273-.362.354-.836.674-1.95.77-2.966C.744 11.37 0 9.76 0 8c0-3.866 3.582-7 8-7s8 3.134 8 7M5 8a1 1 0 1 0-2 0 1 1 0 0 0 2 0m4 0a1 1 0 1 0-2 0 1 1 0 0 0 2 0m3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2"/>
+        </svg>
+      </Button>
 
       <ImageParallax
         src={content.thumbnail1}
       />
+
+      <TechSupport open={chatVisible} setOpen={(visible) => setChatVisible(visible)} />
 
       <TypeText text="Book the vacation of your life." />
 
