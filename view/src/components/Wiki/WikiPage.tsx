@@ -1,8 +1,10 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useParams } from "react-router"
 import type { WikiPost } from "../../types";
 import axios from "axios";
 import NotFound from "../NotFound";
+import { useContext } from "react";
+import UserContext from "../../UserContext";
 
 interface ExpandedWikiPost {
   wikiPost: WikiPost;
@@ -11,6 +13,8 @@ interface ExpandedWikiPost {
 
 const WikiPage = () => {
   const id = useParams().id;
+  const queryClient = useQueryClient();
+  const [user] = useContext(UserContext);
 
   const { data, isLoading } = useQuery<ExpandedWikiPost>({
     queryKey: ["wiki-post"],
@@ -24,6 +28,17 @@ const WikiPage = () => {
     }
   });
 
+  const { mutate: like } = useMutation({
+    mutationFn: async () => {
+      try {
+        await axios.put(`http://localhost:4004/api/wiki/${id}/like`, { user });
+        queryClient.invalidateQueries({ queryKey: ["wiki-post"] });
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  })
+
   if (!isLoading && !data) return <NotFound />;
 
   return (
@@ -34,14 +49,16 @@ const WikiPage = () => {
           <p>Posted on {data.wikiPost.date}</p>
           <p>{data.wikiPost.user.username} | {data.wikiPost
               .coauthors
-              .map((coauth) => coauth.username)
-              .join(", ") 
+              .map(({ username }) => username)
+              .join() 
               || "No co-authors"}</p>
           <div
             dangerouslySetInnerHTML={{
               __html: data.html
             }}
           />
+          <button onClick={() => like()}>Like</button>
+          <p>{data.wikiPost.likes ? `${data.wikiPost.likes} people like this.` : "Be the first person to appreciate this post!"}</p>
         </>
       )}
     </div>

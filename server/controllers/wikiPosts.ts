@@ -5,6 +5,7 @@ import WikiPost from "../models/WikiPost";
 import { placeAsDocumentAndGetPath, readDocument } from "../utils";
 import { User } from "../models/User";
 import { Op } from "sequelize";
+import WikiPostLike from "../models/WikiPostLike";
 
 const router = express.Router();
 
@@ -144,6 +145,39 @@ router.put("/api/wiki/:id", adminTokenAuthenticator, async (req, res) => {
   } catch (err) {
     console.error("Failed to update wiki page:", err);
     return res.status(500).json({ error: "Failed to update wiki page" });
+  }
+});
+
+router.put("/api/wiki/:id/like", userTokenAuthenticator, async (req, res) => {
+  try {
+    const wikiPostId = parseInt(req.params.id, 10);
+    const { id: userId } = (req as any).body.user as { id: number };
+
+    if (isNaN(wikiPostId)) {
+      return res.status(400).json({ error: "Invalid wiki id" });
+    }
+
+    const wiki = await WikiPost.findByPk(wikiPostId);
+    if (!wiki) {
+      return res.status(404).json({ error: "Blog not found" });
+    }
+
+    try {
+      await WikiPostLike.create({ wikiPostId, userId });
+    } catch (err: any) {
+      if (err.name === "SequelizeUniqueConstraintError") {
+        return res.status(409).json({ error: "Already liked" });
+      }
+      throw err;
+    }
+
+    const likeCount = await WikiPostLike.count({ where: { wikiPostId } });
+    await wiki.update({ likes: wiki.likes + 1 });
+
+    return res.status(201).json({ liked: true, likeCount });
+  } catch (err) {
+    console.error("Failed to like wiki:", err);
+    return res.status(500).json({ error: "Failed to like wiki" });
   }
 });
 
