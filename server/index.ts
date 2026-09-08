@@ -4,6 +4,8 @@ require('dotenv').config({ quiet: true });
 const cors = require('cors');
 import sequelize from "./sequelizeConfig";
 const cookieParser = require("cookie-parser");
+import http from "http";
+import { WebSocketServer, WebSocket } from "ws";
 
 const commentRouter = require('./controllers/comments');
 const feedbackRouter = require('./controllers/feedback');
@@ -20,6 +22,39 @@ const rateLimiter = require("express-rate-limit");
 
 const PORT = 4004;
 const app = express();
+const server = http.createServer(app);
+const wss = new WebSocketServer({ server, path: "/ws/support" });
+
+interface ChatMessage {
+  id: number;
+  from: "user" | "agent";
+  text: string;
+  roomId: string;
+};
+
+const rooms = new Map<String, Set<WebSocket>>();
+
+wss.on("connection", (ws, req) => {
+  const url = new URL(req.url!, `http://${req.headers.host}`);
+  const roomId = url.searchParams.get("roomId") || "default";
+
+  if (!rooms.has(roomId)) rooms.set(roomId, new Set());
+  rooms.get(roomId)!.add(ws);
+
+  ws.on("message", (raw) => {
+    const msg: ChatMessage = JSON.parse(raw.toString());
+
+    rooms.get(roomId)?.forEach((client) => {
+      if (client !== ws && client.readyState === WebSocket.OPEN) {
+        client.send(JSON.stringify(msg));
+      }
+    });
+  });
+
+  ws.on("close", () => {
+    rooms.get(roomId)?.delete(ws);
+  });
+});
 
 app.use(rateLimiter({
   windowMs: 60000,
