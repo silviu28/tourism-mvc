@@ -30,6 +30,7 @@ import ManageBlog from './components/AdminPanel/ManageBlog';
 import ManageAnalytics from './components/AdminPanel/ManageAnalytics';
 import WikiPage from './components/Wiki/WikiPage';
 import WikiPageBuilder from './components/Wiki/WikiPageBuilder';
+import ManageWiki from './components/AdminPanel/ManageWiki';
 
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = "http://localhost:4004";
@@ -150,6 +151,7 @@ const App: FunctionComponent = () => {
                     <Route path="feedback" element={<ManageFeedback />} />
                     <Route path="notifications" element={<ManageNotifications />} />
                     <Route path="blog" element={<ManageBlog />} />
+                    <Route path="wiki" element={<ManageWiki />} />
                   </Route>
                 )}
                 <Route path="/gallery" element={<Gallery />} />

@@ -40,6 +40,115 @@ const QuoteWrapper = styled.blockquote`
   }
 `;
 
+const Wrapper = styled.div`
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+`;
+
+const Header = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+
+  h2 {
+    margin: 0;
+  }
+`;
+
+const NewPostButton = styled.button`
+  background-color: #111827;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: #1f2937;
+  }
+`;
+
+const SearchBar = styled.div`
+  display: flex;
+  gap: 8px;
+  margin-bottom: 1.5rem;
+`;
+
+const SearchInput = styled.input`
+  flex: 1;
+  padding: 10px 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 0.95rem;
+
+  &:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  }
+`;
+
+const SearchButton = styled.button`
+  padding: 10px 18px;
+  border: 1px solid #d1d5db;
+  background-color: white;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: #f3f4f6;
+  }
+`;
+
+const LoadingText = styled.p`
+  color: #6b7280;
+  text-align: center;
+  padding: 2rem 0;
+`;
+
+const EmptyState = styled.p`
+  color: #9ca3af;
+  text-align: center;
+  padding: 3rem 0;
+`;
+
+const PostList = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+`;
+
+const PostCard = styled.div`
+  padding: 16px 18px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
+
+  &:hover {
+    border-color: #2563eb;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    transform: translateX(2px);
+  }
+`;
+
+const PostTitle = styled.h3`
+  margin: 0 0 4px;
+  font-size: 1.05rem;
+  color: #111827;
+`;
+
+const PostMeta = styled.span`
+  font-size: 0.8rem;
+  color: #9ca3af;
+`;
+
 interface VotableCollapsibleProps {
   title: string,
   thumbnailSrc: string,
@@ -67,11 +176,11 @@ const Wiki: FunctionComponent = () => {
   const [pageNo, setPageNo] = useState(1);
   const navigate = useNavigate();
 
-  const { data: wikiPage, isLoading: wikiLoading } = useQuery<PagedQuery<WikiPost>>({
+  const { data: wikiPage, isLoading: wikiLoading, ...q } = useQuery<PagedQuery<WikiPost>>({
     queryKey: ["wiki-page"],
     queryFn: async () => {
       try {
-        const wikiRes = await axios.get(`http://localhost:4004/api/wiki?page=${pageNo}`);
+        const wikiRes = await axios.get(`http://localhost:4004/api/wiki?page=${pageNo}&search=${query}`);
         return wikiRes.data;
       } catch (error) {
         console.error(error);
@@ -79,30 +188,51 @@ const Wiki: FunctionComponent = () => {
     }
   });
 
-  const search = function() { };
+  const search = () => q.refetch();
 
   return (
     <>
-      <div className="container">
-        <h2>Wiki</h2>
-        <input type="text" value={query} onChange={(e) => setQuery(e.target.value)} />
-        <button onClick={search}>Search</button>
-        <button onClick={() => navigate("/wiki/new")}>New Post...</button>
-        {wikiLoading && <p>Please wait...</p>}
+      <Wrapper>
+        <Header>
+          <h2>Wiki</h2>
+          <NewPostButton onClick={() => navigate("/wiki/new")}>
+            + New Post
+          </NewPostButton>
+        </Header>
+
+        <SearchBar>
+          <SearchInput
+            type="text"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Search wiki posts..."
+            onKeyDown={(e) => e.key === "Enter" && search()}
+          />
+          <SearchButton onClick={search}>Search</SearchButton>
+        </SearchBar>
+
+        {wikiLoading && <LoadingText>Please wait...</LoadingText>}
+
         {wikiPage && (
           <>
-            {wikiPage.content.map((post) => 
-              <div className="container" onClick={() => navigate(`/wiki/${post.id}`)} style={{ cursor: 'pointer' }}>
-                {post.title}
-              </div>
+            {wikiPage.content.length === 0 ? (
+              <EmptyState>No wiki posts found.</EmptyState>
+            ) : (
+              <PostList>
+                {wikiPage.content.map((post) => (
+                  <PostCard key={post.id} onClick={() => navigate(`/wiki/${post.id}`)}>
+                    <PostTitle>{post.title}</PostTitle>
+                    <PostMeta>{new Date(post.date).toLocaleDateString()}</PostMeta>
+                  </PostCard>
+                ))}
+              </PostList>
             )}
-            <Pager
-              state={{ pageNo, ...wikiPage }}
-              onPageChange={(no) => setPageNo(no)}
-            />
+
+            <Pager state={{ pageNo, ...wikiPage }} onPageChange={(no) => setPageNo(no)} />
           </>
         )}
-      </div>
+      </Wrapper>
+
       <div className="slight-margin">
         <h1>Featured</h1>
         <VotableCollapsible

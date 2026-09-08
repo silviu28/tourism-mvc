@@ -34,6 +34,7 @@ const links = [
   { "to": "/admin/feedback", "name": "Feedback" },
   { "to": "/admin/notifications", "name": "Notifications" },
   { "to": "/admin/blog", "name": "Blog Posts" },
+  { "to": "/admin/wiki", "name": "Wiki Posts" },
 ];
 
 const AdminPanel: FC = () => {
