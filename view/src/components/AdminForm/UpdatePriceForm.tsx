@@ -1,5 +1,5 @@
 import { useState, type FC, type SyntheticEvent } from "react";
-import type { Price } from "../../types";
+import type { Price } from "shared";
 
 interface UpdatePriceFormProps {
   price: Price;

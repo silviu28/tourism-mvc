@@ -7,7 +7,7 @@ import AlertContext from "../../AlertContext";
 import styled from "styled-components";
 import { useState, useRef, useEffect, type FunctionComponent } from "react";
 import { useQuery } from "@tanstack/react-query";
-import type { ClientsideNotification, ReceivedNotification } from "../../types";
+import type { ClientsideNotification, ReceivedNotification } from "shared";
 
 const Bar = styled.div`
   display: flex;

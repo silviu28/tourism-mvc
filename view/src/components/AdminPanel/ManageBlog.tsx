@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
-import { EMPTY_PAGE, type BlogPagedQuery, type BlogPost } from "../../types";
+import { EMPTY_PAGE, type BlogPagedQuery, type BlogPost } from "shared";
 import DynamicTable from "../DynamicTable";
 import { useContext, useState, type SyntheticEvent } from "react";
 import Pager from "../Pager";

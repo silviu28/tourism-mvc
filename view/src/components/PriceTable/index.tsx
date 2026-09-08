@@ -1,5 +1,5 @@
 import { useContext, type FC } from "react";
-import type { PagedQuery, Price } from "../../types";
+import type { PagedQuery, Price } from "shared";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import AlertContext from "../../AlertContext";

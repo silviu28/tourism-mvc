@@ -9,7 +9,7 @@ import PolaroidImage from "../PolaroidImage";
 import ScrollButton from "../ScrollButton";
 import RecentBlogPosts from "../RecentBlogPosts";
 import axios from "axios";
-import type { CommentData } from "../../types";
+import type { CommentData } from "shared";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import AlertContext from "../../AlertContext";
 import UserContext from "../../UserContext";

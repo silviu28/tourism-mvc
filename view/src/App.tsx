@@ -9,7 +9,7 @@ import PriceTable from './components/PriceTable';
 import Contact from './components/Contact';
 import axios from 'axios';
 import Login from './components/LoginPage';
-import type { UserData } from './types';
+import type { UserData } from 'shared';
 import UserContext from './UserContext';
 import Alert from './components/Alert';
 import AdminPanel from './components/AdminPanel';

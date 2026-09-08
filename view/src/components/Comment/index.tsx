@@ -1,5 +1,5 @@
 import type { FC } from "react";
-import type { CommentData } from "../../types";
+import type { CommentData } from "shared";
 
 interface CommentProps {
   comment: CommentData,

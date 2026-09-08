@@ -1,5 +1,5 @@
 import { useContext, useState, type FC } from "react";
-import type { Image } from "../../types";
+import type { Image } from "shared";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import AlertContext from "../../AlertContext";

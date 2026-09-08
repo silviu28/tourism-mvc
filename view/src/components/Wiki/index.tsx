@@ -3,7 +3,7 @@ import Collapsible from "../Collapsible";
 
 import styled from "styled-components";
 import { useQuery } from "@tanstack/react-query";
-import { type PagedQuery, type WikiPost } from "../../types";
+import { type PagedQuery, type WikiPost } from "shared";
 import axios from "axios";
 import Pager from "../Pager";
 import { useNavigate } from "react-router";

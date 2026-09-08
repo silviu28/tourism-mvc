@@ -1,5 +1,5 @@
 import { useState, type FC } from "react";
-import { type CommentData, type UserData } from "../../types";
+import { type CommentData, type UserData } from "shared";
 import axios from "axios";
 import Comment from "../Comment";
 import "./style.css";

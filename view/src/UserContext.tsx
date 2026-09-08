@@ -1,5 +1,5 @@
 import { createContext, type Dispatch, type SetStateAction } from "react";
-import type { UserData } from "./types";
+import type { UserData } from "shared";
 
 type NullableUserContextArgs = [UserData?, Dispatch<SetStateAction<UserData>>?];
 

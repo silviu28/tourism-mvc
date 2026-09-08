@@ -1,6 +1,6 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
-import { EMPTY_QUERY_PAGE, type PagedQuery, type Price } from "../../types";
+import { EMPTY_QUERY_PAGE, type PagedQuery, type Price } from "shared";
 import { type FC, useState, type SyntheticEvent, useContext } from "react";
 import AlertContext from "../../AlertContext";
 import useInvalidatingRemove from "../../hooks/useInvalidatingRemove";

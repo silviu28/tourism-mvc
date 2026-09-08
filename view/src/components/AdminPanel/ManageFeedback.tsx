@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import type { Feedback } from "../../types";
+import type { Feedback } from "shared";
 import { useContext, useState } from "react";
 import AlertContext from "../../AlertContext";
 import useInvalidatingRemove from "../../hooks/useInvalidatingRemove";

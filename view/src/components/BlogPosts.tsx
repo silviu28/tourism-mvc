@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import useAdminAuth from "../hooks/useAdminAuth";
 import Collapsible from "./Collapsible";
-import type { BlogPagedQuery, BlogPost } from "../types";
+import type { BlogPagedQuery, BlogPost } from "shared";
 import { useNavigate } from "react-router";
 
 interface PreviewState {

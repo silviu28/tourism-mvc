@@ -1,6 +1,6 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
-import type { Notification, ReceivedNotification } from "../../types";
+import type { Notification, ReceivedNotification } from "shared";
 import { useContext, useState } from "react";
 import Modal from "../Modal";
 import AlertContext from "../../AlertContext";

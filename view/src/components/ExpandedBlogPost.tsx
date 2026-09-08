@@ -1,5 +1,5 @@
 import { useNavigate, useParams } from "react-router";
-import { type PagedQuery, type BlogPost, type CommentData, type UserData } from "../types";
+import { type PagedQuery, type BlogPost, type CommentData, type UserData } from "shared";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import CommentSection from "./CommentSection";

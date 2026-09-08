@@ -1,5 +1,5 @@
 import type { FC } from "react";
-import type { AdminPanelItem, Price } from "../../types";
+import type { AdminPanelItem, Price } from "shared";
 import ImageForm from "./ImageForm";
 import PriceForm from "./PriceForm";
 import UpdatePriceForm from "./UpdatePriceForm";

@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useParams } from "react-router"
-import type { WikiPost } from "../../types";
+import type { WikiPost } from "shared";
 import axios from "axios";
 import NotFound from "../NotFound";
 import { useContext } from "react";

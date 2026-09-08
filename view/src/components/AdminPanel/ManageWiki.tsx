@@ -3,10 +3,10 @@ import axios from "axios";
 import { useContext, useState } from "react";
 import { useNavigate } from "react-router";
 import styled from "styled-components";
-import type { PagedQuery, WikiPost } from "../../types";
 import Pager from "../Pager";
 import DynamicTable from "../DynamicTable";
 import AlertContext from "../../AlertContext";
+import type { WikiPost, PagedQuery } from "shared";
 
 const Wrapper = styled.div`
   max-width: 800px;

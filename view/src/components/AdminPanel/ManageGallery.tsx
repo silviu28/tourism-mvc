@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import type { Image } from "../../types";
+import type { Image } from "shared";
 import { useContext, useState, type FC, type SyntheticEvent } from "react";
 import AlertContext from "../../AlertContext";
 import useInvalidatingSubmit from "../../hooks/useInvalidatingSubmit";
