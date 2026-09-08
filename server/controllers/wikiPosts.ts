@@ -6,6 +6,7 @@ import { placeAsDocumentAndGetPath, readDocument } from "../utils";
 import { User } from "../models/User";
 import { Op } from "sequelize";
 import WikiPostLike from "../models/WikiPostLike";
+import { type my_very_awesome_type } from "shared";
 
 const router = express.Router();
 

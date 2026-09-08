@@ -1,3 +1,5 @@
+import { my_very_awesome_type } from "shared";
+
 export interface UserData {
   id?: number,
   username?: string,
