@@ -191,10 +191,10 @@ const Wiki: FunctionComponent = () => {
   const search = () => q.refetch();
 
   return (
-    <>
+    <div style={{ margin: 60 }}>
       <Wrapper>
         <Header>
-          <h2>Wiki</h2>
+          <h1>Wiki</h1>
           <NewPostButton onClick={() => navigate("/wiki/new")}>
             + New Post
           </NewPostButton>
@@ -287,7 +287,7 @@ const Wiki: FunctionComponent = () => {
 
         <div style={{ height: 100 }}></div>
       </div>
-    </>
+    </div>
   );
 };
 

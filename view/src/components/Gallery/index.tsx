@@ -4,11 +4,12 @@ import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import AlertContext from "../../AlertContext";
 import styled from "styled-components";
+import Modal from "../Modal";
 
 const CarouselContainer = styled.div`
   position: relative;
-  width: 600px;
-  height: 400px;
+  width: 800px;
+  height: 600px;
   max-width: 100%;
   margin: auto;
   display: flex;
@@ -70,6 +71,8 @@ const NavButton = styled.button<{ $side: "left" | "right" }>`
 const Gallery: FC = () => {
   const showAlert = useContext(AlertContext);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedImageRes, setSelectedImageRes] = useState("");
 
   const { data: images = [], isLoading } = useQuery<Image[]>({
     queryKey: ["images"],
@@ -109,26 +112,38 @@ const Gallery: FC = () => {
   }
 
   return (
-    <CarouselContainer>
-      <NavButton $side="left" onClick={goToPrevious}>‹</NavButton>
-      <CarouselImages>
-        <SideImage
-          $side="left"
-          src={images[getImageIndex(-1)].src}
-          alt="Previous"
-        />
-        <FrontImage
-          src={images[currentIndex].src}
-          alt="Current"
-        />
-        <SideImage
-          $side="right"
-          src={images[getImageIndex(1)].src}
-          alt="Next"
-        />
-      </CarouselImages>
-      <NavButton $side="right" onClick={goToNext}>›</NavButton>
-  </CarouselContainer>
+    <>
+      <Modal
+        isVisible={modalVisible}
+        visibilitySetter={setModalVisible}
+      >
+        <img src={selectedImageRes} />
+      </Modal>
+      <CarouselContainer>
+        <NavButton $side="left" onClick={goToPrevious}>‹</NavButton>
+        <CarouselImages>
+          <SideImage
+            $side="left"
+            src={images[getImageIndex(-1)].src}
+            alt="Previous"
+          />
+          <FrontImage
+            src={images[currentIndex].src}
+            alt="Current"
+            onClick={() => {
+              setSelectedImageRes(images[currentIndex].src)
+              setModalVisible(true);
+            }}
+          />
+          <SideImage
+            $side="right"
+            src={images[getImageIndex(1)].src}
+            alt="Next"
+          />
+        </CarouselImages>
+        <NavButton $side="right" onClick={goToNext}>›</NavButton>
+    </CarouselContainer>
+    </>
   );
 };
 
