@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import { PEACH } from "../colors";
 
 const Button = styled.button`
   background-color: orange;

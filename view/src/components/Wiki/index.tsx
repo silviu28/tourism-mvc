@@ -41,8 +41,6 @@ const QuoteWrapper = styled.blockquote`
 `;
 
 const Wrapper = styled.div`
-  max-width: 800px;
-  margin: 0 auto;
   padding: 2rem 1.5rem;
 `;
 
@@ -76,6 +74,7 @@ const SearchBar = styled.div`
   display: flex;
   gap: 8px;
   margin-bottom: 1.5rem;
+  background-color: white;
 `;
 
 const SearchInput = styled.input`
@@ -130,9 +129,10 @@ const PostCard = styled.div`
   border-radius: 8px;
   cursor: pointer;
   transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
+  background-color: white;
 
   &:hover {
-    border-color: #2563eb;
+    border-color: orange;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
     transform: translateX(2px);
   }
