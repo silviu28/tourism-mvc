@@ -9,8 +9,7 @@ const ImageParallax: FunctionComponent<ImageParallaxProps> = ({ src }) => {
   return (
     <div style={{
       backgroundImage: `url(${src})`,
-      minHeight: "70vh",
-      backgroundAttachment: "fixed",
+      minHeight: "100vh",
       backgroundPosition: "center",
       backgroundRepeat: "no-repeat",
       backgroundSize: "cover"

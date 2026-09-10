@@ -13,6 +13,7 @@ import type { CommentData } from "../../types";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import AlertContext from "../../AlertContext";
 import UserContext from "../../UserContext";
+import { useNavigate } from "react-router";
 
 const toTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
 
@@ -20,6 +21,7 @@ const FrontPage: FunctionComponent = () => {
   const queryClient = useQueryClient();
   const [user] = useContext(UserContext);
   const showAlert = useContext(AlertContext);
+  const navigate = useNavigate();
 
   const { data: comments = [], isLoading } = useQuery<CommentData[]>({
     queryKey: ["comments"],
@@ -51,18 +53,34 @@ const FrontPage: FunctionComponent = () => {
   });
 
   return (
-    <div style={{ color: 'white', height: '100%' }}>
+    <div>
       <ScrollButton toTop={toTop} />
 
       <ImageParallax
         src={content.thumbnail1}
       />
 
-      <TypeText text="Book the vacation of your life." />
+      <TypeText
+         text="Book the vacation of your life." 
+         actions={[
+          {
+            name: "Pricing",
+            onClick: () => navigate("/prices")
+          },
+          {
+            name: "Blog",
+            onClick: () => navigate("/blog")
+          },
+          {
+            name: "Contact us",
+            onClick: () => navigate("/contact")
+          },
+         ]}
+      />
 
 
-      <div style={{ padding: '80px', background: " linear-gradient(0deg,rgba(153, 153, 153, 1) 0%, rgba(250, 238, 232, 1) 47%, rgba(255, 250, 250, 1) 79%, rgba(255, 255, 255, 1) 100%)" }}>
-        <div style={{ background: 'white', padding: '40px' }}>
+      <div style={{ padding: '80px' }}>
+        <div style={{ background: '#e6c9b9', padding: '40px' }}>
           <hr style={{ marginBottom: 100 }}></hr>
           <section
             className="info-section"
@@ -116,6 +134,10 @@ const FrontPage: FunctionComponent = () => {
           <hr style={{ margin: 100 }}></hr>
           <h1 style={{ textAlign: "center" }}>Recent blog posts</h1>
           <RecentBlogPosts />
+
+          <hr style={{ margin: 100 }}></hr>
+          <h1 style={{ textAlign: "center" }}>Check out the Wiki</h1>
+          <p>Here's some posts done by people like you.</p>
 
           <hr style={{ margin: 100 }}></hr>
 
