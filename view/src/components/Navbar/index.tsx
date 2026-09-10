@@ -9,25 +9,68 @@ import { useState, useRef, useEffect, type FunctionComponent } from "react";
 import { useQuery } from "@tanstack/react-query";
 import type { ClientsideNotification, ReceivedNotification } from "../../types";
 
+const NavLink = styled(Link)`
+display: inline-block;
+color: black;
+text-align: left;
+padding: 10px 10px;
+
+&:hover {
+  background-color: yellow;
+  transition: background-color .2s ease-in;
+}
+`;
+
 const Bar = styled.div`
   display: flex;
+  align-items: center;
   justify-content: space-between;
-  padding: -2rem 2rem;
-  top: -100%;
-  left: 100%;
+  padding: 1rem 2rem;
   background-color: orange;
+  position: sticky;
+  top: 0;
   z-index: 10;
+
   li {
     list-style: none;
   }
 `;
 
+const LeftGroup = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+`;
+
+const RightGroup = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+`;
+
+const Logo = styled.img`
+  width: 50px;
+  height: 50px;
+`;
+
 const NavFlex = styled.ul`
   display: flex;
-  gap: .5rem;
+  align-items: center;
+  gap: 0.5rem;
   list-style: none;
   margin: 0;
   padding: 0;
+`;
+
+const GreetingButton = styled.a`
+  cursor: pointer;
+  color: #111827;
+
+  &:hover {
+    text-decoration: underline;
+    color: #ffffff;
+    transition: color .4s ease;
+  }
 `;
 
 const Wrapper = styled.div`
@@ -45,10 +88,6 @@ const NotificationButton = styled.button`
   cursor: pointer;
   padding: 8px;
   transition: background-color 0.2s ease;
-
-  &:hover {
-    background-color: rgba(0, 0, 0, 0.05);
-  }
 `;
 
 const Badge = styled.span`
@@ -264,41 +303,40 @@ const Navbar: FC<NavbarProps> = ({ isAdmin }) => {
 
   return (
     <Bar>
-      <img style={{ width: '50px', height: '50px' }} src="favi.png"/>
-      <NavFlex>
-        <li><Link to="/">Home</Link></li>
-        {!user!.username &&
-          <>
-            <li>
-              <Link to="/signup">
-              Sign Up
-              </Link>
-              </li>
-            <li><Link to="/login">Login</Link></li>
-          </>
-        }
-        <li><Link to="/wiki">Wiki</Link></li>
-        <li><Link to="/prices">Prices</Link></li>
-        <li><Link to="/gallery">Gallery</Link></li>
-        {user!.username && isAdmin &&
-          <li><Link to="/admin">Admin</Link></li>}
-        <li>
-          <Link to="/blog">Blog</Link>
-        </li>
-      </NavFlex>
-      <NotificationNotification
-         notifications={notifications || []}
-         onMarkAsRead={markAsRead}
-         onMarkAllAsRead={() => notifications?.forEach(({ id }) => markAsRead(id))}
-      />
+      <LeftGroup>
+        <Logo src="favi.png" alt="Logo" />
+        |
+        <NavFlex>
+          <NavLink to="/">Home</NavLink>
+          {!user?.username && (
+            <>
+              <NavLink to="/signup">Sign Up</NavLink>
+              <NavLink to="/login">Login</NavLink>
+            </>
+          )}
+          <NavLink to="/wiki">Wiki</NavLink>
+          <NavLink to="/prices">Prices</NavLink>
+          <NavLink to="/gallery">Gallery</NavLink>
+          {user?.username && isAdmin && (
+            <NavLink to="/admin">Admin</NavLink>
+          )}
+          <NavLink to="/blog">Blog</NavLink>
+        </NavFlex>
+      </LeftGroup>
 
-      <ul>
-        {user!.username && (
-          <li>
-            <a onClick={promptLogout}>Welcome, <i>{user!.username}</i>!</a>
-          </li>
+      <RightGroup>
+        <NotificationNotification
+          notifications={notifications || []}
+          onMarkAsRead={markAsRead}
+          onMarkAllAsRead={() => notifications?.forEach(({ id }) => markAsRead(id))}
+        />
+        |
+        {user?.username && (
+          <GreetingButton onClick={promptLogout}>
+            Welcome, <u>{user.username}</u>!
+          </GreetingButton>
         )}
-      </ul>
+      </RightGroup>
     </Bar>
   );
 };
