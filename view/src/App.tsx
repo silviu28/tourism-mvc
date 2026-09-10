@@ -31,6 +31,7 @@ import ManageAnalytics from './components/AdminPanel/ManageAnalytics';
 import WikiPage from './components/Wiki/WikiPage';
 import WikiPageBuilder from './components/Wiki/WikiPageBuilder';
 import ManageWiki from './components/AdminPanel/ManageWiki';
+import Splash from './components/Splash';
 
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = "http://localhost:4004";
@@ -57,6 +58,7 @@ const App: FunctionComponent = () => {
   const [alertContent, setAlertContent] = useState<string>("");
   const [isError, setIsError] = useState<boolean>(false);
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
+  const [showSplash, setShowSplash] = useState(true);
 
   // check for admin authorization for conditional rendering of admin panel
   useEffect(() => {
@@ -122,6 +124,8 @@ const App: FunctionComponent = () => {
       showAlert("Unable to add your feedback", "", true);
     }
   };
+
+  if (showSplash) return <Splash onFinish={() => setShowSplash(false)} />
 
   return (
     <QueryClientProvider client={queryClient}>
