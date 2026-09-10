@@ -35,7 +35,13 @@ import ManageWiki from './components/AdminPanel/ManageWiki';
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = "http://localhost:4004";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false
+    }
+  }
+});
 
 const AppWrapper = styled.div`
   display: flex;

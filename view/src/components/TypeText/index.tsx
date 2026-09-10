@@ -25,7 +25,7 @@ const fadeBg = keyframes`
 const Typing = styled.div`
   position: absolute;
   left: 8vw;
-  top: 30vh;
+  top: 40vh;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   display: inline-block;
   color: black;
@@ -43,7 +43,7 @@ const TypedText = styled.div`
   font-weight: 700;
   border-right: 4px solid orange;
   box-sizing: border-box;
-  color: orange;
+  color: #ffffff;
   font-family: "Helvetica Neue", sans-serif;
 `;
 

@@ -9,6 +9,32 @@ import WikiPostLike from "../models/WikiPostLike";
 
 const router = express.Router();
 
+router.get("/api/wiki/random", async (_req, res) => {
+  try {
+    const maxId = (await WikiPost.max("id")) as number;
+    const minId = (await WikiPost.min("id")) as number;
+
+    if (!maxId || !minId) return [];
+
+    let randomIds: number[] = [];
+    while (randomIds.length < 5) {
+      randomIds.push(Math.floor(Math.random() * (maxId - minId + 1)) + minId);
+    }
+
+  return res.status(200).json({
+    posts: await WikiPost.findAll({
+        where: {
+          id: { [Op.in]: randomIds },
+          archived: false,
+        },
+      })
+    });
+  } catch (err) {
+    console.error("Failed to fetch wiki pages:", err);
+    return res.status(500).json({ error: "Failed to fetch wiki pages" });
+  }
+});
+
 router.get("/api/wiki", async (req, res) => {
   try {
     const page = parseInt(req.query.page as string, 10) || 1;
