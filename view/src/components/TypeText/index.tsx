@@ -1,4 +1,3 @@
-import './style.css';
 import styled, { keyframes } from "styled-components";
 
 const typing = keyframes`

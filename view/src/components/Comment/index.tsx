@@ -6,16 +6,9 @@ interface CommentProps {
   onLike?: () => void
 };
 
-const style = {
-  padding: '1vw',
-  margin: '.7vw',
-  border: "1px solid #ccc",
-  boxShadow: "0 2px 5px rgba(0, 0, 0, 0.05)"
-};
-
 const Comment: FC<CommentProps> = ({ comment, onLike }) => {
   return (
-    <div style={style}>
+    <div className="container">
       <h2>{comment.user.username} says...</h2>
       <p>{comment.comment}</p>
       {onLike && (

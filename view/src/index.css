@@ -258,8 +258,7 @@ input {
   position: relative;
   border: 1px solid #e2e2e2;
   border-radius: 12px;
-  padding: 2rem 1.5rem 1.5rem;
-  /* max-width: 400px; */
+  padding: 2rem;
   margin: 2rem auto;
   background: #ffffff;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
@@ -270,7 +269,7 @@ input {
   position: relative;
   border: 1px solid #e2e2e2;
   border-radius: 12px;
-  padding: 2rem 1.5rem 1.5rem;
+  padding: 4rem;
   margin: 2rem auto;
   background: #ffffff;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);

@@ -73,6 +73,11 @@ const PostMeta = styled.span`
   color: #9ca3af;
 `;
 
+const SectionBreak = styled.hr`
+  margin: 100px;
+  color: #7a665b;
+`;
+
 const toTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
 
 const FrontPage: FunctionComponent = () => {
@@ -161,7 +166,7 @@ const FrontPage: FunctionComponent = () => {
          ]}
       />
 
-      <div style={{ background: PEACH, padding: '40px', marginLeft: '40px', marginRight: '40px' }}>
+      <div style={{ background: PEACH, padding: '80px', marginLeft: '40px', marginRight: '40px' }}>
         <section
           className="info-section"
           style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "5%" }}>
@@ -171,13 +176,14 @@ const FrontPage: FunctionComponent = () => {
               subtext="Image: ceoworld.biz"
             />
             <div className='shadow-container'>
+              <h1>About us</h1>
               <p>Whether you're looking for a relaxing getaway, a thrilling adventure, or an authentic cultural experience, we're here to make it happen. Our team takes pride in crafting unique travel experiences that match your interests, schedule, and budget.</p>
               <p>From hidden gems off the beaten path to world-famous destinations, we'll guide you every step of the way. With our expertise and passion for exploration, all you have to do is pack your bags and let the journey begin.</p>
               <p>Because with us, traveling isn't just about reaching a destination; it's about discovering the world in your own way.</p>
             </div>
         </section>
 
-        <hr style={{ margin: 100 }}></hr>
+        <SectionBreak />
 
         <h1 style={{ textAlign: "center" }}>Why choose us?</h1>
         <ColumnSplit splitCount={4}>
@@ -206,48 +212,53 @@ const FrontPage: FunctionComponent = () => {
           </div>
         </ColumnSplit>
 
-        <hr style={{ margin: 100 }}></hr>
+        <SectionBreak />
 
         <h1 style={{ textAlign: "center" }}>Check out some pics of our offers</h1>
         <Gallery />
 
-        <hr style={{ margin: 100 }}></hr>
+        <SectionBreak />
         <h1 style={{ textAlign: "center" }}>Recent blog posts</h1>
         {blogPostsLoading && <p>Please wait...</p>}
         {blogPage && (
-          <CardGrid>
-            {blogPage?.blogPosts.map((post, index) => (
-              <PostCard
-                key={post.id}
-                $delay={index * 0.1}
-                onClick={() => navigate(`/wiki/${post.id}`)}
-              >
-                <CardAccent />
-                <PostTitle>{post.title}</PostTitle>
-                <PostMeta>{new Date(post.date).toLocaleDateString()} | Posted by {post.adminId}</PostMeta>
-              </PostCard>
-            ))}
-          </CardGrid>
+          <div className="container">
+            <p>Interested in possible offers and new features? Here's some posts made by the administrators of MyTravel.</p>
+            <CardGrid>
+              {blogPage?.blogPosts.map((post, index) => (
+                <PostCard
+                  key={post.id}
+                  $delay={index * 0.1}
+                  onClick={() => navigate(`/wiki/${post.id}`)}
+                >
+                  <CardAccent />
+                  <PostTitle>{post.title}</PostTitle>
+                  <PostMeta>{new Date(post.date).toLocaleDateString()} | Posted by {post.adminId}</PostMeta>
+                </PostCard>
+              ))}
+            </CardGrid>
+          </div>
         )}
 
         <hr style={{ margin: 100 }}></hr>
         <h1 style={{ textAlign: "center" }}>Check out the Wiki</h1>
-        <p>Here's some posts done by people like you.</p>
         {wikiPostsLoading && <p>Please wait...</p>}
         {randomWikiPosts?.posts && (
-          <CardGrid>
-            {randomWikiPosts.posts.map((post, index) => (
-              <PostCard
-                key={post.id}
-                $delay={index * 0.1}
-                onClick={() => navigate(`/wiki/${post.id}`)}
-              >
-                <CardAccent />
-                <PostTitle>{post.title}</PostTitle>
-                <PostMeta>{new Date(post.date).toLocaleDateString()}</PostMeta>
-              </PostCard>
-            ))}
-          </CardGrid>
+          <div className="container">
+          <p>Need help figuring something out? Need inspiration for your next vacation? Here's some starting points.</p>
+            <CardGrid>
+              {randomWikiPosts.posts.map((post, index) => (
+                <PostCard
+                  key={post.id}
+                  $delay={index * 0.1}
+                  onClick={() => navigate(`/wiki/${post.id}`)}
+                >
+                  <CardAccent />
+                  <PostTitle>{post.title}</PostTitle>
+                  <PostMeta>{new Date(post.date).toLocaleDateString()}</PostMeta>
+                </PostCard>
+              ))}
+            </CardGrid>
+          </div>
         )}
 
         <hr style={{ margin: 100 }}></hr>
