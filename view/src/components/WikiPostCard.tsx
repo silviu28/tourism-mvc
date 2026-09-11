@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import type { WikiPost } from "../types";
 import { PostCard, CardAccent, PostTitle, PostMeta } from "./atoms";
 import styled from "styled-components";
@@ -46,7 +47,7 @@ const WikiPostCard = ({
       <PostTitle>{post.title}</PostTitle>
  
       <AuthorRow>
-        <AuthorName>{post.userId}</AuthorName>
+        <AuthorName>{(post as any).userId}</AuthorName>
         {post.coauthors?.length > 0 && (
           <Coauthors>
             {" "}
