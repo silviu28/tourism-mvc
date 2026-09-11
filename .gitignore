@@ -7,10 +7,12 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-node_modules
-dist
-dist-ssr
+*/node_modules
+*/dist
+*/dist-ssr
 *.local
+*/lib
+*/storage
 
 # Editor directories and files
 .vscode/*
@@ -24,11 +26,14 @@ dist-ssr
 *.sw?
 
 # Playwright
-/test-results/
-/playwright-report/
-/blob-report/
-/playwright/.cache/
-/playwright/.auth/
+*/test-results/
+*/playwright-report/
+*/blob-report/
+*/playwright/.cache/
+*/playwright/.auth/
 
 # v8 Test coverage report
-coverage
+*/coverage
+
+.env
+*/.env
