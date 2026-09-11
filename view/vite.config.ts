@@ -5,6 +5,13 @@ import react from '@vitejs/plugin-react';
 export default defineConfig({
   plugins: [react()],
   test: {
+    exclude: [
+      "**/e2e/**",
+      "**/node_modules/**"
+    ],
+    coverage: {
+      provider: "v8"
+    },
     environment: 'jsdom',
     globals: true,
     setupFiles: './test_setup.js',
