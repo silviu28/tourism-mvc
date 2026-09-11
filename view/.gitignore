@@ -29,3 +29,6 @@ dist-ssr
 /blob-report/
 /playwright/.cache/
 /playwright/.auth/
+
+# v8 Test coverage report
+coverage
