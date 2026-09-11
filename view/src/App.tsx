@@ -32,6 +32,7 @@ import WikiPage from './components/Wiki/WikiPage';
 import WikiPageBuilder from './components/Wiki/WikiPageBuilder';
 import ManageWiki from './components/AdminPanel/ManageWiki';
 import Splash from './components/Splash';
+import BlogPostBuilder from './components/BlogPostBuilder';
 
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = "http://localhost:4004";
@@ -166,6 +167,7 @@ const App: FunctionComponent = () => {
                 )}
                 <Route path="/gallery" element={<Gallery />} />
                 <Route path="/blog" element={<BlogPosts />} />
+                <Route path="/blog/new" element={<BlogPostBuilder />} />
                 <Route path="/blog/:id" element={<ExpandedBlogPost />} />
               </Routes>
             </Router>
