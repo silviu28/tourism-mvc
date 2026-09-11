@@ -9,6 +9,28 @@ const Table = styled.table`
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
   background: rgba(255, 255, 255);
   font-family: monospace;
+  width: 100%;
+  border-collapse: collapse;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255);
+
+  thead {
+    color: white;
+    letter-spacing: 0.05em;
+  }
+
+  th,
+  td {
+    padding: 1rem 1.5rem;
+    text-align: left;
+    font-size: 0.95rem;
+  }
+
+  tbody tr {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  }
 
   thead {
     background: orange;
