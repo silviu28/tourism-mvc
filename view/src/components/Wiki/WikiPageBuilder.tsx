@@ -8,6 +8,44 @@ interface PreviewState {
   html: string;
 };
 
+const BuilderLayout = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+
+  @media (max-width: 900px) {
+    flex-direction: column;
+  }
+`;
+
+const BuilderPane = styled.div`
+  flex: 1;
+  min-width: 0;
+  height: 75vh;
+`;
+
+const PreviewPane = styled.div`
+  flex: 1;
+  min-width: 0;
+  position: sticky;
+  top: 2rem;
+  height: 75vh;
+  overflow: scroll;
+`;
+
+const EmptyPreview = styled.div`
+  border: 1px dashed #d1d5db;
+  border-radius: 8px;
+  padding: 3rem 1.5rem;
+  text-align: center;
+  color: #9ca3af;
+  font-size: 0.9rem;
+`;
+
 const Field = styled.div`
   display: flex;
   flex-direction: column;
@@ -131,54 +169,60 @@ const WikiPageBuilder = () => {
   }
 
   return (
-    <div className="container">
-      <h1>Wiki</h1>
-      <p>Write a new page</p>
+    <BuilderLayout>
+      <BuilderPane className="container">
+        <h1>Wiki</h1>
+        <p>Write a new page</p>
 
-      <Field>
-        <label>Title</label>
-        <TitleInput
-          id="title"
-          type="text"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          placeholder="Post Title"
-        />
-      </Field>
-
-      <Field>
-        <label>Content (HTML)</label>
-        <ContentTextarea
-          value={html}
-          onChange={(e) => setHtml(e.target.value)}
-          placeholder="<p>Write your content here...</p>"
-          rows={12}
-        />
-      </Field>
-
-      <Actions>
-        <button onClick={handlePreview}>Preview</button>
-        <button onClick={handlePublish} disabled={saving}>
-          {saving ? "Publishing..." : "Publish"}
-        </button>
-        <button onClick={handleLocalSave} disabled={saving}>
-          Save Locally
-        </button>
-      </Actions>
-
-      {saveError && <ErrorText>{saveError}</ErrorText>}
-
-      {preview && (
-        <PreviewPanel>
-          <PreviewTitle>{preview.title || "Untitled post"}</PreviewTitle>
-          <PreviewContent
-            dangerouslySetInnerHTML={{
-              __html: preview.html,
-            }}
+        <Field>
+          <label>Title</label>
+          <TitleInput
+            id="title"
+            type="text"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            placeholder="Post Title"
           />
-        </PreviewPanel>
-      )}
-    </div>
+        </Field>
+
+        <Field>
+          <label>Content (HTML)</label>
+          <ContentTextarea
+            value={html}
+            onChange={(e) => setHtml(e.target.value)}
+            placeholder="<p>Write your content here...</p>"
+            rows={12}
+          />
+        </Field>
+
+        <Actions>
+          <button onClick={handlePreview}>Preview</button>
+          <button onClick={handlePublish} disabled={saving}>
+            {saving ? "Publishing..." : "Publish"}
+          </button>
+          <button onClick={handleLocalSave} disabled={saving}>
+            Save Locally
+          </button>
+        </Actions>
+
+        {saveError && <ErrorText>{saveError}</ErrorText>}
+      </BuilderPane>
+
+      <PreviewPane className="container">
+        {preview ? (
+          <PreviewPanel>
+            <PreviewTitle>{preview.title || "Untitled post"}</PreviewTitle>
+            <PreviewContent
+              dangerouslySetInnerHTML={{
+                __html: preview.html,
+              }}
+            />
+          </PreviewPanel>
+        ) : (
+          <EmptyPreview>Click "Preview" to see how your post will look.</EmptyPreview>
+        )}
+      </PreviewPane>
+    </BuilderLayout>
   );
 };
 

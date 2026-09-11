@@ -1,11 +1,13 @@
 import { useState, type FunctionComponent, type ReactNode } from "react";
 import styled from "styled-components";
+import { PEACH } from "../../colors";
 
 const ImgThumbnail = styled.img`
   width: 100%;
   height: 100px;
   object-fit: none;
   object-fit: cover;
+  border-radius: 16px;
 `;
 
 const InfoCollapse = styled.div`
@@ -18,8 +20,10 @@ const InfoCollapse = styled.div`
   font-size: 18px;
   padding-top: 1%;
   padding-bottom: 1%;
+  border-radius: 20px;
   &:hover {
-    background-color: yellow;
+    background-color: ${PEACH};
+    transition: background-color .3s ease-in;
   }
 `;
 
@@ -29,6 +33,8 @@ const CompositeCollapse = styled.div`
   margin: 10px;
   box-shadow: 20px 20px;
   border: solid;
+  border-radius: 20px;
+  background: white;
 `;
 
 const InfoCollapseContent = styled.div`
@@ -36,6 +42,7 @@ const InfoCollapseContent = styled.div`
   transition: visibility 0.3s ease;
   background-color: white;
   padding: 2%;
+  border-radius: 20px;
 `;
 
 interface CollapsibleProps {

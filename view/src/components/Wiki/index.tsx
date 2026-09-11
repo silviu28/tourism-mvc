@@ -7,6 +7,7 @@ import { type PagedQuery, type WikiPost } from "../../types";
 import axios from "axios";
 import Pager from "../Pager";
 import { useNavigate } from "react-router";
+import WikiPostCard from "../WikiPostCard";
 
 const QuoteWrapper = styled.blockquote`
   position: relative;
@@ -55,26 +56,10 @@ const Header = styled.div`
   }
 `;
 
-const NewPostButton = styled.button`
-  background-color: #111827;
-  color: white;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 6px;
-  font-size: 0.85rem;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-
-  &:hover {
-    background-color: #1f2937;
-  }
-`;
-
 const SearchBar = styled.div`
   display: flex;
   gap: 8px;
   margin-bottom: 1.5rem;
-  background-color: white;
 `;
 
 const SearchInput = styled.input`
@@ -86,22 +71,8 @@ const SearchInput = styled.input`
 
   &:focus {
     outline: none;
-    border-color: #2563eb;
+    border-color: orange;
     box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-  }
-`;
-
-const SearchButton = styled.button`
-  padding: 10px 18px;
-  border: 1px solid #d1d5db;
-  background-color: white;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 0.9rem;
-  transition: background-color 0.2s ease;
-
-  &:hover {
-    background-color: #f3f4f6;
   }
 `;
 
@@ -121,32 +92,7 @@ const PostList = styled.div`
   display: flex;
   flex-direction: column;
   gap: 10px;
-`;
-
-const PostCard = styled.div`
-  padding: 16px 18px;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
-  background-color: white;
-
-  &:hover {
-    border-color: orange;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-    transform: translateX(2px);
-  }
-`;
-
-const PostTitle = styled.h3`
-  margin: 0 0 4px;
-  font-size: 1.05rem;
-  color: #111827;
-`;
-
-const PostMeta = styled.span`
-  font-size: 0.8rem;
-  color: #9ca3af;
+  min-height: 90vh;
 `;
 
 interface VotableCollapsibleProps {
@@ -195,21 +141,23 @@ const Wiki: FunctionComponent = () => {
       <Wrapper>
         <Header>
           <h1>Wiki</h1>
-          <NewPostButton onClick={() => navigate("/wiki/new")}>
+          <button onClick={() => navigate("/wiki/new")}>
             + New Post
-          </NewPostButton>
+          </button>
         </Header>
 
-        <SearchBar>
-          <SearchInput
-            type="text"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search wiki posts..."
-            onKeyDown={(e) => e.key === "Enter" && search()}
-          />
-          <SearchButton onClick={search}>Search</SearchButton>
-        </SearchBar>
+        <div className="container">
+          <SearchBar>
+            <SearchInput
+              type="text"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Search wiki posts..."
+              onKeyDown={(e) => e.key === "Enter" && search()}
+            />
+            <button onClick={search}>Search</button>
+          </SearchBar>
+        </div>
 
         {wikiLoading && <LoadingText>Please wait...</LoadingText>}
 
@@ -219,11 +167,13 @@ const Wiki: FunctionComponent = () => {
               <EmptyState>No wiki posts found.</EmptyState>
             ) : (
               <PostList>
-                {wikiPage.content.map((post) => (
-                  <PostCard key={post.id} onClick={() => navigate(`/wiki/${post.id}`)}>
-                    <PostTitle>{post.title}</PostTitle>
-                    <PostMeta>{new Date(post.date).toLocaleDateString()}</PostMeta>
-                  </PostCard>
+                {wikiPage.content.map((post, idx) => (
+                  <WikiPostCard
+                    key={post.id}
+                    index={idx}
+                    onClick={() => navigate(`/wiki/${post.id}`)}
+                    post={post}
+                  />
                 ))}
               </PostList>
             )}
