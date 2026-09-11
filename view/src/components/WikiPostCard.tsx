@@ -42,7 +42,7 @@ const WikiPostCard = ({
   onClick: () => void;
 }) => {
   return (
-    <PostCard $delay={(index ?? 0) * 0.1} onClick={onClick}>
+    <PostCard $delay={(index ?? 0) * 0.1} onClick={onClick} data-testid="wiki-post-card">
       <CardAccent />
       <PostTitle>{post.title}</PostTitle>
  

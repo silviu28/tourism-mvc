@@ -16,7 +16,7 @@ const Button = styled.button`
 
 const ScrollButton = ({ toTop }: { toTop: () => void }) => {
   return (
-    <Button onClick={toTop}>
+    <Button onClick={toTop} data-testid="top-btn" >
       ↑
     </Button>
   );

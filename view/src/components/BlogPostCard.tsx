@@ -13,7 +13,9 @@ const BlogPostCard = ({ post, index, onClick, onArchive }: { post: BlogPost, ind
       <p>{post.description || "No description provided."}</p>
       <PostMeta>
         {new Date(post.date).toLocaleDateString()} | Posted by {post.adminId} 
-        {onArchive && <button onClick={onArchive}>Archive</button>}
+        {onArchive && (
+          <button onClick={onArchive} data-testid={`archive-btn${index ?? 0}`}>Archive</button>
+        )}
       </PostMeta>
     </PostCard>
   );
