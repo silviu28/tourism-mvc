@@ -36,7 +36,11 @@ A Wordpress-style Web application for a tourism agency. It has a Blog and a comm
 
 ## Screenshots
 
-TBA
+<img src="screenshots/home-fs8.png" alt="Home page">
+<img src="screenshots/admin-fs8.png" alt="Admin panel in the price page section">
+<img src="screenshots/blogbuilder-fs8.png" alt="Blog editing">
+<img src="screenshots/gallery-fs8.png" alt="Gallery with image carousel">
+<img src="screenshots/wiki-fs8.png" alt="Wiki page with a featured article (source Wikipedia)">
 
 ---
 ## Development and Build
