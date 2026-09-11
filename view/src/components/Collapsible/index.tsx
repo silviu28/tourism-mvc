@@ -56,7 +56,7 @@ const Collapsible: FunctionComponent<CollapsibleProps> = ({ thumbnailSrc, title,
   const [open, setOpen] = useState<boolean>(false);
 
   return (
-    <CompositeCollapse>
+    <CompositeCollapse data-testid="collapsible">
       {thumbnailSrc != null
         && <ImgThumbnail src={thumbnailSrc} alt={alt} />}
       <InfoCollapse

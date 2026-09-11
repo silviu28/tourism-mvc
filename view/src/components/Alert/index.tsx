@@ -17,7 +17,7 @@ const Alert: FC<AlertProps> = ({ title, content, error }) => {
   if (!content) return;
 
   return (
-    <div className="alert" style={style}>
+    <div className="alert" style={style} data-testid="alert">
       {(title && <h1>{title}</h1>)}
       <p>{content}</p>
     </div>

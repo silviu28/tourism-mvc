@@ -8,7 +8,7 @@ interface CommentProps {
 
 const Comment: FC<CommentProps> = ({ comment, onLike }) => {
   return (
-    <div className="container">
+    <div className="container" data-testid="comm">
       <h2>{comment.user.username} says...</h2>
       <p>{comment.comment}</p>
       {onLike && (
