@@ -1,4 +1,20 @@
 import { useState, type FC } from "react";
+import styled from "styled-components";
+
+const Table = styled.table`
+  width: 100%;
+  border-collapse: collapse;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255);
+  font-family: monospace;
+
+  thead {
+    background: orange;
+    color: black;
+  }
+`;
 
 interface DynamicTableProps {
   items: Record<string, unknown>[];
@@ -15,7 +31,7 @@ const DynamicTable: FC<DynamicTableProps> = ({ items, onRowSelect })  => {
   const headers = Object.keys(items[0]);
 
   return (
-    <table className="pricetable">
+    <Table>
       <thead>
         <tr>
           {headers.map((header) => (
@@ -39,7 +55,7 @@ const DynamicTable: FC<DynamicTableProps> = ({ items, onRowSelect })  => {
           </tr>
         ))}
       </tbody>
-    </table>
+    </Table>
   );
 };
 

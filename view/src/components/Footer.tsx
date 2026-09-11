@@ -119,22 +119,22 @@ const Footer = () => {
 
         <LinkColumn>
           <ColumnTitle>Product</ColumnTitle>
-          <FooterLink href="#">Pricing</FooterLink>
+          <FooterLink href="prices">Pricing</FooterLink>
         </LinkColumn>
 
         <LinkColumn>
           <ColumnTitle>Company</ColumnTitle>
-          <FooterLink href="#">About</FooterLink>
-          <FooterLink href="#">Careers</FooterLink>
-          <FooterLink href="#">Blog</FooterLink>
-          <FooterLink href="#">Press</FooterLink>
+          <FooterLink href="about">About</FooterLink>
+          <FooterLink href="careers">Careers</FooterLink>
+          <FooterLink href="blog">Blog</FooterLink>
+          <FooterLink href="press">Press</FooterLink>
         </LinkColumn>
 
         <LinkColumn>
           <ColumnTitle>Contact</ColumnTitle>
-          <FooterLink href="#">E-mail</FooterLink>
-          <FooterLink href="#">Help center</FooterLink>
-          <FooterLink href="#">Contact</FooterLink>
+          <FooterLink href="mailto:not_a_real_company_dont_mail@mail.com">E-mail</FooterLink>
+          <FooterLink href="contact">Help center</FooterLink>
+          <FooterLink href="contact">Contact</FooterLink>
         </LinkColumn>
 
         <LinkColumn>

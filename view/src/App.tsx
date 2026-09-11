@@ -31,11 +31,19 @@ import ManageAnalytics from './components/AdminPanel/ManageAnalytics';
 import WikiPage from './components/Wiki/WikiPage';
 import WikiPageBuilder from './components/Wiki/WikiPageBuilder';
 import ManageWiki from './components/AdminPanel/ManageWiki';
+import Splash from './components/Splash';
+import BlogPostBuilder from './components/BlogPostBuilder';
 
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = "http://localhost:4004";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false
+    }
+  }
+});
 
 const AppWrapper = styled.div`
   display: flex;
@@ -51,6 +59,7 @@ const App: FunctionComponent = () => {
   const [alertContent, setAlertContent] = useState<string>("");
   const [isError, setIsError] = useState<boolean>(false);
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
+  const [showSplash, setShowSplash] = useState(true);
 
   // check for admin authorization for conditional rendering of admin panel
   useEffect(() => {
@@ -117,6 +126,8 @@ const App: FunctionComponent = () => {
     }
   };
 
+  if (showSplash) return <Splash onFinish={() => setShowSplash(false)} />
+
   return (
     <QueryClientProvider client={queryClient}>
       <AlertContext.Provider value={showAlert}>
@@ -156,6 +167,7 @@ const App: FunctionComponent = () => {
                 )}
                 <Route path="/gallery" element={<Gallery />} />
                 <Route path="/blog" element={<BlogPosts />} />
+                <Route path="/blog/new" element={<BlogPostBuilder />} />
                 <Route path="/blog/:id" element={<ExpandedBlogPost />} />
               </Routes>
             </Router>

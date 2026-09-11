@@ -2,7 +2,6 @@ import { useState, type FC } from "react";
 import { type CommentData, type UserData } from "../../types";
 import axios from "axios";
 import Comment from "../Comment";
-import "./style.css";
 
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = "http://localhost:4004";
@@ -27,7 +26,7 @@ const CommentSection: FC<CommentSectionProps> = ({ comments, user, onComment, on
         <input
           type="text"
           onChange={e => setComment(e.target.value)}
-          style={{ width: '87%' }}
+          style={{ width: "100%" }}
           placeholder={!user.username ? "Sign in to comment" : "Write something..."}
           disabled={!user.username}
         />

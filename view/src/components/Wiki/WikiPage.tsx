@@ -42,10 +42,10 @@ const WikiPage = () => {
   if (!isLoading && !data) return <NotFound />;
 
   return (
-    <div className="container">
+    <div className="container" style={{ width: "80%", height: "100%" }}>
       {data && (
         <>
-          <h2>{data.wikiPost.title}</h2>
+          <h1>{data.wikiPost.title}</h1>
           <p>Posted on {data.wikiPost.date}</p>
           <p>{data.wikiPost.user.username} | {data.wikiPost
               .coauthors

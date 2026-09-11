@@ -1,12 +1,22 @@
-import { useContext, type FC } from "react";
+import { useContext, useMemo, useState, type FC } from "react";
 import type { PagedQuery, Price } from "../../types";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import AlertContext from "../../AlertContext";
 import "./style.css";
+import DynamicTable from "../DynamicTable";
+import { Link as _Link } from "react-router";
+import styled from "styled-components";
+import Pager from "../Pager";
+
+const Link = styled(_Link)`
+  font-size: 64px;
+`;
 
 const PriceTable: FC = () => {
   const showAlert = useContext(AlertContext);
+  const [pageNo, setPageNo] = useState(1);
+  const queryClient = useQueryClient();
 
   const { data: prices, isLoading, isError } = useQuery<PagedQuery<Price>>({
     queryKey: ["prices"],
@@ -23,6 +33,16 @@ const PriceTable: FC = () => {
     }
   });
 
+  const jointPriceEntries = useMemo(() => prices?.content.map((item) => {
+    const joint = { 
+      ...item,
+      priceRange: `${item.priceLower} - ${item.priceUpper}`,
+    }
+    delete joint.priceLower;
+    delete joint.priceUpper;
+    return joint;
+  }), [prices]);
+
   if (isLoading) {
     return <p>Loading...</p>;
   }
@@ -34,27 +54,19 @@ const PriceTable: FC = () => {
   return (
     <div className="slight-margin">
       <h1>Price Table</h1>
-      <table width="100%" className="pricetable">
-        <tbody>
-          <tr className="table-head">
-            <th>Country</th>
-            <th>Available?</th>
-            <th>Travel Host</th>
-            <th>Pricing</th>
-          </tr>
-          {prices?.content.map((price) =>
-            <tr>
-              <td>{price.country}</td>
-              <td>{price.isAvailable ? "yes" : "no"}</td>
-              <td>{price.travelHost}</td>
-              <td>
-                {(price.priceLower && price.priceUpper) &&
-                  `${price.priceLower} - ${price.priceUpper}`}
-              </td>
-            </tr>)}
-        </tbody>
-      </table>
+      <DynamicTable
+        items={jointPriceEntries || []}
+        onRowSelect={() => {}}
+      />
+      <Pager
+        state={{ pageNo, totalPages: prices?.totalPages || 1 }}
+        onPageChange={(no) => {
+          setPageNo(no);
+          queryClient.invalidateQueries();
+        }}
+      />
       <br />
+      <h1><Link to="/contact">Contact us</Link> for more information.</h1>
     </div>
   );
 };

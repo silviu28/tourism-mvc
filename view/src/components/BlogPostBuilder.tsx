@@ -1,7 +1,7 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import axios from "axios";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
+import useAdminAuth from "../hooks/useAdminAuth";
+import NotFound from "./NotFound";
 
 interface PreviewState {
   title: string;
@@ -26,6 +26,7 @@ const BuilderPane = styled.div`
   flex: 1;
   min-width: 0;
   height: 75vh;
+  width: 40vw;
 `;
 
 const PreviewPane = styled.div`
@@ -34,6 +35,7 @@ const PreviewPane = styled.div`
   position: sticky;
   top: 2rem;
   height: 75vh;
+  width: 40vw;
   overflow: scroll;
 `;
 
@@ -101,78 +103,43 @@ const PreviewContent = styled.div`
   line-height: 1.6;
 `;
 
-const LOCAL_STORAGE_KEY = "wiki_draft";
 
-const WikiPageBuilder = () => {
+const BlogPostBuilder = () => {
   const [title, setTitle] = useState("");
   const [html, setHtml] = useState("");
   const [preview, setPreview] = useState<PreviewState | null>(null);
-  const [saving, setSaving] = useState(false);
-  const [saveError, setSaveError] = useState<string | null>(null);
+  const [saving, _setSaving] = useState(false);
+  const [saveError, _setSaveError] = useState<string | null>(null);
+  const auth = useAdminAuth();
 
   useEffect(() => {
-    const stored = localStorage.getItem(LOCAL_STORAGE_KEY);
-    if (stored) {
-      const { title: savedTitle, html: savedHtml } = JSON.parse(stored) as { title: string, html: string };
-      setTitle(savedTitle);
-      setHtml(savedHtml);
+    const last = localStorage.getItem("lastBlog");
+    if (last) {
+      const { title, blogHtml } = JSON.parse(last)
+      setTitle(title);
+      setHtml(blogHtml);
     }
   }, []);
 
-  function handlePreview(event: any) {
-    event.preventDefault();
+  const handlePreview = () => {
     setPreview({ title, html });
-  }
+  };
 
-  async function handlePublish(event: any) {
-    event.preventDefault();
+  const handlePublish = async () => {
+    localStorage.removeItem("lastBlog")
+  };
 
-    if (!title.trim() || !html.trim()) {
-      setSaveError("Title and content can't be empty.");
-      return;
-    }
+  const handleLocalSave = async () => {
+    localStorage.setItem("lastBlog", JSON.stringify({ title, html }))
+  };
 
-    setSaving(true);
-    setSaveError(null);
-
-    try {
-      await axios.post(
-        "/api/wiki",
-        { title, html },
-        { withCredentials: true }
-      );
-
-      setTitle("");
-      setHtml("");
-      setPreview(null);
-      localStorage.removeItem(LOCAL_STORAGE_KEY);
-    } catch (err) {
-      console.error("Failed to publish wiki page:", err);
-      setSaveError("Failed to publish. Please try again.");
-    } finally {
-      setSaving(false);
-    }
-  }
-
-  function handleLocalSave(event: any) {
-    event.preventDefault();
-
-    try {
-      localStorage.setItem(
-        LOCAL_STORAGE_KEY,
-        JSON.stringify({ title, html, savedAt: new Date().toISOString() })
-      );
-    } catch (err) {
-      console.error("Failed to save draft locally:", err);
-      setSaveError("Failed to save draft locally.");
-    }
-  }
+  if (!auth) return <NotFound />;
 
   return (
     <BuilderLayout>
       <BuilderPane className="container">
-        <h1>Wiki</h1>
-        <p>Write a new page</p>
+        <h1>Blog</h1>
+        <p>Write a new Blog post</p>
 
         <Field>
           <label>Title</label>
@@ -226,4 +193,4 @@ const WikiPageBuilder = () => {
   );
 };
 
-export default WikiPageBuilder;
+export default BlogPostBuilder;
