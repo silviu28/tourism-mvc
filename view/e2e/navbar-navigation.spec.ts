@@ -1,7 +1,7 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from './fixtures';
 
 test("opens", async ({ page }) => {
-  await page.goto('http://localhost:5173');
+  await page.goto('/');
   await expect(page).toHaveTitle(/MyTravel/);
 });
 
@@ -18,14 +18,13 @@ const navLinks = [
 test.describe("navbar navigation", () => {
   for (const { name, path } of navLinks) {
     test(`clicking "${name}" navigates to ${path}`, async ({ page }) => {
-      await page.goto("http://localhost:5173");
+      await page.goto("/");
 
-      const link = page.getByRole("link", { name });
+      const link = page.locator('ul').getByRole("link", { name });
       await expect(link).toBeVisible();
 
       await link.click();
-      await expect(page).toHaveURL(`http://localhost:5173${path}`);
+      await expect(page).toHaveURL(`${path}`);
     });
   }
 });
- 
