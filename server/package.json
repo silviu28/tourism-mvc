@@ -4,8 +4,10 @@
   "main": "./index.ts",
   "scripts": {
     "start": "ts-node index.ts",
+    "start:test": "TEST=1 ts-node index.ts",
     "dev": "ts-node-dev index.ts",
     "test": "jest",
+    "db:setup:test": "ts-node scripts/setupTestDb.ts",
     "build": "tsc",
     "lint": "tslint -c tslint.json src/**/*.ts"
   },
