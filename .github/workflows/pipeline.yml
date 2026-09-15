@@ -25,11 +25,11 @@ jobs:
 
       - name: Install dependencies for backend
         working-directory: ./server
-        run: npm install
+        run: npm ci
 
       - name: Install dependencies for frontend
         working-directory: ./view
-        run: npm install
+        run: npm ci
 
       - name: Run database unit tests
         working-directory: ./server
@@ -42,6 +42,10 @@ jobs:
       - name: Run view linter
         working-directory: ./view
         run: npm run lint
+
+      - name: Run view unit tests
+        working-directory: ./view
+        run: npm run test
 
       - name: Build React
         working-directory: ./view
