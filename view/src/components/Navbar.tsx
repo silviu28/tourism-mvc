@@ -332,7 +332,7 @@ const Navbar: FC<NavbarProps> = ({ isAdmin }) => {
         />
         |
         {user?.username && (
-          <GreetingButton onClick={promptLogout}>
+          <GreetingButton onClick={promptLogout} data-testid="greeting">
             Welcome, <u>{user.username}</u>!
           </GreetingButton>
         )}
