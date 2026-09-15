@@ -1,0 +1,218 @@
+import { useContext, type FunctionComponent } from "react";
+import ImageParallax from "../components/ImageParallax";
+import TypeText from "../components/TypeText";
+import ColumnSplit from "../components/ColumnSplit";
+import CommentSection from "../components/CommentSection";
+import content from "../content.json";
+import Gallery from "../components/Gallery";
+import PolaroidImage from "../components/PolaroidImage";
+import ScrollButton from "../components/ScrollButton";
+import axios from "axios";
+import { type WikiPost, type BlogPagedQuery, type CommentData } from "../types";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import AlertContext from "../context/AlertContext";
+import UserContext from "../context/UserContext";
+import { useNavigate } from "react-router";
+import { PEACH } from "../colors";
+import BlogPostCard from "../components/BlogPostCard";
+import WikiPostCard from "../components/WikiPostCard";
+import { CardGrid, SectionBreak } from "../components/atoms";
+
+const toTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
+
+const FrontPage: FunctionComponent = () => {
+  const queryClient = useQueryClient();
+  const [user] = useContext(UserContext);
+  const showAlert = useContext(AlertContext);
+  const navigate = useNavigate();
+
+  const { data: comments = [], isLoading } = useQuery<CommentData[]>({
+    queryKey: ["comments"],
+    queryFn: async () => {
+      try {
+        const commentsRes = await axios.get("http://localhost:4004/api/comments");
+        return commentsRes.data;
+      } catch (_error) {
+        showAlert("Cannot display comments", "", true);
+      }
+    }
+  });
+
+  const { data: blogPage, isLoading: blogPostsLoading } = useQuery<BlogPagedQuery>({
+    queryKey: ["blog-posts"],
+    queryFn: async () => {
+      try {
+        const blogRes = await axios.get("http://localhost:4004/api/blog");
+        return blogRes.data;
+      } catch (_error) {
+        showAlert("Cannot display blog posts", "", true);
+      }
+    }
+  });
+
+  const { data: randomWikiPosts, isLoading: wikiPostsLoading } = useQuery<{ posts: WikiPost[] }>({
+    queryKey: ["wiki-posts"],
+    queryFn: async () => {
+      try {
+        const wikiRes = await axios.get("http://localhost:4004/api/wiki/random");
+        return wikiRes.data;
+      } catch (_error) {
+        showAlert("Cannot display wiki posts", "", true);
+      }
+    }
+  })
+
+  const { mutate } = useMutation({
+    mutationFn: async (newComment: {
+      username: string,
+      comment: string
+    }) => {
+      try {
+        await axios.post("http://localhost:4004/api/comments", newComment, {
+          withCredentials: true
+        });
+        queryClient.invalidateQueries({
+          queryKey: ["comments"],
+        });
+      } catch (_error) {
+        showAlert("Unable to add your comment", "", true);
+      }
+    }
+  });
+
+  return (
+    <div>
+      <ScrollButton toTop={toTop} />
+
+      <ImageParallax
+        src={content.thumbnail1}
+      />
+
+      <TypeText
+         text="Book the vacation of your life." 
+         actions={[
+          {
+            name: "Pricing",
+            onClick: () => navigate("/prices")
+          },
+          {
+            name: "Blog",
+            onClick: () => navigate("/blog")
+          },
+          {
+            name: "Contact us",
+            onClick: () => navigate("/contact")
+          },
+         ]}
+      />
+
+      <div style={{ background: PEACH, padding: '80px', marginLeft: '40px', marginRight: '40px' }}>
+        <section
+          className="info-section"
+          style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "5%" }}>
+            <PolaroidImage
+              src="https://ceoworld.biz/wp-content/uploads/2024/04/Adventure-Tourism.jpg"
+              alt="Tourists going with kayaks"
+              subtext="Image: ceoworld.biz"
+            />
+            <div className='shadow-container'>
+              <h1>About us</h1>
+              <p>Whether you're looking for a relaxing getaway, a thrilling adventure, or an authentic cultural experience, we're here to make it happen. Our team takes pride in crafting unique travel experiences that match your interests, schedule, and budget.</p>
+              <p>From hidden gems off the beaten path to world-famous destinations, we'll guide you every step of the way. With our expertise and passion for exploration, all you have to do is pack your bags and let the journey begin.</p>
+              <p>Because with us, traveling isn't just about reaching a destination; it's about discovering the world in your own way.</p>
+            </div>
+        </section>
+
+        <SectionBreak />
+
+        <h1 style={{ textAlign: "center" }}>Why choose us?</h1>
+        <ColumnSplit splitCount={4}>
+          <div className="shadow-container">
+            <p className='container-deco'>⛰️</p>
+            <h2>Discover Breathtaking Places</h2>
+            <p>From tropical beaches to snowy mountains, we help you find your dream destination. Personalized recommendations ensure every trip is unforgettable.</p>
+          </div>
+
+          <div className="shadow-container">
+            <p className="container-deco">🤑</p>
+            <h2>Curated Travel Packages</h2>
+            <p>Enjoy specially curated travel packages with accommodations, activities, and guided tours included. Flexible options for solo travelers, couples, and families.</p>
+          </div>
+
+          <div className="shadow-container">
+            <p className="container-deco">💚</p>
+            <h2>Seamless Booking Experience</h2>
+            <p>Book your flights, hotels, and experiences in a few clicks. Our easy-to-use platform ensures smooth planning from start to finish.</p>
+          </div>
+
+          <div className="shadow-container">
+            <p className="container-deco">👋</p>
+            <h2>Travel Like a Local</h2>
+            <p>Our team of local guides and experts provide insider tips and authentic experiences, helping you explore off-the-beaten-path gems.</p>
+          </div>
+        </ColumnSplit>
+
+        <SectionBreak />
+
+        <h1 style={{ textAlign: "center" }}>Check out some pics of our offers</h1>
+        <Gallery />
+
+        <SectionBreak />
+        <h1 style={{ textAlign: "center" }}>Recent blog posts</h1>
+        {blogPostsLoading && <p>Please wait...</p>}
+        {blogPage && (
+          <div className="container">
+            <p>Interested in possible offers and new features? Here's some posts made by the administrators of MyTravel.</p>
+            <CardGrid>
+              {blogPage?.blogPosts.map((post, index) => (
+                <BlogPostCard
+                  key={index}
+                  index={index}
+                  post={post}
+                  onClick={() => navigate(`/wiki/${post.id}`)}
+                />
+              ))}
+            </CardGrid>
+          </div>
+        )}
+
+        <hr style={{ margin: 100 }}></hr>
+        <h1 style={{ textAlign: "center" }}>Check out the Wiki</h1>
+        {wikiPostsLoading && <p>Please wait...</p>}
+        {randomWikiPosts?.posts && (
+          <div className="container">
+          <p>Need help figuring something out? Need inspiration for your next vacation? Here's some starting points.</p>
+            <CardGrid>
+              {randomWikiPosts.posts.map((post, index) => (
+                <WikiPostCard
+                  onClick={() => navigate(`/wiki/${post.id}`)}
+                  post={post}
+                  index={index}
+                />
+              ))}
+            </CardGrid>
+          </div>
+        )}
+
+        <hr style={{ margin: 100 }}></hr>
+
+        <h1 style={{ textAlign: "center" }}>What do you think?</h1>
+        {isLoading && <p>Please wait...</p>}
+        <CommentSection
+          user={user}
+          comments={comments}
+          onComment={({ username }, comment) => {
+            try {
+              mutate({ username: username!, comment})
+              return true;
+            } catch (_error) {
+              return false;
+            }
+          }}
+        />
+      </div>
+    </div>
+  );
+};
+
+export default FrontPage;

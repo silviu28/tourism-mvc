@@ -15,19 +15,22 @@ const notificationCategoryRouter = require("./controllers/notificationCategories
 const notificationRouter = require("./controllers/notifications");
 const blogPostsRouter = require("./controllers/blogPosts");
 const wikiPostsRouter = require("./controllers/wikiPosts");
+const testRouter = require("./controllers/tests");
 
 const rateLimiter = require("express-rate-limit");
 
 const PORT = 4004;
 const app = express();
 
-app.use(rateLimiter({
-  windowMs: 60000,
-  max: 50,
-  standardHeaders: true,
-  legacyHeaders: false,
-  message: "You are being rate limited"
-}));
+if (process.env.TEST !== "1" && process.env.TEST !== "true") {
+  app.use(rateLimiter({
+    windowMs: 60000,
+    max: 50,
+    standardHeaders: true,
+    legacyHeaders: false,
+    message: "You are being rate limited"
+  }));
+}
 
 app.use(cors({
   origin: "http://localhost:5173",
@@ -50,10 +53,14 @@ app.use(
   notificationRouter,
   blogPostsRouter,
   wikiPostsRouter,
+  testRouter,
 );
 
 (async function () {
   await sequelize.authenticate();
+  if (process.env.DB_ALTER === "true") {
+    await sequelize.sync({ alter: true });
+  }
   console.log("Database connected");
 })();
 

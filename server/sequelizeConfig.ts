@@ -18,9 +18,14 @@ import WikiPostContribution from "./models/WikiPostContribution";
 import WikiPostCoauthor from "./models/WikiPostCoauthor";
 require('dotenv').config({ quiet: true });
 
+const isTestEnv = process.env.TEST === "1" || process.env.TEST === "true";
+const databaseName = isTestEnv
+  ? (process.env.DB_NAME_TEST || `${process.env.DB_NAME || "tourism"}_test`)
+  : process.env.DB_NAME;
+
 const con = new Sequelize({
   dialect: "mysql",
-  database: process.env.DB_NAME,
+  database: databaseName,
   username: process.env.DB_USER,
   password: process.env.PASSWORD || "",
   host: process.env.HOST,
@@ -28,7 +33,5 @@ const con = new Sequelize({
     WikiPost, WikiPostLike, WikiPostContribution, WikiPostCoauthor
   ],
 });
-
-con.sync({ alter: process.env.DB_ALTER === "true" });
 
 export default con;
