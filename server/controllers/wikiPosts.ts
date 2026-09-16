@@ -6,6 +6,7 @@ import { placeAsDocumentAndGetPath, readDocument } from "../utils";
 import { User } from "../models/User";
 import { Op } from "sequelize";
 import WikiPostLike from "../models/WikiPostLike";
+import { addWikiPostSchema, updateWikiPostSchema } from "../schemas";
 
 const router = express.Router();
 
@@ -130,12 +131,13 @@ router.get("/api/wiki/:id", async (req, res) => {
 
 router.post("/api/wiki", userTokenAuthenticator, async (req, res) => {
   try {
-    const { title, html } = req.body;
-    const userId = (req as any).id;
-
-    if (!title || !html) {
-      return res.status(400).json({ error: "title and htmlRef are required" });
+    const parsed = addWikiPostSchema.safeParse(req.body);
+    if (!parsed.success) {
+      return res.status(400).json({ error: parsed.error.flatten() });
     }
+
+    const { title, html } = parsed.data;
+    const userId = (req as any).id;
 
     const htmlRef = await placeAsDocumentAndGetPath("/wiki", html, title);
 
@@ -156,8 +158,13 @@ router.post("/api/wiki", userTokenAuthenticator, async (req, res) => {
 
 router.put("/api/wiki/:id", adminTokenAuthenticator, async (req, res) => {
   try {
-    const { id } = req.params;
-    const { title, htmlRef, archived, pendingApproval } = req.body;
+    const id = parseInt(req.params.id, 10);
+    const parsed = updateWikiPostSchema.safeParse(req.body);
+    if (!parsed.success) {
+      return res.status(400).json({ error: parsed.error.flatten() });
+    }
+
+    const { title, htmlRef, archived, pendingApproval } = parsed.data;
 
     const wikiPost = await WikiPost.findByPk(id);
 

@@ -4,6 +4,7 @@ import { Response } from "express";
 import path from "path";
 import fs from "fs/promises";
 import { Model, ModelStatic } from "sequelize";
+import DOMPurify from "isomorphic-dompurify";
 const jwt = require("jsonwebtoken");
 
 const WIKI_DOCS_ROOT = path.join(process.cwd(), "storage", "wiki");
@@ -100,7 +101,7 @@ export const placeAsDocumentAndGetPath = async (dir: string, html: string, title
   const filename = `${slug}-${uniqueSuffix}.html`;
 
   const filePath = path.join(dirPath, filename);
-  await fs.writeFile(filePath, html, "utf-8");
+  await fs.writeFile(filePath, DOMPurify.sanitize(html), "utf-8");
 
   return path.join(safeFolder, filename);
 };
