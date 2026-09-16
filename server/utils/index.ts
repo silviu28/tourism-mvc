@@ -4,7 +4,7 @@ import { Response } from "express";
 import path from "path";
 import fs from "fs/promises";
 import { Model, ModelStatic } from "sequelize";
-import DOMPurify from "isomorphic-dompurify";
+const DOMPurify = require("isomorphic-dompurify");
 const jwt = require("jsonwebtoken");
 
 const WIKI_DOCS_ROOT = path.join(process.cwd(), "storage", "wiki");

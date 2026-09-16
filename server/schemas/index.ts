@@ -98,10 +98,7 @@ export const addUserSchema = z.object({
     .max(18, "Username must be 3-18 characters")
     .regex(/^[a-zA-Z0-9_.-]+$/, "Username can only contain letters, numbers, underscores, dots, and hyphens"),
   
-  email: z.string()
-    .trim()
-    .min(1, "Email is required")
-    .regex(/^\S+@\S+\.\S+$/, "Invalid email address"),
+  email: z.email(),
   
   password: z.string()
     .min(1, "Password is required")

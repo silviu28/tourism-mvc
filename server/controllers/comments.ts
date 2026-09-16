@@ -36,7 +36,7 @@ router.post("/api/comments", commentRateLimiter, userTokenAuthenticator, async (
       return res.status(400).json({ error: parsed.error.flatten() });
     }
 
-    const id = req.id!;
+    const id = (req as any).id!;
     const { comment } = parsed.data;
 
     const user = await User.findOne({

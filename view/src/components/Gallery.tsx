@@ -1,5 +1,5 @@
 import { useContext, useState, type FC } from "react";
-import type { Image } from "../types";
+import type { Image, PagedQuery } from "../types";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import AlertContext from "../context/AlertContext";
@@ -78,10 +78,11 @@ const Gallery: FC = () => {
     queryKey: ["images"],
     queryFn: async () => {
       try {
-        const imagesRes = await axios.get("http://localhost:4004/api/images");
-        return imagesRes.data;
+        const imagesRes = await axios.get<PagedQuery<Image>>("http://localhost:4004/api/images");
+        return imagesRes.data.content;
       } catch (_error) {
         showAlert("Unable to get gallery images.", "", true);
+        return [];
       }
     },
   });
