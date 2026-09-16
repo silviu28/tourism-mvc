@@ -1,24 +1,26 @@
 import express from 'express';
 import { Feedback } from '../models/Feedback';
 import adminTokenAuthenticator from '../middleware/adminTokenAuthenticator';
+import { addFeedbackSchema } from '../schemas';
+import { handlePagedQuery } from '../utils';
 const router = express.Router();
 
-router.get("/api/feedback", adminTokenAuthenticator, async (_req, res) => {
-  const feedback = await Feedback.findAll();
-  res.json(feedback);
+router.get("/api/feedback", adminTokenAuthenticator, async (req, res) => {
+  return handlePagedQuery(Feedback, req, res);
 });
 
 router.post("/api/feedback", async (req, res) => {
   try {
-    const { id, feedback } = req.body;
-    const query = await Feedback.create({
-      userId: id,
-      feedback
-    });
+    const parsed = addFeedbackSchema.safeParse(req.body);
+    if (!parsed.success) {
+      return res.status(400).json({ error: parsed.error.flatten() });
+    }
 
-    res.status(200).json(query);
+    const { feedback } = parsed.data;
+    const query = await Feedback.create({ feedback });
+    return res.status(200).json(query);
   } catch (error) {
-    res.status(400).json(error);
+    return res.status(400).json(error);
   }
 });
 

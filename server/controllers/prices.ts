@@ -1,33 +1,12 @@
 import express from 'express';
 import { Price } from '../models/Price';
 import adminTokenAuthenticator from '../middleware/adminTokenAuthenticator';
+import { handlePagedQuery } from '../utils';
+import { addPricingSchema, updatePricingSchema } from '../schemas';
 const router = express.Router();
 
-const PAGE_SIZE=10;
-
 router.get("/api/prices", async (req, res) => {
-  try {
-    const page = parseInt(req.query.page as string, 10) || 1;
-
-    if (page < 1) {
-      return res.status(400).json({ error: "page must be 1 or greater" });
-    }
-
-    const { rows, count } = await Price.findAndCountAll({
-      limit: PAGE_SIZE,
-      offset: PAGE_SIZE * (page - 1),
-    });
-
-    return res.status(200).json({
-      content: rows,
-      totalCount: count,
-      totalPages: Math.ceil(count / PAGE_SIZE),
-      currentPage: page,
-    });
-  } catch (err) {
-    console.error("Failed to fetch pricing:", err);
-    return res.status(500).json({ error: "Failed to fetch pricing" });
-  }
+  return handlePagedQuery(Price, req, res);
 });
 
 router.delete("/api/prices/:id", async (req, res) => {
@@ -47,29 +26,37 @@ router.delete("/api/prices/:id", async (req, res) => {
 
 router.post("/api/prices", adminTokenAuthenticator, async (req, res) => {
   try {
-    const price = req.body;
+    const parsed = addPricingSchema.safeParse(req.body);
+    if (!parsed.success) {
+      return res.status(400).json({ error: parsed.error.flatten() });
+    }
+
+    const price = parsed.data;
     const query = await Price.create({ ...price });
-    res.status(200).json(query);
+    return res.status(200).json(query);
   } catch (error) {
-    res.status(400).json({ error });
+    return res.status(400).json({ error });
   }
 });
 
 router.put("/api/prices/:id", async (req, res) => {
   const id = req.params.id;
   try {
-    const { price } = req.body;
-    let updatedPrice = await Price.findByPk(id);
-    if (!updatedPrice) {
-      res.status(404).json({ error: "Does not exist" });
-      return;
+    const parsed = updatePricingSchema.safeParse(req.body);
+    if (!parsed.success) {
+      return res.status(400).json({ error: parsed.error.flatten() });
     }
 
-    updatedPrice.set(price);
-    await updatedPrice.save();
-    res.status(200).json(updatedPrice);
+    const price = parsed.data;
+    const updatedPrice = await Price.findByPk(id);
+    if (!updatedPrice) {
+      return res.status(404).json({ error: "Does not exist" });
+    }
+
+    await updatedPrice.update({ ...price });
+    return res.status(200).json(updatedPrice);
   } catch (error) {
-    res.status(400).json({ error });
+    return res.status(400).json({ error });
   }
 });
 

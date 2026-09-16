@@ -1,40 +1,50 @@
 import express from 'express';
 import { User } from '../models/User';
 import userTokenAuthenticator from '../middleware/userTokenAuthenticator';
-import { generateRefreshToken } from '../utils';
+import { generateRefreshToken, handlePagedQuery } from '../utils';
+import { addUserSchema, userLoginSchema } from '../schemas';
 const router = express.Router();
 const bcrypt = require('bcrypt');
 
-router.get("/api/users", async (_req, res) => {
-  res.json(await User.findAll());
+router.get("/api/users", async (req, res) => {
+  return handlePagedQuery(User, req, res);
 });
 
 router.post("/api/users", async (req, res) => {
-  const {
-    name,
-    dob,
-    username,
-    email,
-    password,
-    notify,
-  } = req.body;
-
-  const salt = await bcrypt.genSalt(10);
-  const passwordHash = await bcrypt.hash(password, salt);
-
   try {
+    const parsed = addUserSchema.safeParse(req.body);
+    if (!parsed.success) {
+      return res.status(400).json({ error: parsed.error.flatten() });
+    }
+
+    const {
+      name,
+      dob,
+      username,
+      email,
+      password,
+      notify,
+    } = parsed.data;
+
+    const salt = await bcrypt.genSalt(10);
+    const passwordHash = await bcrypt.hash(password, salt);
+
     const query = User.create({
       name, username, email, birthdate: dob, notify, passwordHash
     });
-    res.json(query)
+    return res.status(201).json(query)
   } catch (error) {
-    res.status(400).json(error);
+    return res.status(400).json(error);
   }
 });
 
 router.post("/api/login", async (req, res) => {
   try {
-    const { username, password, remember } = req.body;
+    const parsed = userLoginSchema.safeParse(req.body);
+    if (!parsed.success) {
+      return res.status(400).json({ error: parsed.error.flatten() });
+    }
+    const { username, password, remember } = parsed.data;
 
     const user = await User.findOne({ where: { username } });
     if (!user || !(await bcrypt.compare(password, user.passwordHash))) {

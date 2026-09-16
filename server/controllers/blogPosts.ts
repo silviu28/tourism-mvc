@@ -7,6 +7,8 @@ import BlogLike from "../models/BlogLike";
 import { BlogPostComment } from "../models/BlogPostComment";
 import BlogPostCommentLike from "../models/BlogPostCommentLike";
 import { User } from "../models/User";
+import { addBlogPostCommentSchema, createBlogPostSchema, updateBlogPostSchema } from "../schemas";
+import { Admin } from "../models/Admin";
 
 const router = express.Router();
 
@@ -25,6 +27,14 @@ router.get("/api/blog", async (req, res) => {
       order: [["date", "DESC"]],
       limit: PAGE_SIZE,
       offset: PAGE_SIZE * (page - 1),
+      include: [{
+        model: Admin,
+        attributes: [],
+        include: [{
+          model: User,
+          attributes: ["username"]
+        }]
+      }]
     });
 
     return res.status(200).json({
@@ -51,6 +61,14 @@ router.get("/api/blog/all", adminTokenAuthenticator, async (req, res) => {
       order: [["date", "DESC"]],
       limit: PAGE_SIZE,
       offset: PAGE_SIZE * (page - 1),
+      include: [{
+        model: Admin,
+        attributes: [],
+        include: [{
+          model: User,
+          attributes: ["username"]
+        }]
+      }]
     });
 
     return res.status(200).json({
@@ -69,7 +87,15 @@ router.get("/api/blog/:id", async (req, res) => {
   try {
     const { id } = req.params;
 
-    const blog = await BlogPost.findByPk(id);
+    const blog = await BlogPost.findByPk(id, {
+      include: [{
+        model: Admin,
+        include: [{
+          model: User,
+          attributes: ["username"]
+        }]
+      }]
+    });
 
     if (!blog) {
       return res.status(404).json({ error: "BlogPost post not found" });
@@ -84,16 +110,17 @@ router.get("/api/blog/:id", async (req, res) => {
 
 router.post("/api/blog", adminTokenAuthenticator, async (req, res) => {
   try {
-    const { title, html } = req.body;
-    const { adminId } = (req as any).admin as { adminId: number }; // ts gaslighting
-
-    if (!title || !html) {
-      return res.status(400).json({ error: "title and html are required" });
+    const parsed = createBlogPostSchema.safeParse(req.body);
+    if (!parsed.success) {
+      return res.status(400).json({ error: parsed.error.flatten() });
     }
+    const { title, html, description } = parsed.data;
+    const { adminId } = (req as any).admin as { adminId: number }; // ts gaslighting
 
     const blog = await BlogPost.create({
       title,
       html: DOMPurify.sanitize(html),
+      description,
       adminId,
       date: new Date(),
       archived: false,
@@ -109,7 +136,11 @@ router.post("/api/blog", adminTokenAuthenticator, async (req, res) => {
 router.put("/api/blog/:id", adminTokenAuthenticator, async (req, res) => {
   try {
     const { id } = req.params;
-    const updated = req.body;
+    const parsed = updateBlogPostSchema.safeParse(req.body);
+    if (!parsed.success) {
+      return res.status(400).json({ error: parsed.error.flatten() });
+    }
+    const updated = parsed.data;
 
     const blog = await BlogPost.findByPk(id);
 
@@ -117,7 +148,7 @@ router.put("/api/blog/:id", adminTokenAuthenticator, async (req, res) => {
       return res.status(404).json({ error: "BlogPost post not found" });
     }
 
-    await blog.update({ ...updated });
+    await blog.update({ ...updated, html: DOMPurify.sanitize(updated.html) });
 
     return res.status(200).json(blog);
   } catch (err) {
@@ -220,14 +251,15 @@ router.post("/api/blog/:id/comment", userTokenAuthenticator, async (req, res) =>
   try {
     const blogPostId = parseInt(req.params.id, 10);
     const { id } = (req as any).user;
-    const { comment } = req.body;
+    
+    const parsed = addBlogPostCommentSchema.safeParse(req.body);
+    if (!parsed.success) {
+      return res.status(400).json({ error: parsed.error.flatten() });
+    }
+    const { comment } = parsed.data;
 
     if (isNaN(blogPostId)) {
       return res.status(400).json({ error: "Invalid blog id" });
-    }
-
-    if (!comment || !comment.trim()) {
-      return res.status(400).json({ error: "Comment cannot be empty" });
     }
 
     const blog = await BlogPost.findByPk(blogPostId);

@@ -4,6 +4,7 @@ import { User } from "../models/User";
 import userTokenAuthenticator from "../middleware/userTokenAuthenticator";
 import adminTokenAuthenticator from "../middleware/adminTokenAuthenticator";
 import rateLimit from "express-rate-limit";
+import { addCommentSchema } from "../schemas";
 
 const router = express.Router();
 
@@ -30,42 +31,45 @@ router.get("/api/comments", async (_req, res) => {
 
 router.post("/api/comments", commentRateLimiter, userTokenAuthenticator, async (req, res) => {
   try {
-    const { username, comment } = req.body;
-    const user = await User.findOne({
-      where: {
-        username
-      }
-    });
-    if (!user) {
-      res.status(404).json({ error: "User not found" });
-      return;
+    const parsed = addCommentSchema.safeParse(req.body);
+    if (!parsed.success) {
+      return res.status(400).json({ error: parsed.error.flatten() });
     }
 
-    const query = await Comment.create({
+    const id = (req as any).id!;
+    const { comment } = parsed.data;
+
+    const user = await User.findOne({
+      where: { id }
+    });
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    const comm = await Comment.create({
       userId: user.id,
       comment,
       date: new Date()
     });
-    console.log(query);
+    console.log(comm);
 
-    res.status(200).json(query);
+    return res.status(200).json(comm);
   } catch (error) {
-    res.status(400).json(error);
+    return res.status(400).json(error);
   }
 });
 
-router.delete("/comments", adminTokenAuthenticator, async (req, res) => {
+router.delete("/comments/:id", adminTokenAuthenticator, async (req, res) => {
   try {
-    const { id } = req.body;
+    const id = parseInt(req.params.id, 10);
     const comment = await Comment.findByPk(id);
     if (!comment) {
-      res.status(404).json({ error: "Not found" });
-      return;
+      return res.status(404).json({ error: "Not found" });
     }
     await comment.destroy();
-    res.status(200).send();
+    return res.status(200).send();
   } catch (error) {
-    res.status(400).json({ error });
+    return res.status(400).json({ error });
   }
 });
 
