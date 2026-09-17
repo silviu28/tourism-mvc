@@ -24,19 +24,33 @@ const ModalContainer = styled.div`
 interface ModalProps {
   isVisible: boolean;
   visibilitySetter: Dispatch<boolean>;
+  options?: {
+    name: string;
+    onClick: () => void;
+  }[],
   children?: ReactNode;
 };
 
-const Modal: FC<ModalProps> = ({ isVisible, visibilitySetter, children }) => {
+const Modal: FC<ModalProps> = ({ isVisible, visibilitySetter, options, children }) => {
   if (!isVisible) return;
 
   return (
     <Backdrop>
       <ModalContainer>
         {children}
-        <button onClick={() => visibilitySetter(false)}>
-          Close
-        </button>
+        {options
+          ? <>
+            {options.map(({ name, onClick }) => 
+              <button 
+                onClick={onClick}
+                id={`opt-${name}`}
+              >{name}</button>
+            )}
+          </>
+          : <button onClick={() => visibilitySetter(false)}>
+            Close
+          </button>
+        }
       </ModalContainer>
     </Backdrop>
   );

@@ -33,6 +33,7 @@ import WikiPageBuilder from './pages/Wiki/WikiPageBuilder';
 import ManageWiki from './pages/AdminPanel/ManageWiki';
 import Splash from './components/Splash';
 import BlogPostBuilder from './pages/BlogPostBuilder';
+import CookieBanner from './components/CookieBanner';
 
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = "http://localhost:4004";
@@ -142,6 +143,10 @@ const App: FunctionComponent = () => {
                 />
 
                 <Navbar isAdmin={isAdmin} />
+                <CookieBanner
+                  visible={true}
+                  onAccept={() => {}}
+                />
               </Content>
               <Routes>
                 <Route path="*" element={<NotFound />} />
