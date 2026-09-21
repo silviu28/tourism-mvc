@@ -137,3 +137,40 @@ export const handlePagedQuery = async <T extends Model>(model: ModelStatic<T>, r
     return res.status(500).json({ error: "Failed to fetch data" });
   }
 };
+
+export const buildConsentCookie = (uuid: string, permissions: number): string => {
+  const sign = crypto.createHmac("sha256", process.env.COOKIE_SECRET!)
+    .update(`${uuid}.${permissions}`)
+    .digest("hex");
+  return `${uuid}.${permissions}.${sign}`;
+};
+
+export const parseConsentCookie = (cookieVal: string) => {
+  const [uuid, permsStr, sign] = cookieVal.split(".");
+  if (!uuid || !permsStr || !sign)
+    return null;
+
+  const perms = parseInt(permsStr, 10);
+  if (isNaN(perms) || perms < 0 || perms > 7)
+    return null;
+
+  const expectedSign = crypto.createHmac("sha256", process.env.COOKIE_SECRET!)
+    .update(`${uuid}.${perms}`)
+    .digest("hex");
+  
+    const [actual, expected] = [Buffer.from(sign, "hex"), Buffer.from(expectedSign, "hex")];
+    if (actual.length !== expected.length || !crypto.timingSafeEqual(actual, expected))
+      return null;
+
+    return { uuid, permissions: perms };
+};
+
+type Permission = "preferences" | "statistics" | "marketing";
+
+export const canCollect = (perm: Permission, prefs: number) => {
+  switch (perm) {
+    case "preferences": return (prefs & 1) === 1;
+    case "statistics": return (prefs & 2) === 2;
+    case "marketing": return (prefs & 4) === 4;
+  }
+};

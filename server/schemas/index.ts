@@ -132,3 +132,7 @@ export const updateWikiPostSchema = addWikiPostSchema.partial()
     htmlRef: z.string().trim(),
     pendingApproval: z.boolean().optional()
   });
+
+export const postCookiePreferencesSchema = z.object({
+  permissions: z.number()
+}).strict();

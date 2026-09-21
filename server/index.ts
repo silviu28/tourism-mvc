@@ -3,19 +3,8 @@ const path = require('path');
 require('dotenv').config({ quiet: true });
 const cors = require('cors');
 import sequelize from "./sequelizeConfig";
+import wholeRouting from "./controllers";
 const cookieParser = require("cookie-parser");
-
-const commentRouter = require('./controllers/comments');
-const feedbackRouter = require('./controllers/feedback');
-const priceRouter = require('./controllers/prices');
-const userRouter = require('./controllers/users');
-const imageRouter = require("./controllers/images");
-const adminRouter = require("./controllers/admins");
-const notificationCategoryRouter = require("./controllers/notificationCategories");
-const notificationRouter = require("./controllers/notifications");
-const blogPostsRouter = require("./controllers/blogPosts");
-const wikiPostsRouter = require("./controllers/wikiPosts");
-const testRouter = require("./controllers/tests");
 
 const rateLimiter = require("express-rate-limit");
 
@@ -42,19 +31,7 @@ app.use(express.static(path.join(__dirname, "dist")));
 app.use(express.json());
 app.use(cookieParser());
 
-app.use(
-  commentRouter,
-  feedbackRouter,
-  priceRouter,
-  userRouter,
-  imageRouter,
-  adminRouter,
-  notificationCategoryRouter,
-  notificationRouter,
-  blogPostsRouter,
-  wikiPostsRouter,
-  testRouter,
-);
+app.use( ...wholeRouting() );
 
 (async function () {
   await sequelize.authenticate();
