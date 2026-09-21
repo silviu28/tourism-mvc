@@ -15,10 +15,10 @@ router.post("/api/cookies", async (req, res) => {
 
     if (!req.cookies.identifier) {
       const uuid = crypto.randomUUID();
-      await BrowserIdentifier.create({ uuid, permissions, createdAt: new Date() });
+      await BrowserIdentifier.create({ uuid, permissions, date: new Date() });
 
       const cookie = buildConsentCookie(uuid, permissions);
-      res.cookie("consent", cookie, {
+      return res.cookie("consent", cookie, {
         httpOnly: false,
         secure: process.env.NODE_ENV === "production",
         sameSite: "lax",
@@ -34,6 +34,7 @@ router.post("/api/cookies", async (req, res) => {
     await existing.update({ permissions });
     return res.status(204).end();
   } catch (error) {
+    console.error(error);
     return res.status(500).json({ error: "Unable to assign identifier cookie" });
   }
 });

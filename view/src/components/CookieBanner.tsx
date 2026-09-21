@@ -1,7 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Modal from './Modal';
-import { FormControlLabel, Switch } from '@mui/material';
+import { Switch } from '@mui/material';
+import { useMutation } from '@tanstack/react-query';
+import AlertContext from '../context/AlertContext';
+import axios from 'axios';
 
 const BannerWrapper = styled.div`
   position: fixed;
@@ -84,17 +87,53 @@ const EvenSpaced = styled.div`
   align-items: center;
 `;
 
-const CookieBanner = ({ visible, onAccept }: { visible: boolean, onAccept: () => void }) => {
+const CookieBanner = () => {
+  const [visible, setVisible] = useState(true);
   const [selectionModalVisible, setSelectionModalVisible] = useState(false);
   const [options, setOptions] = useState({
-    preferences: true,
-    statistics: true,
-    marketing: true,
+    preferences: 0,
+    statistics: 0,
+    marketing: 0,
   });
+  const showAlert = useContext(AlertContext);
 
   useEffect(() => {
-    console.log(options);
-  }, [options]);
+    const cookie = (() => {
+      const match = document.cookie
+        .split("; ")
+        .find((row) => row.startsWith("consent="));
+      return match ? decodeURIComponent(match.split("=")[1]) : null;
+    })();
+    setVisible(!cookie);
+  }, []);
+
+  const cookieMutation = useMutation({
+    mutationFn: async (permissions: typeof options) => {
+      try {
+        await axios.post("http://localhost:4004/api/cookies", {
+          permissions: permissions.preferences + permissions.statistics * 2 + permissions.marketing * 4
+        });
+      } catch (_error) {
+        showAlert("Something went wrong with cookies", "", true);
+      }
+    }
+  });
+
+  const accept = () => {
+    cookieMutation.mutateAsync(options)
+      .then(() => {
+        setSelectionModalVisible(false);
+        setVisible(false);
+      });
+  };
+
+  const acceptAll = () => {
+    cookieMutation.mutateAsync({ preferences: 1, statistics: 1, marketing: 1 })
+      .then(() => {
+        setSelectionModalVisible(false);
+        setVisible(false);
+      });
+  };
 
   if (!visible) return null;
 
@@ -106,11 +145,11 @@ const CookieBanner = ({ visible, onAccept }: { visible: boolean, onAccept: () =>
         options={[
           {
             name: "Accept Selection",
-            onClick: () => {}
+            onClick: accept
           },
           {
             name: "Accept All",
-            onClick: () => {}
+            onClick: acceptAll
           }
         ]}
       >
@@ -119,21 +158,21 @@ const CookieBanner = ({ visible, onAccept }: { visible: boolean, onAccept: () =>
           <p>Preferences</p>
           <Switch 
             value={options.preferences} 
-            onChange={(e) => setOptions({ ...options, preferences: e.target.checked })}
+            onChange={(e) => setOptions({ ...options, preferences: e.target.checked ? 1 : 0 })}
           />
         </EvenSpaced>
         <EvenSpaced>
           <p>Statistics</p>
           <Switch 
             value={options.statistics} 
-            onChange={(e) => setOptions({ ...options, statistics: e.target.checked })}
+            onChange={(e) => setOptions({ ...options, statistics: e.target.checked ? 1 : 0 })}
           />
         </EvenSpaced>
         <EvenSpaced>
           <p>Marketing</p>
           <Switch 
             value={options.marketing} 
-            onChange={(e) => setOptions({ ...options, marketing: e.target.checked })}
+            onChange={(e) => setOptions({ ...options, marketing: e.target.checked ? 1 : 0 })}
           />
         </EvenSpaced>
       </Modal>
@@ -143,8 +182,13 @@ const CookieBanner = ({ visible, onAccept }: { visible: boolean, onAccept: () =>
           We use cookies to improve your experience. By continuing, you agree to
           our use of cookies.
         </p>
-        <button onClick={onAccept}>Accept All</button>
-        <button onClick={() => setSelectionModalVisible(true)}>Choose</button>
+        <button 
+          onClick={acceptAll}>
+          Accept All
+        </button>
+        <button onClick={() => setSelectionModalVisible(true)}>
+          Choose
+        </button>
       </BannerWrapper>
     </>
   );

@@ -143,10 +143,7 @@ const App: FunctionComponent = () => {
                 />
 
                 <Navbar isAdmin={isAdmin} />
-                <CookieBanner
-                  visible={true}
-                  onAccept={() => {}}
-                />
+                <CookieBanner />
               </Content>
               <Routes>
                 <Route path="*" element={<NotFound />} />
