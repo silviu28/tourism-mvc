@@ -8,17 +8,41 @@ import styled from "styled-components";
 import { useState, useRef, useEffect, type FunctionComponent } from "react";
 import { useQuery } from "@tanstack/react-query";
 import type { ClientsideNotification, ReceivedNotification } from "../types";
+import useVerticalCheck from "../utils/useVerticalCheck";
+
+const GreetingButton = styled.a`
+  cursor: pointer;
+  color: #111827;
+  white-space: nowrap;
+ 
+  &:hover {
+    text-decoration: underline;
+    color: #ffffff;
+    transition: color 0.4s ease;
+  }
+ 
+  @media (max-width: 480px) {
+    font-size: 0.8rem;
+  }
+`;
 
 const NavLink = styled(Link)`
-display: inline-block;
-color: black;
-text-align: left;
-padding: 10px 10px;
+  display: inline-block;
+  color: black;
+  text-align: left;
+  padding: 10px 10px;
+ 
+  &:hover {
+    background-color: yellow;
+    transition: background-color 0.2s ease-in;
+  }
+ 
+  @media (max-width: 768px) {
+    display: block;
+    width: 100%;
+    padding: 14px 20px;
+  }
 
-&:hover {
-  background-color: yellow;
-  transition: background-color .2s ease-in;
-}
 `;
 
 const Bar = styled.div`
@@ -34,44 +58,67 @@ const Bar = styled.div`
   li {
     list-style: none;
   }
+
+  @media (max-width: 768px) {
+    padding: 0.75rem 1rem;
+  }
 `;
 
 const LeftGroup = styled.div`
   display: flex;
   align-items: center;
   gap: 1.5rem;
+  @media (max-width: 768px) {
+    gap: 0.75rem;
+  }
 `;
 
 const RightGroup = styled.div`
   display: flex;
   align-items: center;
   gap: 1rem;
+  @media (max-width: 480px) {
+    gap: 0.5rem;
+  }
 `;
 
 const Logo = styled.img`
   width: 50px;
   height: 50px;
+  @media (max-width: 768px) {
+    width: 36px;
+    height: 36px;
+  }
 `;
 
-const NavFlex = styled.ul`
+const NavFlex = styled.ul<{ $open?: boolean }>`
   display: flex;
   align-items: center;
   gap: 0.5rem;
   list-style: none;
   margin: 0;
   padding: 0;
-`;
-
-const GreetingButton = styled.a`
-  cursor: pointer;
-  color: #111827;
-
-  &:hover {
-    text-decoration: underline;
-    color: #ffffff;
-    transition: color .4s ease;
+ 
+  @media (max-width: 768px) {
+    position: fixed;
+    top: 64px; /* roughly the height of Bar on mobile, adjust if needed */
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    background-color: orange;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+    max-height: ${({ $open }) => ($open ? "80vh" : "0")};
+    overflow: hidden;
+    transition: max-height 0.25s ease;
+ 
+    li {
+      width: 100%;
+    }
   }
 `;
+
 
 const Wrapper = styled.div`
   position: relative;
@@ -258,11 +305,13 @@ interface NavbarProps {
 
 const Navbar: FC<NavbarProps> = ({ isAdmin }) => {
   const [user, setUser] = useContext(UserContext);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
   const showAlert = useContext(AlertContext);
   const [read] = useState(() => {
     const stored = localStorage.getItem(READ_KEY);
     return stored ? JSON.parse(stored) : [];
   });
+  const mobile = useVerticalCheck();
 
   const markAsRead = (id: number) => {
     if (!read.includes(id)) {
@@ -306,7 +355,16 @@ const Navbar: FC<NavbarProps> = ({ isAdmin }) => {
       <LeftGroup>
         <Logo src="favi.png" alt="Logo" />
         |
-        <NavFlex>
+        {mobile && (
+          <Wrapper>
+            <NotificationButton onClick={() => setDropdownOpen(!dropdownOpen)}>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5"/>
+              </svg>
+            </NotificationButton>
+          </Wrapper>
+        )}
+        <NavFlex $open={dropdownOpen}>
           <NavLink to="/">Home</NavLink>
           {!user?.username && (
             <>
