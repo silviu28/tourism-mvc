@@ -44,14 +44,14 @@ router.post("/api/login", async (req, res) => {
     if (!parsed.success) {
       return res.status(400).json({ error: parsed.error.flatten() });
     }
-    const { username, password, remember } = parsed.data;
+    const { username, password, rememberMe } = parsed.data;
 
     const user = await User.findOne({ where: { username } });
     if (!user || !(await bcrypt.compare(password, user.passwordHash))) {
       return res.status(401).json({ error: "Invalid credentials" });
     }
 
-    const { token, expiresAt } = await generateRefreshToken(user.id, Boolean(remember));
+    const { token, expiresAt } = await generateRefreshToken(user.id, Boolean(rememberMe));
 
     res.cookie("refreshToken", token, {
       httpOnly: true,
