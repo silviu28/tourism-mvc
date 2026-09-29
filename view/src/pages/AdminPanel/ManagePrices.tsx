@@ -148,7 +148,7 @@ const ManagePrices = () => {
     queryKey: ["prices"],
     queryFn: async () => {
       try {
-        const pricesRes = await axios.get(`http://localhost:4004/api/prices?page=${pageNo}`);
+        const pricesRes = await axios.get(`/api/prices?page=${pageNo}`);
         return pricesRes.data;
       } catch (_error) {
         showAlert("Unable to load prices", "", true);
@@ -159,7 +159,7 @@ const ManagePrices = () => {
 
   const submitPrice = async (price: Price) => {
     try {
-      await axios.post("http://localhost:4004/api/prices", price);
+      await axios.post("/api/prices", price);
       showAlert("Price uploaded", "", false);
       queryClient.invalidateQueries({
         queryKey: ["prices"]
@@ -171,7 +171,7 @@ const ManagePrices = () => {
 
   const updatePrice = async (price: Price) => {
     try {
-      await axios.put(`http://localhost:4004/api/prices/${price.id}`, { price });
+      await axios.put(`/api/prices/${price.id}`, { price });
       showAlert("Price updated", "", false);
       queryClient.invalidateQueries({
         queryKey: ["prices"]

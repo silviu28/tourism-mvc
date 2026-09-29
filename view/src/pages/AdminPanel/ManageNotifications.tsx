@@ -43,7 +43,7 @@ const ManageNotifications = () => {
     queryKey: ["notification-categories"],
     queryFn: async () => {
       try {
-        const notifRes = await axios.get("http://localhost:4004/api/notificationCategory");
+        const notifRes = await axios.get("/api/notificationCategory");
         return notifRes.data;
       } catch (_error) {
         showAlert("Unable to retrieve notification categories", "", true);
@@ -56,7 +56,7 @@ const ManageNotifications = () => {
     queryKey: ["notifications"],
     queryFn: async () => {
       try {
-        const notifRes = await axios.get(`http://localhost:4004/api/notifications?page=${pageNo}`)
+        const notifRes = await axios.get(`/api/notifications?page=${pageNo}`)
         return notifRes.data;
       } catch (_error) {
         showAlert("Unable to retrieve old notifications", "", true);
@@ -67,7 +67,7 @@ const ManageNotifications = () => {
 
   const addCategory = async () => {
     try {
-      await axios.post('http://localhost:4004/api/notificationCategory', { name: notificationCategoryName });
+      await axios.post('/api/notificationCategory', { name: notificationCategoryName });
       showAlert("Category added", "", false);
       queryClient.invalidateQueries({
         queryKey: ["notification-categories"]
@@ -79,7 +79,7 @@ const ManageNotifications = () => {
 
   const sendNotification = async (noti: Notification) => {
     try {
-      await axios.post('http://localhost:4004/api/notifications', noti);
+      await axios.post('/api/notifications', noti);
       showAlert("Notification sent", "", false);
       queryClient.invalidateQueries({
         queryKey: ["notifications-all"]
@@ -91,7 +91,7 @@ const ManageNotifications = () => {
 
   const updateNotification = async (noti: ReceivedNotification) => {
     try {
-      await axios.put(`http://localhost:4004/api/notifications/${noti.id}`, noti);
+      await axios.put(`/api/notifications/${noti.id}`, noti);
       showAlert("Notification updated", "", false);
       queryClient.invalidateQueries({
         queryKey: ["notifications-all"]

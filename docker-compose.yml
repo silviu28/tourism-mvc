@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  db:
+    image: mariadb:10.11
+    container_name: tourism_db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
+    ports:
+      - "3307:3307"
+    volumes:
+      - mariadb_data:/var/lib/mysql
+
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: tourism_server
+    restart: always
+    environment:
+      PORT: 4004
+      HOST: db
+      DB_NAME: ${DB_NAME:-tourism}
+      DB_USER: root
+      PASSWORD: ${DB_PASSWORD}
+      CORS_ORIGIN: ${CORS_ORIGIN}
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_EXPIRY: ${JWT_EXPIRY}
+      DB_ALTER: ${DB_ALTER}
+
+  frontend:
+    build:
+      context: ./view
+      dockerfile: Dockerfile
+    container_name: tourism_frontend
+    restart: always
+
+  proxy:
+    image: nginx:alpine
+    container_name: tourism_proxy
+    restart: always
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - server
+      - frontend
+
+volumes:
+  mariadb_data:

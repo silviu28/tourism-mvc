@@ -17,7 +17,7 @@ const ManageFeedback = () => {
     queryKey: ["feedback"],
     queryFn: async () => {
       try {
-        const feedbackRes = await axios.get(`http://localhost:4004/api/feedback?page=${pageNo}`);
+        const feedbackRes = await axios.get(`/api/feedback?page=${pageNo}`);
         return feedbackRes.data;
       } catch (_error) {
         showAlert("Unable to load feedback", "", true);

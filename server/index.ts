@@ -19,7 +19,7 @@ const testRouter = require("./controllers/tests");
 
 const rateLimiter = require("express-rate-limit");
 
-const PORT = 4004;
+const PORT = process.env.PORT || 4004;
 const app = express();
 
 if (process.env.TEST !== "1" && process.env.TEST !== "true") {
@@ -32,8 +32,13 @@ if (process.env.TEST !== "1" && process.env.TEST !== "true") {
   }));
 }
 
+const corsOrigin = process.env.CORS_ORIGIN || "http://localhost:5173";
+const corsOrigins = corsOrigin.includes(",")
+  ? corsOrigin.split(",").map((origin) => origin.trim()).filter(Boolean)
+  : corsOrigin;
+
 app.use(cors({
-  origin: "http://localhost:5173",
+  origin: corsOrigins,
   credentials: true
 }));
 

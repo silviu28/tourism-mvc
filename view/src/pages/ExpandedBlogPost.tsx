@@ -17,7 +17,7 @@ const ExpandedBlogPost = () => {
     queryKey: ["blog-post"],
     queryFn: async () => {
       try {
-      const postRes = await axios.get(`http://localhost:4004/api/blog/${id}`);
+      const postRes = await axios.get(`/api/blog/${id}`);
       return postRes.data;
       } catch (_error) {
         navigate(-1);
@@ -29,7 +29,7 @@ const ExpandedBlogPost = () => {
     queryKey: ["post-comments"],
     queryFn: async () => {
       try {
-        const commRes = await axios.get(`http://localhost:4004/api/blog/${id}/comments?page=${pageNo}`);
+        const commRes = await axios.get(`/api/blog/${id}/comments?page=${pageNo}`);
         return commRes.data;
       } catch (_error) {
         // ...
@@ -40,7 +40,7 @@ const ExpandedBlogPost = () => {
   const postMutation = useMutation({
     mutationFn: async ({ user, comment }: { user: UserData, comment: string }) => {
       try {
-        await axios.post(`http://localhost:4004/api/blog/${id}/comment`, { userId: user.id, comment });
+        await axios.post(`/api/blog/${id}/comment`, { userId: user.id, comment });
         queryClient.invalidateQueries({ queryKey: ["post-comments"] });
       } catch (_error) {
         // ...
@@ -51,7 +51,7 @@ const ExpandedBlogPost = () => {
   const commentLikeMutation = useMutation({
     mutationFn: async ({ user, commentId }: { user: UserData, commentId: number }) => {
       try {
-        await axios.post(`http://localhost:4004/api/blog/${id}/comment/${commentId}/like`, { userId: user.id, commentId });
+        await axios.post(`/api/blog/${id}/comment/${commentId}/like`, { userId: user.id, commentId });
         queryClient.invalidateQueries({ queryKey: ["post-comments"] });
       } catch (_error) {
         // ...

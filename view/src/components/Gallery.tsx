@@ -81,7 +81,7 @@ const Gallery: FC = () => {
     queryKey: ["images"],
     queryFn: async () => {
       try {
-        const imagesRes = await axios.get<PagedQuery<Image>>("http://localhost:4004/api/images");
+        const imagesRes = await axios.get<PagedQuery<Image>>("/api/images");
         return imagesRes.data.content;
       } catch (_error) {
         showAlert("Unable to get gallery images.", "", true);

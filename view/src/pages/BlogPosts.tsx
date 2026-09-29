@@ -29,7 +29,7 @@ const BlogPosts = () => {
     queryKey: ["blog-posts"],
     queryFn: async () => {
       try {
-        const blogRes = await axios.get<BlogPagedQuery>(`http://localhost:4004/api/blog?page=${pageNo}`);
+        const blogRes = await axios.get<BlogPagedQuery>(`/api/blog?page=${pageNo}`);
         return blogRes.data;
       } catch (_error) {
         return EMPTY_PAGE;
@@ -40,7 +40,7 @@ const BlogPosts = () => {
   const archiveMutation = useMutation({
     mutationFn: async ({ blogPost }: { blogPost: BlogPost }) => {
       try {
-        await axios.put(`http://localhost:4004/api/blog/${blogPost.id}`, {
+        await axios.put(`/api/blog/${blogPost.id}`, {
           ...blogPost,
           archived: true
         });

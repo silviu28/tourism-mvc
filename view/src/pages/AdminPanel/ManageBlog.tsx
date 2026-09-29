@@ -64,7 +64,7 @@ const ManageBlog = ( ) => {
     queryKey: ["blog-posts"],
     queryFn: async () => {
       try {
-        const blogRes = await axios.get<BlogPagedQuery>(`http://localhost:4004/api/blog/all?page=${pageNo}`);
+        const blogRes = await axios.get<BlogPagedQuery>(`/api/blog/all?page=${pageNo}`);
         return blogRes.data;
       } catch (_error) {
         return EMPTY_PAGE;
@@ -75,7 +75,7 @@ const ManageBlog = ( ) => {
   const blogMutation = useMutation({
     mutationFn: async ({ post }: { post : BlogPost }) => {
       try {
-        await axios.put(`http://localhost:4004/api/blog/${post.id}`, post);
+        await axios.put(`/api/blog/${post.id}`, post);
         queryClient.invalidateQueries({
           queryKey: ["blog-posts"]
         });

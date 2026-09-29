@@ -126,7 +126,7 @@ const Wiki: FunctionComponent = () => {
     queryKey: ["wiki-page"],
     queryFn: async () => {
       try {
-        const wikiRes = await axios.get(`http://localhost:4004/api/wiki?page=${pageNo}&search=${query}`);
+        const wikiRes = await axios.get(`/api/wiki?page=${pageNo}&search=${query}`);
         return wikiRes.data;
       } catch (error) {
         console.error(error);

@@ -7,7 +7,7 @@ export default function useAdminAuth() {
   useEffect(() => {
     (async () => {
       try {
-        const adminRes = await axios.get("http://localhost:4004/api/admin/auth");
+        const adminRes = await axios.get("/api/admin/auth");
         if (adminRes.data) {
           setIsAdmin(true);
         }

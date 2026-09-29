@@ -20,7 +20,7 @@ const WikiPage = () => {
     queryKey: ["wiki-post"],
     queryFn: async () => {
       try {
-        const pageRes = await axios.get(`http://localhost:4004/api/wiki/${id}`);
+        const pageRes = await axios.get(`/api/wiki/${id}`);
         return pageRes.data;
       } catch (error) {
         console.error(error);
@@ -31,7 +31,7 @@ const WikiPage = () => {
   const { mutate: like } = useMutation({
     mutationFn: async () => {
       try {
-        await axios.put(`http://localhost:4004/api/wiki/${id}/like`, { user });
+        await axios.put(`/api/wiki/${id}/like`, { user });
         queryClient.invalidateQueries({ queryKey: ["wiki-post"] });
       } catch (error) {
         console.error(error);
