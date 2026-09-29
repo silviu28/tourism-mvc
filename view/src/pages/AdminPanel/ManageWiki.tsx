@@ -96,7 +96,7 @@ const ManageWiki = () => {
     queryKey: ["wiki-page"],
     queryFn: async () => {
       try {
-        const wikiRes = await axios.get(`http://localhost:4004/api/wiki/admin?page=${pageNo}&search=${query}`);
+        const wikiRes = await axios.get(`/api/wiki/admin?page=${pageNo}&search=${query}`);
         return wikiRes.data;
       } catch (error) {
         console.error(error);
@@ -107,7 +107,7 @@ const ManageWiki = () => {
   const postMutation = useMutation({
     mutationFn: async ({ wikiPost }: { wikiPost: ControllableWikiPost }) => {
       try {
-        await axios.put(`http://localhost:4004/api/wiki/${wikiPost.id}`, wikiPost);
+        await axios.put(`/api/wiki/${wikiPost.id}`, wikiPost);
         queryClient.invalidateQueries({ queryKey: ["wiki-page"] });
         showAlert(`Post ${wikiPost.pendingApproval ? "unapproved" : "approved"}.`, "", false);
       } catch (error) {

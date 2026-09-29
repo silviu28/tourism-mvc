@@ -35,7 +35,13 @@ import Splash from './components/Splash';
 import BlogPostBuilder from './pages/BlogPostBuilder';
 
 axios.defaults.withCredentials = true;
-axios.defaults.baseURL = "http://localhost:4004";
+const configuredApiUrl = import.meta.env.VITE_API_URL;
+axios.defaults.baseURL =
+  configuredApiUrl !== undefined && configuredApiUrl !== ""
+    ? configuredApiUrl
+    : import.meta.env.DEV
+      ? "http://localhost:4004"
+      : "";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -65,7 +71,7 @@ const App: FunctionComponent = () => {
   useEffect(() => {
     const fetchAsync = async () => {
       try {
-        const adminRes = await axios.get("http://localhost:4004/api/admin/auth");
+        const adminRes = await axios.get("/api/admin/auth");
         if (adminRes.data) {
           setIsAdmin(true);
         }
@@ -91,7 +97,7 @@ const App: FunctionComponent = () => {
   const createAccount = async (data: any) => {
     try {
       console.log(data);
-      await axios.post('http://localhost:4004/api/users', data);
+      await axios.post('/api/users', data);
       showAlert("Succesfully created account", "", false);
     } catch (_error) {
       showAlert("Unable to create account", "", true);
@@ -100,7 +106,7 @@ const App: FunctionComponent = () => {
 
   const login = async (data: any) => {
     try {
-      const res = await axios.post("http://localhost:4004/api/login", data);
+      const res = await axios.post("/api/login", data);
       showAlert("Login succesful", "", false);
       setUser({
         id: res.data.id,
@@ -117,7 +123,7 @@ const App: FunctionComponent = () => {
 
   const addFeedback = async (feedback: string) => {
     try {
-      await axios.post("http://localhost:4004/api/feedback", {
+      await axios.post("/api/feedback", {
         feedback
       });
       showAlert("Feedback added", "", false);

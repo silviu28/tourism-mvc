@@ -332,7 +332,7 @@ const Navbar: FC<NavbarProps> = ({ isAdmin }) => {
     queryKey: ["recent-notifs"],
     queryFn: async () => {
       try {
-        const notifs = await axios.get<ReceivedNotification[]>('http://localhost:4004/api/notifications/active');
+        const notifs = await axios.get<ReceivedNotification[]>('/api/notifications/active');
         return notifs.data.map((noti) => ({ ... noti, read: isRead(noti.id) }));
       } catch (_error) {
         return [];
@@ -341,7 +341,7 @@ const Navbar: FC<NavbarProps> = ({ isAdmin }) => {
   });
 
   const logout = () => {
-    axios.post("http://localhost:4004/api/logout")
+    axios.post("/api/logout")
       .then((_res) => {
         showAlert("Logged out.", "", false);
         setUser!({});

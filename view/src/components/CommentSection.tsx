@@ -4,7 +4,6 @@ import axios from "axios";
 import Comment from "./Comment";
 
 axios.defaults.withCredentials = true;
-axios.defaults.baseURL = "http://localhost:4004";
 
 interface CommentSectionProps {
   comments: CommentData[],

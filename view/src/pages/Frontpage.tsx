@@ -43,7 +43,7 @@ const FrontPage: FunctionComponent = () => {
     queryKey: ["comments"],
     queryFn: async () => {
       try {
-        const commentsRes = await axios.get("http://localhost:4004/api/comments");
+        const commentsRes = await axios.get("/api/comments");
         return commentsRes.data;
       } catch (_error) {
         showAlert("Cannot display comments", "", true);
@@ -55,7 +55,7 @@ const FrontPage: FunctionComponent = () => {
     queryKey: ["blog-posts"],
     queryFn: async () => {
       try {
-        const blogRes = await axios.get("http://localhost:4004/api/blog");
+        const blogRes = await axios.get("/api/blog");
         return blogRes.data;
       } catch (_error) {
         showAlert("Cannot display blog posts", "", true);
@@ -67,7 +67,7 @@ const FrontPage: FunctionComponent = () => {
     queryKey: ["wiki-posts"],
     queryFn: async () => {
       try {
-        const wikiRes = await axios.get("http://localhost:4004/api/wiki/random");
+        const wikiRes = await axios.get("/api/wiki/random");
         return wikiRes.data;
       } catch (_error) {
         showAlert("Cannot display wiki posts", "", true);
@@ -81,7 +81,7 @@ const FrontPage: FunctionComponent = () => {
       comment: string
     }) => {
       try {
-        await axios.post("http://localhost:4004/api/comments", newComment, {
+        await axios.post("/api/comments", newComment, {
           withCredentials: true
         });
         queryClient.invalidateQueries({

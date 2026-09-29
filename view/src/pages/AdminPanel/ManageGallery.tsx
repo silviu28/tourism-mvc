@@ -72,7 +72,7 @@ const ManageGallery = () => {
     queryKey: ["images"],
     queryFn: async () => {
       try {
-        const imagesRes = await axios.get(`http://localhost:4004/api/images?page=${pageNo}`);
+        const imagesRes = await axios.get(`/api/images?page=${pageNo}`);
         return imagesRes.data;
       } catch (_error) {
         showAlert("Unable to load images", "", true);
