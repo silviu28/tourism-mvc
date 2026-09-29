@@ -1,6 +1,7 @@
 import { useState, type FC } from "react";
 import { NavLink, Outlet, useLocation } from "react-router";
 import styled from "styled-components";
+import useVerticalCheck from "../../utils/useVerticalCheck";
 
 const PanelWrapper = styled.div`
   display: flex;
@@ -9,7 +10,7 @@ const PanelWrapper = styled.div`
 `;
 
 const Sidebar = styled.div`
-  width: 10%;
+  min-width: 15%;
   padding: 20px;
   display: flex;
   flex-direction: column;
@@ -40,6 +41,19 @@ const links = [
 const AdminPanel: FC = () => {
   const location = useLocation().pathname;
   const [route, setRoute] = useState(location);
+  const isVertical = useVerticalCheck();
+
+  if (isVertical) {
+    return (
+      <div style={{ margin: 60 }}>
+        <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" fill="currentColor" viewBox="0 0 16 16">
+          <path d="M1 4.5a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v6a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1zm-1 6a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2H2a2 2 0 0 0-2 2z"/>
+          <path d="M14 7.5a1 1 0 1 0-2 0 1 1 0 0 0 2 0"/>
+        </svg>
+        <h1>Please turn your device to landscape or extend the width of your browser window to continue.</h1>
+      </div>
+    );
+  }
 
   return (
     <PanelWrapper>

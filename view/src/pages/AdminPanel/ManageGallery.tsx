@@ -1,12 +1,13 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import type { Image } from "../../types";
+import { EMPTY_QUERY_PAGE, type Image, type PagedQuery } from "../../types";
 import { useContext, useState, type FC, type SyntheticEvent } from "react";
 import AlertContext from "../../context/AlertContext";
 import useInvalidatingSubmit from "../../hooks/useInvalidatingSubmit";
 import useInvalidatingRemove from "../../hooks/useInvalidatingRemove";
 import styled from "styled-components";
 import Modal from "../../components/Modal";
+import Pager from "../../components/Pager";
 
 const GalleryGrid = styled.ul`
   display: grid;
@@ -62,18 +63,20 @@ const ManageGallery = () => {
   const showAlert = useContext(AlertContext);
   const [selected, setSelected] = useState<Image | null>(null);
   const [formVisible, setFormVisible] = useState(false);
+  const [pageNo, setPageNo] = useState(1);
 
   const submitImage = useInvalidatingSubmit("images");
   const removeImage = useInvalidatingRemove("images");
 
-  const { data: gallery = [], isLoading: galleryLoading } = useQuery<Image[]>({
+  const { data: galleryPage, isLoading: galleryLoading } = useQuery<PagedQuery<Image>>({
     queryKey: ["images"],
     queryFn: async () => {
       try {
-        const imagesRes = await axios.get("http://localhost:4004/api/images");
+        const imagesRes = await axios.get(`http://localhost:4004/api/images?page=${pageNo}`);
         return imagesRes.data;
       } catch (_error) {
         showAlert("Unable to load images", "", true);
+        return EMPTY_QUERY_PAGE;
       }
     }
   });
@@ -87,7 +90,8 @@ const ManageGallery = () => {
       <div className="container">
         {!galleryLoading && (
           <GalleryGrid>
-            {gallery.map((img) => (
+            {(!galleryPage || galleryPage.content.length === 0) && <p>No data to show.</p>}
+            {galleryPage?.content?.map((img) => (
               <GalleryItem
                 key={img.id}
                 $selected={img === selected}
@@ -105,6 +109,10 @@ const ManageGallery = () => {
         >
           Delete
         </button>
+        <Pager
+          state={{ pageNo, totalPages: galleryPage?.totalPages || 1 }}
+          onPageChange={(no) => setPageNo(no)}
+        />
       </div>
     </>
   );
