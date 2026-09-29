@@ -37,7 +37,7 @@ const NavLink = styled(Link)`
     transition: background-color 0.2s ease-in;
   }
  
-  @media (max-width: 768px) {
+  @media (max-width: 1000px) {
     display: block;
     width: 100%;
     padding: 14px 20px;
@@ -59,7 +59,7 @@ const Bar = styled.div`
     list-style: none;
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: 1000px) {
     padding: 0.75rem 1rem;
   }
 `;
@@ -68,7 +68,7 @@ const LeftGroup = styled.div`
   display: flex;
   align-items: center;
   gap: 1.5rem;
-  @media (max-width: 768px) {
+  @media (max-width: 1000px) {
     gap: 0.75rem;
   }
 `;
@@ -85,7 +85,7 @@ const RightGroup = styled.div`
 const Logo = styled.img`
   width: 50px;
   height: 50px;
-  @media (max-width: 768px) {
+  @media (max-width: 1000px) {
     width: 36px;
     height: 36px;
   }
@@ -99,7 +99,7 @@ const NavFlex = styled.ul<{ $open?: boolean }>`
   margin: 0;
   padding: 0;
  
-  @media (max-width: 768px) {
+  @media (max-width: 1000px) {
     position: fixed;
     top: 64px; /* roughly the height of Bar on mobile, adjust if needed */
     left: 0;
@@ -167,6 +167,11 @@ const Panel = styled.div<{ $open: boolean }>`
   flex-direction: column;
   overflow: hidden;
   z-index: 100;
+  @media (max-width: 1000px) {
+    top: 50%;
+    left: 50%;
+    transform: translate(-90%, 50%);
+  }
 
   opacity: ${({ $open }) => ($open ? 1 : 0)};
   transform: translateY(${({ $open }) => ($open ? "0" : "-8px")});

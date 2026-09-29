@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 
+const isVertical = () => typeof window !== "undefined" && window.innerWidth < window.innerHeight;
+
 export default function useVerticalCheck() {
-  const [vertical, setVertical] = useState(false);
+  const [vertical, setVertical] = useState(() => isVertical());
 
   useEffect(() => {
     const updateVertSt = (_e: UIEvent) => {
-      setVertical(window.innerWidth < window.innerHeight);
+      setVertical(isVertical());
     };
     window.addEventListener("resize", updateVertSt);
     return () => window.removeEventListener("resize", updateVertSt);

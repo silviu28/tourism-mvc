@@ -24,7 +24,7 @@ const Table = styled.table`
     padding: 1rem 1.5rem;
     text-align: left;
     font-size: 0.95rem;
-    @media (max-width: 768px) {
+    @media (max-width: 1000px) {
       padding: .5rem .75rem;
       font-size: .5rem;
     }

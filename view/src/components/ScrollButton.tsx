@@ -12,7 +12,7 @@ const Button = styled.button`
   font-size: 25px;
   border: none;
   border-radius: 50%;
-  @media (max-width: 768px) {
+  @media (max-width: 1000px) {
     width: 60px;
     height: 60px;
     left: 85%;

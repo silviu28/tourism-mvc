@@ -24,7 +24,7 @@ const Body = styled.div`
   padding: 80px;
   margin-left: 40px;
   margin-right: 40px;
-  @media (max-width: 768px) {
+  @media (max-width: 1000px) {
     padding: 40px;
     margin-left: 20px;
     margin-right: 20px;

@@ -31,7 +31,7 @@ const Login: FunctionComponent<LoginProps> = ({ onSubmit }) => {
   return (
     <PageWrapper>
       <Background src={content.thumbnail2} />
-      <FloatContainer style={{ width: 400 }}>
+      <FloatContainer style={{ width: 300 }}>
         <h1 style={{ textAlign: "center", top: '85vh', left: '90vw', color: 'black' }}>Login</h1>
         <form onSubmit={submit} className="flex-col">
 

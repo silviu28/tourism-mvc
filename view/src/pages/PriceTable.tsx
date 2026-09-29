@@ -11,7 +11,7 @@ import useVerticalCheck from "../utils/useVerticalCheck";
 
 const Link = styled(_Link)`
   font-size: 64px;
-  @media (max-width: 768px) {
+  @media (max-width: 1000px) {
     font-size: 32px;
   }
 `;

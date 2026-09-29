@@ -15,7 +15,7 @@ const Sidebar = styled.div`
   display: flex;
   flex-direction: column;
   gap: 8px;
-  background-color: #eb9900;
+  background-color: #eb9100;
 `;
 
 const Content = styled.div`

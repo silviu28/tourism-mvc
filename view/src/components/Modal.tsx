@@ -15,7 +15,7 @@ const ModalContainer = styled.div`
   padding: 5%;
   border: 1px solid #ccc;
   z-index: 10;
-  @media (max-width: 768px) {
+  @media (max-width: 1000px) {
     max-width: 100%;
     max-height: 100%;
     min-width: 80%;

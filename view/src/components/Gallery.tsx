@@ -24,7 +24,7 @@ const CarouselImages = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  @media (max-width: 768px) {
+  @media (max-width: 1000px) {
     height: 60%;
   }
 `;

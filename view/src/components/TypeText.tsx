@@ -44,7 +44,7 @@ const TypedText = styled.div`
   box-sizing: border-box;
   color: #ffffff;
   font-family: "Helvetica Neue", sans-serif;
-  @media (max-width: 768px) {
+  @media (max-width: 1000px) {
     font-size: 1rem;
     letter-spacing: 1px;
   }
@@ -64,7 +64,7 @@ const RoundedButton = styled.button`
 `;
 
 const ButtonAligner = styled.div`
-  @media (max-width: 768px) {
+  @media (max-width: 1000px) {
     display: flex;
     flex-direction: column;
   }

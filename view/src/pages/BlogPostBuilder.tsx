@@ -17,7 +17,7 @@ const BuilderLayout = styled.div`
   margin: 0 auto;
   padding: 2rem;
 
-  @media (max-width: 900px) {
+  @media (max-width: 1000px) {
     flex-direction: column;
   }
 `;
