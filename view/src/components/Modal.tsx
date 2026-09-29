@@ -15,9 +15,20 @@ const ModalContainer = styled.div`
   padding: 5%;
   border: 1px solid #ccc;
   z-index: 10;
-
+  @media (max-width: 768px) {
+    max-width: 100%;
+    max-height: 100%;
+    min-width: 80%;
+    min-height: 40%;
+  }
+  
   li {
     background-color: white;
+  }
+
+  img {
+    width: 90%;
+    height: 90%;
   }
 `;
 

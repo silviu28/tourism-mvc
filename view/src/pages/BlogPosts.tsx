@@ -20,7 +20,6 @@ const EMPTY_PAGE: BlogPagedQuery = {
 }
 
 const BlogPosts = () => {
-  
   const [pageNo, setPageNo] = useState(1);
   const isAdmin = useAdminAuth();
   const navigate = useNavigate();
