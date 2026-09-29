@@ -17,6 +17,19 @@ import { PEACH } from "../colors";
 import BlogPostCard from "../components/BlogPostCard";
 import WikiPostCard from "../components/WikiPostCard";
 import { CardGrid, SectionBreak } from "../components/atoms";
+import styled from "styled-components";
+
+const Body = styled.div`
+  background: ${PEACH};
+  padding: 80px;
+  margin-left: 40px;
+  margin-right: 40px;
+  @media (max-width: 768px) {
+    padding: 40px;
+    margin-left: 20px;
+    margin-right: 20px;
+  }
+`;
 
 const toTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
 
@@ -106,10 +119,9 @@ const FrontPage: FunctionComponent = () => {
          ]}
       />
 
-      <div style={{ background: PEACH, padding: '80px', marginLeft: '40px', marginRight: '40px' }}>
-        <section
-          className="info-section"
-          style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "5%" }}>
+      <Body>
+        <section className="info-section">
+          <ColumnSplit splitCount={2}>
             <PolaroidImage
               src="https://ceoworld.biz/wp-content/uploads/2024/04/Adventure-Tourism.jpg"
               alt="Tourists going with kayaks"
@@ -121,6 +133,7 @@ const FrontPage: FunctionComponent = () => {
               <p>From hidden gems off the beaten path to world-famous destinations, we'll guide you every step of the way. With our expertise and passion for exploration, all you have to do is pack your bags and let the journey begin.</p>
               <p>Because with us, traveling isn't just about reaching a destination; it's about discovering the world in your own way.</p>
             </div>
+          </ColumnSplit>
         </section>
 
         <SectionBreak />
@@ -210,7 +223,7 @@ const FrontPage: FunctionComponent = () => {
             }
           }}
         />
-      </div>
+      </Body>
     </div>
   );
 };

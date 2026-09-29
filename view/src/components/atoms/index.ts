@@ -52,7 +52,7 @@ export const PostMeta = styled.span`
 
 export const CardGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(90%, 1fr));
   gap: 20px;
   text-align: left;
 `;
