@@ -137,7 +137,7 @@ const Wiki: FunctionComponent = () => {
   const search = () => q.refetch();
 
   return (
-    <div style={{ margin: 60 }}>
+    <div>
       <Wrapper>
         <Header>
           <h1>Wiki</h1>

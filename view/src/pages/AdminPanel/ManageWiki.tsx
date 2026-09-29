@@ -8,12 +8,6 @@ import Pager from "../../components/Pager";
 import DynamicTable from "../../components/DynamicTable";
 import AlertContext from "../../context/AlertContext";
 
-const Wrapper = styled.div`
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 2rem 1.5rem;
-`;
-
 const Header = styled.div`
   display: flex;
   align-items: center;
@@ -125,51 +119,49 @@ const ManageWiki = () => {
   const search = () => q.refetch();
 
   return (
-    <>
-      <Wrapper>
-        <Header>
-          <h2>Wiki</h2>
-          <NewPostButton onClick={() => navigate("/wiki/new")}>
-            + New Post
-          </NewPostButton>
-        </Header>
+    <div>
+      <Header>
+        <h2>Wiki</h2>
+        <NewPostButton onClick={() => navigate("/wiki/new")}>
+          + New Post
+        </NewPostButton>
+      </Header>
 
-        <SearchBar>
-          <SearchInput
-            type="text"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search wiki posts..."
-            onKeyDown={(e) => e.key === "Enter" && search()}
-          />
-          <SearchButton onClick={search}>Search</SearchButton>
-        </SearchBar>
+      <SearchBar>
+        <SearchInput
+          type="text"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="Search wiki posts..."
+          onKeyDown={(e) => e.key === "Enter" && search()}
+        />
+        <SearchButton onClick={search}>Search</SearchButton>
+      </SearchBar>
 
-        {wikiLoading && <LoadingText>Please wait...</LoadingText>}
+      {wikiLoading && <LoadingText>Please wait...</LoadingText>}
 
-        <div className="container" style={{ display: "inline-block" }}>
-          {wikiPage && (
-            <>
-              {wikiPage.content.length === 0 ? (
-                <EmptyState>No wiki posts found.</EmptyState>
-              ) : (
-                <DynamicTable
-                  items={wikiPage.content}
-                  onRowSelect={(post) => setSelected(post as ControllableWikiPost)}
-                />
-              )}
-              <button
-                disabled={!selected}
-                onClick={() => postMutation.mutate({ wikiPost: { ...selected!, pendingApproval: !selected!.pendingApproval } })}>
-                  {selected?.pendingApproval ? "Approve" : "Unapprove"}
-              </button>
+      <div className="container" style={{ display: "inline-block" }}>
+        {wikiPage && (
+          <>
+            {wikiPage.content.length === 0 ? (
+              <EmptyState>No wiki posts found.</EmptyState>
+            ) : (
+              <DynamicTable
+                items={wikiPage.content}
+                onRowSelect={(post) => setSelected(post as ControllableWikiPost)}
+              />
+            )}
+            <button
+              disabled={!selected}
+              onClick={() => postMutation.mutate({ wikiPost: { ...selected!, pendingApproval: !selected!.pendingApproval } })}>
+                {selected?.pendingApproval ? "Approve" : "Unapprove"}
+            </button>
 
-              <Pager state={{ pageNo, ...wikiPage }} onPageChange={(no) => setPageNo(no)} />
-            </>
-          )}
-        </div>
-      </Wrapper>
-    </>
+            <Pager state={{ pageNo, ...wikiPage }} onPageChange={(no) => setPageNo(no)} />
+          </>
+        )}
+      </div>
+    </div>
   );
 };
 

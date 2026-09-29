@@ -13,8 +13,6 @@ const Table = styled.table`
   border-collapse: collapse;
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
-  background: rgba(255, 255, 255);
 
   thead {
     color: white;
@@ -26,6 +24,10 @@ const Table = styled.table`
     padding: 1rem 1.5rem;
     text-align: left;
     font-size: 0.95rem;
+    @media (max-width: 1000px) {
+      padding: .5rem .75rem;
+      font-size: .5rem;
+    }
   }
 
   tbody tr {

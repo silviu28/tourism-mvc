@@ -112,7 +112,7 @@ export const updateUserSchema = addUserSchema.partial();
 export const userLoginSchema = z.object({
   username: z.string().trim(),
   password: z.string().trim(),
-  remember: z.boolean()
+  rememberMe: z.boolean()
 }).strict();
 
 export const addWikiPostSchema = z.object({

@@ -7,15 +7,20 @@ import DynamicTable from "../components/DynamicTable";
 import { Link as _Link } from "react-router";
 import styled from "styled-components";
 import Pager from "../components/Pager";
+import useVerticalCheck from "../utils/useVerticalCheck";
 
 const Link = styled(_Link)`
   font-size: 64px;
+  @media (max-width: 1000px) {
+    font-size: 32px;
+  }
 `;
 
 const PriceTable: FC = () => {
   const showAlert = useContext(AlertContext);
   const [pageNo, setPageNo] = useState(1);
   const queryClient = useQueryClient();
+  const mobile = useVerticalCheck();
 
   const { data: prices, isLoading, isError } = useQuery<PagedQuery<Price>>({
     queryKey: ["prices"],
@@ -64,6 +69,7 @@ const PriceTable: FC = () => {
           queryClient.invalidateQueries();
         }}
       />
+      {mobile && <p>We recommend you turn your device to landscape mode for better visualization.</p>}
       <br />
       <h1><Link to="/contact">Contact us</Link> for more information.</h1>
     </div>
